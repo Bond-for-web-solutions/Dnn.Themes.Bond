@@ -1,0 +1,136 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,500;0,600;0,700&display=swap');
+
+html, body { margin: 0; padding: 0; }
+body { background: #f4ede4 !important; }
+
+.bond-splash {
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;   /* dynamische viewport-hoogte: geen sprong door mobiele adresbalk */
+    /* Subtiel verloop voor diepte i.p.v. egale vlakke kleur */
+    background: radial-gradient(120% 90% at 50% 0%, #faf5ee 0%, #f4ede4 46%, #efe6d9 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    color: #2b2b2b;
+    padding: clamp(20px, 6vw, 40px);
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.bond-splash__inner {
+    max-width: 600px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(22px, 5vw, 32px);
+}
+
+/* ===== Logo ===== */
+.bond-logo {
+    display: block;
+    width: 100%;
+    max-width: clamp(200px, 62vw, 360px);
+    height: auto;
+}
+
+/* ===== Tekst ===== */
+.bond-splash__title {
+    font-size: clamp(22px, 5.2vw, 30px);
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    color: #2b2b2b;
+}
+
+.bond-splash__text {
+    font-size: clamp(15px, 3.6vw, 17px);
+    font-weight: 400;
+    line-height: 1.7;
+    max-width: 460px;
+    color: #5a5a5a;
+}
+
+/* ===== Divider als 'in uitvoering' voortgangsbalk ===== */
+.bond-splash__rule {
+    position: relative;
+    width: 200px;
+    max-width: 70%;
+    height: 3px;
+    border: 0;
+    border-radius: 999px;
+    background: rgba(43, 43, 43, 0.10);
+    overflow: hidden;
+}
+.bond-splash__rule::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 38%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, transparent, #5abcd2 50%, transparent);
+    animation: bondProgress 2s ease-in-out infinite;
+}
+
+/* ===== Footer ===== */
+.bond-splash__footer {
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #8a8175;
+}
+.bond-splash__footer a {
+    color: #8a8175;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color 0.2s ease;
+}
+.bond-splash__footer a:hover { color: #2b2b2b; }
+
+/* ContentPane: leeg op de splash pagina (toont niets). */
+.bond-splash__contentpane:not(:empty) {
+    width: 100%;
+    max-width: 440px;
+    text-align: left;
+}
+
+/* ==========================================================================
+   Animaties
+   ========================================================================== */
+@keyframes bondFadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes bondLogoIn {
+    from { opacity: 0; transform: translateY(12px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes bondProgress {
+    0%   { transform: translateX(-130%); }
+    100% { transform: translateX(420%); }
+}
+
+/* Gespreide entree-animatie (staggered fade-up) */
+.bond-logo            { animation: bondLogoIn 0.8s cubic-bezier(0.22, 0.7, 0.25, 1) 0.05s both; }
+.bond-splash__title   { animation: bondFadeUp 0.7s cubic-bezier(0.22, 0.7, 0.25, 1) 0.20s both; }
+.bond-splash__text    { animation: bondFadeUp 0.7s cubic-bezier(0.22, 0.7, 0.25, 1) 0.33s both; }
+.bond-splash__rule    { animation: bondFadeUp 0.7s cubic-bezier(0.22, 0.7, 0.25, 1) 0.46s both; }
+.bond-splash__footer  { animation: bondFadeUp 0.7s cubic-bezier(0.22, 0.7, 0.25, 1) 0.60s both; }
+
+/* Respecteer 'reduce motion': geen beweging, statische divider */
+@media (prefers-reduced-motion: reduce) {
+    .bond-logo,
+    .bond-splash__title,
+    .bond-splash__text,
+    .bond-splash__rule,
+    .bond-splash__footer { animation: none; }
+    .bond-splash__rule { width: 48px; background: #c3d1d8; }
+    .bond-splash__rule::after { display: none; }
+}

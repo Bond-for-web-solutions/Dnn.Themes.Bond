@@ -1,0 +1,79 @@
+@using DotNetNuke.Web.DDRMenu;
+@using System.Dynamic;
+@using DotNetNuke.Common;
+@using DotNetNuke.Entities.Portals;
+@inherits DotNetNuke.Web.Razor.DotNetNukeWebPage<dynamic>
+
+@{
+    var ps = PortalSettings.Current;
+
+    // Logo
+    string logoSrc = !string.IsNullOrEmpty(ps.LogoFile) ? ps.HomeDirectory + ps.LogoFile : "";
+    string homeUrl = Globals.NavigateURL(ps.HomeTabId);
+
+    // Copyright
+    string copyright = string.Format("Copyright {0} by {1}", DateTime.Now.Year, ps.PortalName);
+
+    // Terms & Privacy
+    string termsUrl = ps.TermsTabId > -1 ? Globals.NavigateURL(ps.TermsTabId) : "#";
+    string privacyUrl = ps.PrivacyTabId > -1 ? Globals.NavigateURL(ps.PrivacyTabId) : "#";
+}
+
+<footer class="bond-footer">
+    <!-- Accent Bar -->
+    <div class="bond-footer__accent"></div>
+
+    <!-- Footer Content -->
+    <div class="bond-container bond-footer__body">
+        <div class="bond-footer__grid">
+
+            <!-- Left: Nav Links -->
+            <div class="bond-footer__left">
+                <nav>
+                    <ul class="bond-footer__nav-list">
+                        @foreach (var node in Model.Source.root.Children)
+                        {
+                            var attrTarget = !string.IsNullOrEmpty(node.Target) ? ("target=\"" + node.Target + "\"") : string.Empty;
+                            var attrHref = node.Enabled ? node.Url : "javascript:void(0);";
+
+                            <li class="bond-footer__nav-item">
+                                @if (node.Enabled)
+                                {
+                                    <a href="@attrHref" @attrTarget class="bond-footer__link @(node.Selected ? "is-selected" : "")">
+                                        @node.Text
+                                    </a>
+                                }
+                                else
+                                {
+                                    <span class="bond-footer__link bond-footer__link--disabled">
+                                        @node.Text
+                                    </span>
+                                }
+                            </li>
+                        }
+                    </ul>
+                </nav>
+
+                <!-- Terms / Privacy -->
+                <div class="bond-footer__meta">
+                    <a href="@termsUrl">Terms</a>
+                    <span class="bond-footer__sep">|</span>
+                    <a href="@privacyUrl">Privacy</a>
+                </div>
+
+                <!-- Copyright -->
+                <div class="bond-footer__copyright">
+                    @copyright
+                </div>
+            </div>
+
+            <!-- Right: Logo watermark -->
+            <div class="bond-footer__logo">
+                @if (!string.IsNullOrEmpty(logoSrc))
+                {
+                    <a href="@homeUrl"><img src="@logoSrc" alt="@ps.PortalName" /></a>
+                }
+            </div>
+        </div>
+    </div>
+</footer>

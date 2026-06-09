@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="PackageSkin" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Import Project="BuildScripts\BuildProperties.props" />
+  <Import Project="BuildScripts\MSBuild.Community.Tasks.Targets" />
+
+  <PropertyGroup>
+    <PackageName>DNN.Themes.Bond</PackageName>
+    <DNNFileName>manifest</DNNFileName>
+    <Extension>zip</Extension>
+    <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
+  </PropertyGroup>
+
+  <Target Name="PackageSkin">
+
+    <!-- Read version from the .dnn manifest -->
+    <XmlRead Prefix="n"
+             Namespace="http://schemas.microsoft.com/developer/msbuild/2003"
+             XPath="dotnetnuke/packages/package[1]/@version"
+             XmlFileName="$(MSBuildProjectDirectory)\$(DNNFileName).dnn">
+      <Output TaskParameter="Value" PropertyName="Version" />
+    </XmlRead>
+
+    <Message Text="Building $(PackageName) v$(Version)..." Importance="high" />
+
+    <!-- ── Gather skin resource files ── -->
+    <ItemGroup>
+      <SkinResources Include="**\*.ascx" Exclude="containers\**;packages\**;obj\**;dist\**;Package\**" />
+      <SkinResources Include="**\*.css" Exclude="containers\**;packages\**;obj\**;dist\**;Package\**" />
+      <SkinResources Include="**\*.js" Exclude="containers\**;packages\**;obj\**;dist\**;Package\**" />
+      <SkinResources Include="**\*.html" Exclude="containers\**;packages\**;obj\**;dist\**;Package\**" />
+      <SkinResources Include="**\*.cshtml" Exclude="containers\**;packages\**;obj\**;dist\**;Package\**" />
+      <SkinResources Include="**\*.resx" Exclude="containers\**;packages\**;obj\**;dist\**;Package\**" />
+      <!-- *.xml covers the DDRMenu menudef.xml manifests (menus\*) and skin.doctype.xml.
+           Without the menudef.xml files the menus fail with "Illegal characters in path". -->
+      <SkinResources Include="**\*.xml" Exclude="containers\**;packages\**;obj\**;dist\**;Package\**" />
+      <!-- Image assets by extension (covers resources\img, images\, etc.) -->
+      <SkinResources Include="**\*.png;**\*.jpg;**\*.jpeg;**\*.gif;**\*.svg;**\*.webp;**\*.ico" Exclude="containers\**;packages\**;obj\**;dist\**;Package\**" />
+      <SkinResources Include="koi.json" Condition="Exists('koi.json')" />
+    </ItemGroup>
+
+    <!-- ── Build Resources.zip ── -->
+    <RemoveDir Directories="$(MSBuildProjectDirectory)\ResourcesZip" />
+    <Copy SourceFiles="@(SkinResources)"
+          DestinationFolder="$(MSBuildProjectDirectory)\ResourcesZip\%(RecursiveDir)" />
+
+    <CreateItem Include="$(MSBuildProjectDirectory)\ResourcesZip\**\*.*">
+      <Output TaskParameter="Include" ItemName="ResourcesContent" />
+    </CreateItem>
+
+    <Zip Files="@(ResourcesContent)"
+         WorkingDirectory="$(MSBuildProjectDirectory)\ResourcesZip"
+         ZipFileName="Resources.$(Extension)" />
+
+    <!-- ── Build ContainerResources.zip ── -->
+    <ItemGroup>
+      <ContainerFiles Include="containers\*.ascx" />
+    </ItemGroup>
+
+    <RemoveDir Directories="$(MSBuildProjectDirectory)\ContainerResourcesZip" />
+    <Copy SourceFiles="@(ContainerFiles)"
+          DestinationFolder="$(MSBuildProjectDirectory)\ContainerResourcesZip\%(RecursiveDir)"
+          Condition="'@(ContainerFiles)' != ''" />
+
+    <CreateItem Include="$(MSBuildProjectDirectory)\ContainerResourcesZip\**\*.*">
+      <Output TaskParameter="Include" ItemName="ContainerResourcesContent" />
+    </CreateItem>
+
+    <Zip Files="@(ContainerResourcesContent)"
+         WorkingDirectory="$(MSBuildProjectDirectory)\ContainerResourcesZip"
+         ZipFileName="ContainerResources.$(Extension)"
+         Condition="'@(ContainerResourcesContent)' != ''" />
+
+    <!-- ── Assemble install package ── -->
+    <RemoveDir Directories="$(MSBuildProjectDirectory)\Package" />
+
+    <CreateItem Include="$(DNNFileName).dnn">
+      <Output TaskParameter="Include" ItemName="PackageManifestFiles" />
+    </CreateItem>
+
+    <CreateItem Include="License.txt">
+      <Output TaskParameter="Include" ItemName="PackageTxtFiles" />
+    </CreateItem>
+    <CreateItem Include="ReleaseNotes.txt">
+      <Output TaskParameter="Include" ItemName="PackageTxtFiles" />
+    </CreateItem>
+
+    <Copy SourceFiles="@(PackageManifestFiles)"
+          DestinationFolder="$(MSBuildProjectDirectory)\Package" />
+    <Copy SourceFiles="@(PackageTxtFiles)"
+          DestinationFolder="$(MSBuildProjectDirectory)\Package" />
+    <Copy SourceFiles="$(MSBuildProjectDirectory)\Resources.$(Extension)"
+          DestinationFolder="$(MSBuildProjectDirectory)\Package" />
+    <Copy SourceFiles="$(MSBuildProjectDirectory)\ContainerResources.$(Extension)"
+          DestinationFolder="$(MSBuildProjectDirectory)\Package"
+          Condition="Exists('$(MSBuildProjectDirectory)\ContainerResources.$(Extension)')" />
+
+    <!-- Skin/container .ascx files declared in the manifest must be at the root of the install zip -->
+    <ItemGroup>
+      <SkinAscxFiles Include="default.ascx" Condition="Exists('default.ascx')" />
+      <ContainerAscxFiles Include="containers\*.ascx" />
+    </ItemGroup>
+    <Copy SourceFiles="@(SkinAscxFiles)"
+          DestinationFolder="$(MSBuildProjectDirectory)\Package"
+          Condition="'@(SkinAscxFiles)' != ''" />
+    <Copy SourceFiles="@(ContainerAscxFiles)"
+          DestinationFolder="$(MSBuildProjectDirectory)\Package"
+          Condition="'@(ContainerAscxFiles)' != ''" />
+
+    <!-- Zip the install package -->
+    <CreateItem Include="$(MSBuildProjectDirectory)\Package\**\*.*">
+      <Output TaskParameter="Include" ItemName="OutputContent" />
+    </CreateItem>
+
+    <MakeDir Directories="$(MSBuildProjectDirectory)\install" />
+
+    <Zip Files="@(OutputContent)"
+         WorkingDirectory="$(MSBuildProjectDirectory)\Package"
+         ZipFileName="$(PackageName)_$(Version)_Install.$(Extension)" />
+
+    <!-- Move to install folder -->
+    <Copy SourceFiles="$(MSBuildProjectDirectory)\$(PackageName)_$(Version)_Install.$(Extension)"
+          DestinationFolder="$(MSBuildProjectDirectory)\install" />
+
+    <!-- Clean up -->
+    <Delete Files="$(MSBuildProjectDirectory)\$(PackageName)_$(Version)_Install.$(Extension)" />
+    <Delete Files="$(MSBuildProjectDirectory)\Resources.$(Extension)" />
+    <Delete Files="$(MSBuildProjectDirectory)\ContainerResources.$(Extension)" ContinueOnError="true" />
+    <RemoveDir Directories="$(MSBuildProjectDirectory)\Package" />
+    <RemoveDir Directories="$(MSBuildProjectDirectory)\ResourcesZip" />
+    <RemoveDir Directories="$(MSBuildProjectDirectory)\ContainerResourcesZip" />
+
+    <Message Text="DNN Install package created: install\$(PackageName)_$(Version)_Install.$(Extension)" Importance="high" />
+
+  </Target>
+</Project>

@@ -1,0 +1,26 @@
+DNN.Themes.Bond v1.0.0 Release Notes
+====================================
+
+Initial release of DNN.Themes.Bond, a native-CSS skin for DNN 10.
+
+Skins:
+- default - main site layout: sticky header with dropdown navigation,
+  content panes (Banner / Content / Fluid), and a footer.
+- Splash  - standalone "under construction" page; shows the logo, a message
+  that automatically includes the site (portal) name, and an animated
+  progress divider.
+
+Highlights:
+- Hand-written native CSS - no CSS framework, no client-side runtime,
+  and no build step for styling.
+- Warm cream palette with a cyan accent (#5abcd2).
+- Fonts: Inter (main skin) and Noto Sans (splash).
+- Fully responsive: fluid clamp()-based sizing, mobile hamburger menu,
+  and dynamic viewport height (100dvh).
+- Header and footer navigation rendered via DDRMenu Razor templates.
+- Tasteful splash animations (staggered fade-in + animated progress bar)
+  with prefers-reduced-motion support; header/footer use no decorative motion.
+- One module container (None) and an HTML5 doctype.
+
+Requirements:
+- DNN Platform 10.0.0 or later.

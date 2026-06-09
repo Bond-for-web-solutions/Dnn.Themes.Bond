@@ -1,0 +1,166 @@
+@using DotNetNuke.Web.DDRMenu;
+@using System.Dynamic;
+@using DotNetNuke.Common;
+@using DotNetNuke.Entities.Portals;
+@using DotNetNuke.Entities.Users;
+@inherits DotNetNuke.Web.Razor.DotNetNukeWebPage<dynamic>
+
+@{
+    var ps = PortalSettings.Current;
+    var user = UserController.Instance.GetCurrentUserInfo();
+    bool isAuth = HttpContext.Current.Request.IsAuthenticated;
+
+    // Logo
+    string logoSrc = !string.IsNullOrEmpty(ps.LogoFile) ? ps.HomeDirectory + ps.LogoFile : "";
+    string homeUrl = Globals.NavigateURL(ps.HomeTabId);
+
+    // Login / Logout
+    string loginUrl = isAuth
+        ? Globals.NavigateURL(ps.ActiveTab.TabID, "Logoff")
+        : Globals.LoginURL(HttpContext.Current.Request.RawUrl, false);
+    string loginText = isAuth ? "Logout" : "Login";
+
+    // User profile
+    string userName = isAuth ? user.DisplayName : "";
+    string userUrl = isAuth ? Globals.UserProfileURL(user.UserID) : "";
+}
+
+@helper RenderNodes(dynamic nodes, bool isRoot) {
+    <ul class="bond-menu @(isRoot ? "bond-menu--root" : "bond-menu--sub")">
+        @foreach (var node in nodes)
+        {
+            bool hasChildren = node.HasChildren();
+            string target = !string.IsNullOrEmpty((string)node.Target) ? ("target=\"" + node.Target + "\"") : "";
+            string href = (bool)node.Enabled ? (string)node.Url : "javascript:void(0);";
+            bool selected = (bool)node.Selected;
+
+            <li class="bond-menu__item">
+                @if (isRoot)
+                {
+                    if ((bool)node.Enabled)
+                    {
+                        <a href="@href" @target class="bond-nav-link @(selected ? "is-selected" : "")">
+                            @node.Text
+                            @if (hasChildren)
+                            {
+                                <svg class="bond-menu-icon" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                                </svg>
+                            }
+                        </a>
+                    }
+                    else
+                    {
+                        <span class="bond-nav-link bond-nav-link--disabled">
+                            @node.Text
+                        </span>
+                    }
+                }
+                else
+                {
+                    if ((bool)node.Enabled)
+                    {
+                        <a href="@href" @target class="bond-submenu-link @(selected ? "is-selected" : "")">
+                            @node.Text
+                            @if (hasChildren)
+                            {
+                                <svg class="bond-menu-icon" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                                </svg>
+                            }
+                        </a>
+                    }
+                    else
+                    {
+                        <span class="bond-submenu-link bond-submenu-link--disabled @(selected ? "is-selected" : "")">
+                            @node.Text
+                        </span>
+                    }
+                }
+                @if (hasChildren)
+                {
+                    <div class="bond-submenu @(isRoot ? "bond-submenu--root" : "bond-submenu--sub")">
+                        @RenderNodes(node.Children, false)
+                    </div>
+                }
+            </li>
+        }
+    </ul>
+}
+
+<header class="bond-header">
+    <!-- Top Bar: User/Login -->
+    <div class="bond-topbar">
+        <div class="bond-container">
+            <div class="bond-topbar__inner">
+                <a href="@loginUrl" class="bond-topbar__link">@loginText</a>
+                @if (isAuth)
+                {
+                    <a href="@userUrl" class="bond-topbar__user">@userName</a>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Header: Logo + Nav -->
+    <div class="bond-header__main">
+        <div class="bond-container">
+            <div class="bond-header__inner">
+
+                <!-- Logo -->
+                <div class="bond-header__logo">
+                    @if (!string.IsNullOrEmpty(logoSrc))
+                    {
+                        <a href="@homeUrl"><img src="@logoSrc" alt="@ps.PortalName" /></a>
+                    }
+                </div>
+
+                <!-- Desktop Navigation -->
+                <nav class="bond-nav" aria-label="Main Navigation">
+                    @RenderNodes(Model.Source.root.Children, true)
+                </nav>
+
+                <!-- Mobile Menu Button -->
+                <button type="button"
+                        class="bond-hamburger"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation"
+                        onclick="this.classList.toggle('open'); var m=document.getElementById('mobile-menu'); m.classList.toggle('open'); this.setAttribute('aria-expanded', m.classList.contains('open'));">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <div id="mobile-menu" class="bond-mobile-menu">
+        <div class="bond-mobile-menu__nav">
+            @RenderNodes(Model.Source.root.Children, true)
+        </div>
+        <div class="bond-mobile-menu__footer">
+            <div class="bond-mobile-menu__footer-inner">
+                @if (isAuth)
+                {
+                    <a href="@userUrl" class="bond-mobile-menu__user">@userName</a>
+                }
+                <a href="@loginUrl" class="bond-mobile-menu__login">@loginText</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<script>
+(function(){
+    var mql = window.matchMedia('(min-width: 1024px)');
+    function closeMobile(){
+        if(!mql.matches) return;
+        var btn = document.querySelector('.bond-hamburger');
+        var menu = document.getElementById('mobile-menu');
+        if(btn) { btn.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
+        if(menu) menu.classList.remove('open');
+    }
+    mql.addEventListener('change', closeMobile);
+})();
+</script>
