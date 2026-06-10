@@ -33,6 +33,8 @@
       <SkinResources Include="**/*.xml" Exclude="containers/**;packages/**;obj/**;dist/**;Package/**" />
       <!-- Image assets by extension (covers resources/img, images/, etc.) -->
       <SkinResources Include="**/*.png;**/*.jpg;**/*.jpeg;**/*.gif;**/*.svg;**/*.webp;**/*.ico" Exclude="containers/**;packages/**;obj/**;dist/**;Package/**" />
+      <!-- Font assets (covers resources/font, e.g. self-hosted MuseoSans) -->
+      <SkinResources Include="**/*.otf;**/*.ttf;**/*.woff;**/*.woff2;**/*.eot" Exclude="containers/**;packages/**;obj/**;dist/**;Package/**" />
       <SkinResources Include="koi.json" Condition="Exists('koi.json')" />
     </ItemGroup>
 

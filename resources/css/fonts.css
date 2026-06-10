@@ -1,0 +1,83 @@
+/* ==========================================================================
+   DNN.Themes.Bond — MuseoSans web fonts
+   Self-hosted from resources/font/MuseoSans. Loaded before skin.css so the
+   family is ready when the skin / splash / login styles reference it.
+   url()s are relative to THIS file (resources/css/), hence ../font/...
+   MuseoSans ships weights 100/300/500/700/900 (each normal + italic); 500 is
+   its regular "book" weight, so body text (font-weight 400) resolves to it.
+   ========================================================================== */
+
+@font-face {
+    font-family: 'MuseoSans';
+    font-style: normal;
+    font-weight: 100;
+    font-display: swap;
+    src: url('../font/MuseoSans/MuseoSans_100.otf') format('opentype');
+}
+@font-face {
+    font-family: 'MuseoSans';
+    font-style: italic;
+    font-weight: 100;
+    font-display: swap;
+    src: url('../font/MuseoSans/MuseoSans_100Italic.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'MuseoSans';
+    font-style: normal;
+    font-weight: 300;
+    font-display: swap;
+    src: url('../font/MuseoSans/MuseoSans_300.otf') format('opentype');
+}
+@font-face {
+    font-family: 'MuseoSans';
+    font-style: italic;
+    font-weight: 300;
+    font-display: swap;
+    src: url('../font/MuseoSans/MuseoSans_300Italic.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'MuseoSans';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('../font/MuseoSans/MuseoSans_500.otf') format('opentype');
+}
+@font-face {
+    font-family: 'MuseoSans';
+    font-style: italic;
+    font-weight: 500;
+    font-display: swap;
+    src: url('../font/MuseoSans/MuseoSans_500_Italic.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'MuseoSans';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('../font/MuseoSans/MuseoSans_700.otf') format('opentype');
+}
+@font-face {
+    font-family: 'MuseoSans';
+    font-style: italic;
+    font-weight: 700;
+    font-display: swap;
+    src: url('../font/MuseoSans/MuseoSans_700Italic.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'MuseoSans';
+    font-style: normal;
+    font-weight: 900;
+    font-display: swap;
+    src: url('../font/MuseoSans/MuseoSans_900.otf') format('opentype');
+}
+@font-face {
+    font-family: 'MuseoSans';
+    font-style: italic;
+    font-weight: 900;
+    font-display: swap;
+    src: url('../font/MuseoSans/MuseoSans_900Italic.otf') format('opentype');
+}

@@ -14,7 +14,7 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    font-family: 'MuseoSans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
     color: #2b2b2b;
     background: #f4ede4;          /* zelfde warme tint als de splash */
     -webkit-font-smoothing: antialiased;

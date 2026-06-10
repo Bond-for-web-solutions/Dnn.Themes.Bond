@@ -1,0 +1,158 @@
+/* ==========================================================================
+   DNN.Themes.Bond — auth card (login + reset password)
+   The native DNN forms (.dnnLoginService / .dnnSendPassword) are visually
+   hidden by resources/js/login.js, which builds a new flex card in their
+   place. The card mirrors the native fields and triggers the original
+   (hidden) controls, so DNN's postback + validation wiring stays untouched.
+   Both forms reuse this one .bond-login component.
+   Layout is flexbox + gap only (no margins). Selectors are scoped under
+   .bond-login so they out-rank DNN's global .dnnForm / .LoginPanel rules.
+   Warm cream palette + cyan accent (#5abcd2), same as skin.css. sm = 640px.
+   ========================================================================== */
+
+/* ===== Hide the native form (kept in the DOM for postback wiring) ===== */
+.bond-login-native--hidden {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    border: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+/* ===== Layout: center the card in the viewport ===== */
+/* Fill the height below the sticky header (5rem) and center the card in it.
+   min-height (not height) lets the wrapper grow if the card is ever taller
+   than the viewport, so nothing gets clipped on short screens. */
+.bond-login {
+    display: flex;
+    justify-content: center;       /* horizontal */
+    align-items: center;           /* vertical */
+    padding: 2.5rem 1rem;
+}
+
+/* ===== Card — flex column, spacing via gap only ===== */
+.bond-login .bond-login__card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    width: 100%;
+    max-width: 26rem;
+    padding: 2rem;
+    background: #faf5ee;          /* lichte cream, zoals skin.css */
+    border: 1px solid #e6ddd0;
+    border-radius: 1rem;
+    box-shadow: 0 12px 32px -12px rgba(43, 43, 43, 0.18);
+}
+@media (min-width: 640px) {
+    .bond-login .bond-login__card { padding: 2.5rem; }
+}
+
+/* Heading group */
+.bond-login .bond-login__header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+}
+.bond-login .bond-login__title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2b2b2b;
+}
+.bond-login .bond-login__subtitle {
+    font-size: 0.875rem;
+    color: #8a8175;
+}
+
+/* ===== Fields ===== */
+.bond-login .bond-login__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+}
+.bond-login .bond-login__label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: #6b6256;
+}
+.bond-login .bond-login__input {
+    width: 100%;
+    padding: 0.75rem 0.875rem;
+    font-family: inherit;
+    font-size: 0.9375rem;
+    color: #2b2b2b;
+    background: #ffffff;
+    border: 1px solid #e6ddd0;
+    border-radius: 0.625rem;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+.bond-login .bond-login__input::placeholder { color: #b3a994; }
+.bond-login .bond-login__input:focus {
+    outline: none;
+    border-color: #5abcd2;
+    box-shadow: 0 0 0 3px rgba(90, 188, 210, 0.2);
+}
+
+/* ===== Remember me + reset link row ===== */
+.bond-login .bond-login__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+.bond-login .bond-login__remember {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: #6b6256;
+    cursor: pointer;
+}
+.bond-login .bond-login__checkbox {
+    flex: 0 0 auto;
+    width: 1rem;
+    height: 1rem;
+    accent-color: #5abcd2;
+    cursor: pointer;
+}
+
+/* ===== Submit button ===== */
+.bond-login .bond-login__submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0.8125rem 1rem;
+    font-family: inherit;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: #ffffff;
+    background: #5abcd2;
+    border: 0;
+    border-radius: 0.625rem;
+    cursor: pointer;
+    transition: background-color 0.15s, transform 0.05s;
+}
+.bond-login .bond-login__submit:hover { background: #0e7490; }
+.bond-login .bond-login__submit:active { transform: translateY(1px); }
+
+/* ===== Links ===== */
+.bond-login .bond-login__link {
+    color: #5abcd2;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.15s;
+}
+.bond-login .bond-login__link:hover { color: #0e7490; text-decoration: underline; }
+
+.bond-login .bond-login__footer {
+    display: flex;
+    justify-content: center;
+}
