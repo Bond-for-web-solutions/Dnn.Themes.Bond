@@ -23,7 +23,7 @@ const browserSecurity = {
 };
 
 export default [
-  { ignores: ['publish/**', 'node_modules/**', '**/node_modules/**', 'test-results/**', 'playwright-report/**', 'install/**'] },
+  { ignores: ['publish/**', 'node_modules/**', '**/node_modules/**', '**/test-results/**', '**/playwright-report/**', 'install/**'] },
   js.configs.recommended,
   {
     files: ['packages/*/src/**/*.js', 'themes/*/scripts/**/*.js', 'packages/build/templates/theme/scripts/**/*.js'],

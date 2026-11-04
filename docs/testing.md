@@ -50,7 +50,7 @@ Only after reviewing the diff in the Playwright report:
 pnpm test:visual:update                 # Windows baselines (system Chrome)
 # Linux baselines, identical to CI:
 docker run --rm -v "$PWD:/src:ro" -v "$PWD/tests/visual/__screenshots__:/out" \
-  mcr.microsoft.com/playwright:v1.64.1-noble bash -c 'cp -r /src /work && cd /work && rm -rf node_modules */*/node_modules && npm i -g pnpm@12.14.0 && pnpm install --frozen-lockfile && CI=1 pnpm exec playwright test --update-snapshots && cp -r tests/visual/__screenshots__/linux /out/'
+  mcr.microsoft.com/playwright:v1.64.1-noble bash -c 'cp -r /src /work && cd /work && rm -rf node_modules */*/node_modules && npm i -g pnpm@12.14.0 && pnpm install --frozen-lockfile && CI=1 pnpm exec playwright test --config tests/playwright.config.mjs --update-snapshots && cp -r tests/visual/__screenshots__/linux /out/'
 ```
 
 Baselines live in `tests/visual/__screenshots__/<platform>/<project>/` and

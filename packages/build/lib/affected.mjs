@@ -7,7 +7,7 @@ import { dependents } from './workspace.mjs';
 import { git } from './git.mjs';
 
 // packages/build is the toolchain every theme is built with: changing it can change every artifact.
-const GLOBAL_INPUTS = [/^packages\/build\//, /^\.gitattributes$/, /^pnpm-lock\.yaml$/, /^pnpm-workspace\.yaml$/, /^package\.json$/, /^\.node-version$/, /^tests\/(fixtures|visual|support|integration)\//, /^playwright\.config\./, /^stylelint\.config\./, /^eslint\.config\./, /^\.github\/workflows\//];
+const GLOBAL_INPUTS = [/^packages\/build\//, /^\.gitattributes$/, /^pnpm-lock\.yaml$/, /^pnpm-workspace\.yaml$/, /^package\.json$/, /^\.node-version$/, /^tests\/(fixtures|visual|support|integration)\//, /^(tests\/)?playwright\.config\./, /^stylelint\.config\./, /^eslint\.config\./, /^\.github\/workflows\//];
 const IGNORED = [/^docs\//, /^\.claude\//, /\.md$/i, /^CLAUDE\.md$/, /^\.vscode\//, /^LICENSE$/];
 
 export function changedFiles(base) {

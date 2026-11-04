@@ -23,8 +23,8 @@
     "lint:css": "stylelint \"packages/*/src/**/*.css\" \"themes/*/styles/**/*.css\"",
     "lint:js": "eslint .",
     "test": "node --test --test-concurrency=1 \"tests/integration/*.test.mjs\"",
-    "test:visual": "playwright test",
-    "test:visual:update": "playwright test --update-snapshots",
+    "test:visual": "playwright test --config tests/playwright.config.mjs",
+    "test:visual:update": "playwright test --config tests/playwright.config.mjs --update-snapshots",
     "test:e2e": "playwright test --config tests/e2e/playwright.config.mjs",
     "verify": "node packages/build/bin/bond.mjs check && stylelint \"packages/*/src/**/*.css\" \"themes/*/styles/**/*.css\" && eslint . && node packages/build/bin/bond.mjs build --all --mode production && node packages/build/bin/bond.mjs validate --all && node --test --test-concurrency=1 \"tests/integration/*.test.mjs\""
   },

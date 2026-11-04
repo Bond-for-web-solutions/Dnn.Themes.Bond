@@ -11,9 +11,11 @@ node_modules/
 .stylelintcache
 
 # Test output
+tests/test-results/
+tests/playwright-report/
+tests/blob-report/
 /test-results/
 /playwright-report/
-/blob-report/
 tests/**/__actual__/
 
 # Developer-local configuration - may contain machine paths (never commit)

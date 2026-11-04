@@ -104,8 +104,8 @@ jobs:
         with:
           name: playwright-report
           path: |
-            playwright-report/
-            test-results/
+            tests/playwright-report/
+            tests/test-results/
           retention-days: 14
 
   security:
