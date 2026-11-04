@@ -29,17 +29,19 @@
 
             <!-- Left: Nav Links -->
             <div class="bond-footer__left">
-                <nav>
+                <nav aria-label="Footer Navigation">
                     <ul class="bond-footer__nav-list">
                         @foreach (var node in Model.Source.root.Children)
                         {
-                            var attrTarget = !string.IsNullOrEmpty(node.Target) ? ("target=\"" + node.Target + "\"") : string.Empty;
-                            var attrHref = node.Enabled ? node.Url : "javascript:void(0);";
+                            @* Null attribute values are omitted by Razor (see HeaderMenu.cshtml). *@
+                            string target = (string)node.Target;
+                            string targetAttr = string.IsNullOrEmpty(target) ? null : target;
+                            string relAttr = target == "_blank" ? "noopener" : null;
 
                             <li class="bond-footer__nav-item">
                                 @if (node.Enabled)
                                 {
-                                    <a href="@attrHref" @attrTarget class="bond-footer__link @(node.Selected ? "is-selected" : "")">
+                                    <a href="@node.Url" target="@targetAttr" rel="@relAttr" class="bond-footer__link @(node.Selected ? "is-selected" : "")">
                                         @node.Text
                                     </a>
                                 }
@@ -56,9 +58,9 @@
 
                 <!-- Terms / Privacy -->
                 <div class="bond-footer__meta">
-                    <a href="@termsUrl">Terms</a>
-                    <span class="bond-footer__sep">|</span>
-                    <a href="@privacyUrl">Privacy</a>
+                    <a class="bond-footer__meta-link" href="@termsUrl">Terms</a>
+                    <span class="bond-footer__sep" aria-hidden="true">|</span>
+                    <a class="bond-footer__meta-link" href="@privacyUrl">Privacy</a>
                 </div>
 
                 <!-- Copyright -->

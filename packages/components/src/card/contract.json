@@ -1,0 +1,13 @@
+{
+  "component": "card",
+  "contractVersion": 1,
+  "block": "bond-card",
+  "elements": ["title", "body", "footer"],
+  "modifiers": ["flat"],
+  "tokens": ["--bond-card-gap", "--bond-card-padding", "--bond-card-bg", "--bond-card-border-color", "--bond-card-radius", "--bond-card-shadow", "--bond-card-title-size"],
+  "accessibility": "Use a real heading element for bond-card__title when the card starts a section.",
+  "examples": [
+    "<article class=\"bond-card\"><h2 class=\"bond-card__title\">Card title</h2><div class=\"bond-card__body\">Body text that wraps across a couple of lines to show line height.</div><div class=\"bond-card__footer\"><a class=\"bond-button\" href=\"#\">Action</a></div></article>",
+    "<div class=\"bond-card bond-card--flat\"><div class=\"bond-card__body\">Flat card</div></div>"
+  ]
+}

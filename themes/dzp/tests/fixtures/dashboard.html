@@ -1,0 +1,43 @@
+<!-- layout: dashboard -->
+<!-- Approximates DNN's rendering of skin/dashboard.ascx (DDRMenu sidebar,
+     a Title container with an HTML module). Not a substitute for real DNN. -->
+<div class="dzp-dashboard" data-dzp-dashboard>
+  <aside class="dzp-sidebar" id="dzp-sidebar" aria-label="Dashboard navigation">
+    <div class="dzp-sidebar__brand"><a id="dnn_dnnLOGO_hypLogo" href="#home"><img id="dnn_dnnLOGO_imgLogo" alt="DZP" width="120" height="32" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='32'%3E%3Crect width='120' height='32' rx='6' fill='%2314a3a3'/%3E%3C/svg%3E"></a></div>
+    <nav class="dzp-sidenav" aria-label="Sections">
+      <ul class="dzp-sidenav__list dzp-sidenav__list--level-1">
+        <li class="dzp-sidenav__item"><a href="#overview" class="dzp-sidenav__link is-selected" aria-current="page">Overview</a></li>
+        <li class="dzp-sidenav__item"><a href="#members" class="dzp-sidenav__link">Members</a>
+          <ul class="dzp-sidenav__list dzp-sidenav__list--level-2">
+            <li class="dzp-sidenav__item"><a href="#groups" class="dzp-sidenav__link">Groups</a></li>
+          </ul>
+        </li>
+        <li class="dzp-sidenav__item"><span class="dzp-sidenav__link dzp-sidenav__link--disabled">Reports</span></li>
+      </ul>
+    </nav>
+  </aside>
+  <div class="dzp-dashboard__main">
+    <header class="dzp-topbar">
+      <button type="button" class="dzp-topbar__toggle" data-dzp-sidebar-toggle aria-controls="dzp-sidebar" aria-expanded="true"><span class="bond-u-visually-hidden">Toggle sidebar</span><span class="dzp-topbar__toggle-icon" aria-hidden="true"></span></button>
+      <a id="dnn_dnnUSER_registerLink" class="dzp-topbar__user" href="#profile">Jane Admin</a>
+      <a id="dnn_dnnLOGIN_loginLink" class="dzp-topbar__login" href="#logout">Logout</a>
+    </header>
+    <div class="dzp-dashboard__panes">
+      <div id="dnn_ContentPane" class="dzp-dashboard__content">
+        <div class="DnnModule DnnModule-DNN_HTML DnnModule-501"><a name="501"></a>
+          <section class="dzp-box">
+            <h2 class="dzp-box__title"><span id="dnn_ctr501_dnnTITLE_titleLabel" class="dzp-box__title-text">Activity</span></h2>
+            <div id="dnn_ctr501_ContentPane" class="dzp-box__body">
+              <div class="bond-alert bond-alert--success" role="status"><span class="bond-alert__title">Synced</span> 12 new members this week.</div>
+              <p>Body copy inside the dashboard content pane.</p>
+              <p><button type="button" class="bond-button">Invite member</button> <button type="button" class="bond-button bond-button--secondary">Export</button></p>
+            </div>
+          </section>
+        </div>
+      </div>
+      <aside id="dnn_AsidePane" class="dzp-dashboard__aside">
+        <div class="bond-card"><h2 class="bond-card__title">Tips</h2><div class="bond-card__body">Cards come from the shared component library.</div></div>
+      </aside>
+    </div>
+  </div>
+</div>

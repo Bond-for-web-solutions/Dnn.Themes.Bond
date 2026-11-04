@@ -1,137 +1,147 @@
-/* Font (MuseoSans) is loaded by partials/_includes.ascx via fonts.css. */
-
-html, body { margin: 0; padding: 0; }
-body { background: #f4ede4 !important; }
+/* ==========================================================================
+   splash.ascx layout bundle (-> Skins/DNN.Themes.Bond/splash.css).
+   DNN auto-loads <layout>.css next to the layout at priority 20, ONLY on
+   pages using splash.ascx - so nothing here can affect other layouts.
+   Bond 1.0 needed "body { background: … !important }" because its CSS loaded
+   before DNN's default.css; skin.css now sets the body colour correctly.
+   ========================================================================== */
+@import "@bond/tokens/media.css";
 
 .bond-splash {
-    width: 100%;
-    min-height: 100vh;
-    min-height: 100dvh;   /* dynamische viewport-hoogte: geen sprong door mobiele adresbalk */
-    /* Subtiel verloop voor diepte i.p.v. egale vlakke kleur */
-    background: radial-gradient(120% 90% at 50% 0%, #faf5ee 0%, #f4ede4 46%, #efe6d9 100%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    font-family: 'MuseoSans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-    color: #2b2b2b;
-    padding: clamp(20px, 6vw, 40px);
-    box-sizing: border-box;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh; /* dynamic viewport height: no jump from the mobile address bar */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(20px, 6vw, 40px);
+  font-family: var(--bond-font-sans);
+  text-align: center;
+  color: var(--bond-color-text);
+  /* Subtle gradient for depth instead of a flat colour */
+  background: radial-gradient(120% 90% at 50% 0%, var(--bond-cream-50) 0%, var(--bond-cream-100) 46%, var(--bond-cream-200) 100%);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .bond-splash__inner {
-    max-width: 600px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: clamp(22px, 5vw, 32px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(22px, 5vw, 32px);
+  width: 100%;
+  max-width: 600px;
 }
 
-/* ===== Logo (CSS background so the skin needs no <%= SkinPath %> code block) ===== */
+/* Logo as CSS background so the skin needs no SkinPath code block. */
 .bond-logo {
-    display: block;
-    width: 100%;
-    max-width: clamp(200px, 62vw, 360px);
-    aspect-ratio: 515 / 116;            /* intrinsic size of the logo PNG */
-    background: url('../img/bond-for-web-solutions-logo.png') center / contain no-repeat;
+  display: block;
+  width: 100%;
+  max-width: clamp(200px, 62vw, 360px);
+  aspect-ratio: 515 / 116; /* intrinsic size of the logo PNG */
+  background: url("../../assets/img/bond-for-web-solutions-logo.png") center / contain no-repeat;
+  animation: bond-logo-in 0.8s cubic-bezier(0.22, 0.7, 0.25, 1) 0.05s both;
 }
 
-/* ===== Tekst ===== */
 .bond-splash__title {
-    font-size: clamp(22px, 5.2vw, 30px);
-    font-weight: 700;
-    line-height: 1.25;
-    letter-spacing: -0.01em;
-    color: #2b2b2b;
+  font-size: clamp(22px, 5.2vw, 30px);
+  font-weight: var(--bond-font-weight-bold);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--bond-color-text);
+  animation: bond-fade-up 0.7s cubic-bezier(0.22, 0.7, 0.25, 1) 0.2s both;
 }
 
 .bond-splash__text {
-    font-size: clamp(15px, 3.6vw, 17px);
-    font-weight: 400;
-    line-height: 1.7;
-    max-width: 460px;
-    color: #5a5a5a;
+  max-width: 460px;
+  font-size: clamp(15px, 3.6vw, 17px);
+  font-weight: var(--bond-font-weight-regular);
+  line-height: 1.7;
+  color: var(--bond-grey-600);
+  animation: bond-fade-up 0.7s cubic-bezier(0.22, 0.7, 0.25, 1) 0.33s both;
 }
 
-/* ===== Divider als 'in uitvoering' voortgangsbalk ===== */
+/* ContentPane: invisible while empty (no extra flex gap); modules placed here
+   get a left-aligned column (values from Bond 1.0's splash.css). */
+.bond-splash__contentpane:empty { display: none; }
+
+.bond-splash__contentpane {
+  width: 100%;
+  max-width: 440px;
+  text-align: left;
+}
+
+/* Divider as an "in progress" bar */
 .bond-splash__rule {
-    position: relative;
-    width: 200px;
-    max-width: 70%;
-    height: 3px;
-    border: 0;
-    border-radius: 999px;
-    background: rgba(43, 43, 43, 0.10);
-    overflow: hidden;
+  position: relative;
+  width: 200px;
+  max-width: 70%;
+  height: 3px;
+  overflow: hidden;
+  background: rgba(var(--bond-ink-rgb), 0.1);
+  border: 0;
+  border-radius: var(--bond-radius-full);
+  animation: bond-fade-up 0.7s cubic-bezier(0.22, 0.7, 0.25, 1) 0.46s both;
 }
+
 .bond-splash__rule::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: 38%;
-    border-radius: inherit;
-    background: linear-gradient(90deg, transparent, #5abcd2 50%, transparent);
-    animation: bondProgress 2s ease-in-out infinite;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 38%;
+  content: "";
+  background: linear-gradient(90deg, transparent, var(--bond-color-accent) 50%, transparent);
+  border-radius: inherit;
+  animation: bond-progress 2s ease-in-out infinite;
 }
 
-/* ===== Footer ===== */
 .bond-splash__footer {
-    font-size: 12px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: #8a8175;
-}
-.bond-splash__footer a {
-    color: #8a8175;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-    transition: color 0.2s ease;
-}
-.bond-splash__footer a:hover { color: #2b2b2b; }
-
-/* ContentPane: leeg op de splash pagina (toont niets). */
-.bond-splash__contentpane:not(:empty) {
-    width: 100%;
-    max-width: 440px;
-    text-align: left;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--bond-color-text-subtle);
+  animation: bond-fade-up 0.7s cubic-bezier(0.22, 0.7, 0.25, 1) 0.6s both;
 }
 
-/* ==========================================================================
-   Animaties
-   ========================================================================== */
-@keyframes bondFadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes bondLogoIn {
-    from { opacity: 0; transform: translateY(12px) scale(0.97); }
-    to   { opacity: 1; transform: translateY(0) scale(1); }
-}
-@keyframes bondProgress {
-    0%   { transform: translateX(-130%); }
-    100% { transform: translateX(420%); }
+.bond-splash__link:is(:link, :visited) {
+  color: var(--bond-color-text-subtle);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color var(--bond-duration-base) ease;
 }
 
-/* Gespreide entree-animatie (staggered fade-up) */
-.bond-logo            { animation: bondLogoIn 0.8s cubic-bezier(0.22, 0.7, 0.25, 1) 0.05s both; }
-.bond-splash__title   { animation: bondFadeUp 0.7s cubic-bezier(0.22, 0.7, 0.25, 1) 0.20s both; }
-.bond-splash__text    { animation: bondFadeUp 0.7s cubic-bezier(0.22, 0.7, 0.25, 1) 0.33s both; }
-.bond-splash__rule    { animation: bondFadeUp 0.7s cubic-bezier(0.22, 0.7, 0.25, 1) 0.46s both; }
-.bond-splash__footer  { animation: bondFadeUp 0.7s cubic-bezier(0.22, 0.7, 0.25, 1) 0.60s both; }
+.bond-splash__link:hover { color: var(--bond-color-text); }
 
-/* Respecteer 'reduce motion': geen beweging, statische divider */
-@media (prefers-reduced-motion: reduce) {
-    .bond-logo,
-    .bond-splash__title,
-    .bond-splash__text,
-    .bond-splash__rule,
-    .bond-splash__footer { animation: none; }
-    .bond-splash__rule { width: 48px; background: #c3d1d8; }
-    .bond-splash__rule::after { display: none; }
+/* Animations (staggered entrance; each rule above references one) */
+@keyframes bond-fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bond-logo-in {
+  from { opacity: 0; transform: translateY(12px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes bond-progress {
+  0% { transform: translateX(-130%); }
+  100% { transform: translateX(420%); }
+}
+
+/* Respect reduced motion: no movement, static divider */
+@media (--bond-reduced-motion) {
+  .bond-logo,
+  .bond-splash__title,
+  .bond-splash__text,
+  .bond-splash__rule,
+  .bond-splash__footer { animation: none; }
+
+  .bond-splash__rule {
+    width: 48px;
+    background: var(--bond-mist-300);
+  }
+
+  .bond-splash__rule::after { display: none; }
 }

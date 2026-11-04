@@ -1,0 +1,55 @@
+/* Bond brand tokens. Values are exactly those of Bond 1.0 (skin.css,
+   login.css, splash.css) - moved here so components can be themed without
+   editing shared source. */
+:root {
+  /* ---- Bond palette (warm cream + cyan accent) ---- */
+  --bond-cream-50: #faf5ee;
+  --bond-cream-100: #f4ede4;
+  --bond-cream-200: #efe6d9;
+  --bond-cream-300: #e6ddd0;
+  --bond-sand-400: #c3b8a5;
+  --bond-sand-500: #b3a994;
+  --bond-ink-500: #8a8175;
+  --bond-ink-600: #6b6256;
+  --bond-ink-900: #2b2b2b;
+  --bond-grey-600: #5a5a5a;
+  --bond-cyan-500: #5abcd2;
+  --bond-cyan-700: #0e7490;
+  --bond-mist-300: #c3d1d8;
+  --bond-ink-rgb: 43, 43, 43;
+  --bond-cyan-rgb: 90, 188, 210;
+
+  /* ---- Shared semantic tokens -> Bond ---- */
+  --bond-font-sans: "MuseoSans", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  --bond-font-heading: var(--bond-font-sans);
+  --bond-color-bg: var(--bond-cream-100);
+  --bond-color-surface: var(--bond-cream-50);
+  --bond-color-surface-raised: #ffffff;
+  --bond-color-surface-sunken: var(--bond-cream-200);
+  --bond-color-text: var(--bond-ink-900);
+  --bond-color-text-muted: var(--bond-ink-600);
+  --bond-color-text-subtle: var(--bond-ink-500);
+  --bond-color-text-disabled: var(--bond-sand-500);
+  --bond-color-border: var(--bond-cream-300);
+  --bond-color-accent: var(--bond-cyan-500);
+  --bond-color-accent-strong: var(--bond-cyan-700);
+  --bond-color-on-accent: #ffffff;
+  --bond-color-focus: var(--bond-cyan-700);
+  --bond-color-focus-ring: rgba(var(--bond-cyan-rgb), 0.2);
+
+  /* ---- Component tuning (Bond 1.0 login card values) ---- */
+  --bond-button-padding-y: 0.8125rem;
+  --bond-button-padding-x: 1rem;
+  --bond-button-font-size: 0.9375rem;
+  --bond-button-letter-spacing: 0.02em;
+  --bond-button-line-height: normal;
+  --bond-button-radius: 0.625rem;
+  --bond-field-label-size: 0.8125rem;
+  --bond-field-label-letter-spacing: 0.02em;
+  --bond-field-padding-y: 0.75rem;
+  --bond-field-padding-x: 0.875rem;
+  --bond-field-font-size: 0.9375rem;
+  --bond-field-radius: 0.625rem;
+  --bond-card-radius: 1rem;
+  --bond-card-shadow: 0 12px 32px -12px rgba(var(--bond-ink-rgb), 0.18);
+}

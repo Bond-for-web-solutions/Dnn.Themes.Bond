@@ -1,0 +1,59 @@
+{
+  "$schema": "../../packages/build/schema/theme.schema.json",
+  "id": "dzp",
+  "prefix": "dzp",
+  "dnn": {
+    "packageName": "DNN.Themes.DZP",
+    "friendlyName": "DNN.Themes.DZP",
+    "description": "Scaffold of a dashboard-style theme demonstrating multiple layouts on the shared design system. NOT the production Dnn.Skin.DZP package.",
+    "skinName": "DNN.Themes.DZP",
+    "containerPackageName": "DNN.Themes.DZP Containers",
+    "containerFriendlyName": "DNN.Themes.DZP Containers",
+    "containerDescription": "Containers for the DNN.Themes.DZP theme.",
+    "containerName": "DNN.Themes.DZP",
+    "coreVersion": "10.00.00",
+    "owner": {
+      "name": "Bond for web solutions",
+      "organization": "Bond for web solutions",
+      "url": "https://www.bondforwebsolutions.nl/",
+      "email": "TODO-set-before-release@invalid"
+    },
+    "license": "package/License.txt",
+    "releaseNotes": "package/ReleaseNotes.txt"
+  },
+  "styles": {
+    "skin.css": "styles/skin.css",
+    "dashboard.css": "styles/layouts/dashboard.css"
+  },
+  "containerStyles": {
+    "container.css": "styles/container.css"
+  },
+  "scripts": {
+    "resources/js/theme.js": "scripts/theme.js",
+    "resources/js/dashboard.js": "scripts/layouts/dashboard.js"
+  },
+  "globalSelectors": [
+    "*",
+    "::after",
+    "::before",
+    ":root",
+    "body"
+  ],
+  "csp": {
+    "inlineScripts": "error"
+  },
+  "budgets": {
+    "skin.css": {
+      "brotli": 4000
+    },
+    "resources/js/theme.js": {
+      "brotli": 2000
+    },
+    "dashboard.css": {
+      "brotli": 1500
+    },
+    "resources/js/dashboard.js": {
+      "brotli": 800
+    }
+  }
+}

@@ -1,0 +1,75 @@
+/* bond-button - works on <a>, <button> and <input type="submit">.
+   Contract: ./contract.json. Customise via --bond-button-* tokens.
+   Specificity is (0,1,1): `:is(a, button, input)` adds one type selector so
+   the component ties with sloppy module CSS such as `.SomeModule button`, and
+   ties go to the theme because DNN loads skin.css (15) after module CSS (10).
+   Variants only change custom properties, so they never add specificity. */
+.bond-button:is(a, button, input) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--bond-space-2);
+  padding: var(--bond-button-padding-y, var(--bond-space-3)) var(--bond-button-padding-x, var(--bond-space-4));
+  font-family: inherit;
+  font-size: var(--bond-button-font-size, var(--bond-font-size-md));
+  font-weight: var(--bond-button-font-weight, var(--bond-font-weight-semibold));
+  line-height: var(--bond-button-line-height, var(--bond-line-height-tight));
+  letter-spacing: var(--bond-button-letter-spacing, normal);
+  color: var(--bond-button-color, var(--bond-color-on-accent));
+  text-decoration: none;
+  background: var(--bond-button-bg, var(--bond-color-accent));
+  border: var(--bond-button-border-width, 0) solid var(--bond-button-border-color, currentColor);
+  border-radius: var(--bond-button-radius, var(--bond-radius-md));
+  cursor: pointer;
+  transition: background-color var(--bond-duration-fast), color var(--bond-duration-fast), transform var(--bond-duration-instant);
+}
+
+/* DNN's default.css styles a:visited at (0,1,1); keep links that look like buttons intact. */
+.bond-button:is(:link, :visited) {
+  color: var(--bond-button-color, var(--bond-color-on-accent));
+  text-decoration: none;
+}
+
+.bond-button:is(a, button, input):hover {
+  color: var(--bond-button-color-hover, var(--bond-button-color, var(--bond-color-on-accent)));
+  background: var(--bond-button-bg-hover, var(--bond-color-accent-strong));
+}
+
+.bond-button:is(a, button, input):active { transform: translateY(1px); }
+
+.bond-button:focus-visible {
+  outline: 2px solid var(--bond-color-focus);
+  outline-offset: 2px;
+}
+
+.bond-button:disabled,
+.bond-button[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.bond-button--block { width: 100%; }
+
+.bond-button--secondary {
+  --bond-button-bg: var(--bond-color-surface);
+  --bond-button-bg-hover: var(--bond-color-surface-sunken);
+  --bond-button-color: var(--bond-color-text);
+  --bond-button-border-width: var(--bond-border-width);
+  --bond-button-border-color: var(--bond-color-border);
+}
+
+.bond-button--ghost {
+  --bond-button-bg: transparent;
+  --bond-button-bg-hover: var(--bond-color-surface-sunken);
+  --bond-button-color: var(--bond-color-accent-strong);
+}
+
+.bond-button--sm {
+  --bond-button-padding-y: var(--bond-space-1-5);
+  --bond-button-padding-x: var(--bond-space-3);
+  --bond-button-font-size: var(--bond-font-size-sm);
+}
+
+@media (--bond-reduced-motion) {
+  .bond-button:is(a, button, input) { transition: none; }
+}

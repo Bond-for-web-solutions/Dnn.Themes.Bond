@@ -1,0 +1,27 @@
+/* Bond page base. These are the theme's only element-level rules; each is
+   allowlisted in theme.json "globalSelectors". They load after DNN's
+   default.css (equal specificity, later wins), which Bond 1.0 did not do - its
+   body font and background were silently overridden by default.css. */
+
+/* stylelint-disable bond/selector-namespace -- page-level base for Bond layouts; allowlisted in theme.json */
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--bond-font-sans);
+  color: var(--bond-color-text);
+  background: var(--bond-color-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* DNN wraps the skin in a <form>; make it a full-height flex column so the
+   main area grows and the footer sits at the bottom of short pages. */
+body > form {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+img { max-width: 100%; }
+/* stylelint-enable bond/selector-namespace */

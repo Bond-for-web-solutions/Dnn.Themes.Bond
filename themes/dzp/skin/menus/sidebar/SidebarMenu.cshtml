@@ -1,0 +1,31 @@
+@using DotNetNuke.Web.DDRMenu;
+@inherits DotNetNuke.Web.Razor.DotNetNukeWebPage<dynamic>
+
+@helper RenderNodes(dynamic nodes, int level) {
+    <ul class="dzp-sidenav__list dzp-sidenav__list--level-@level">
+        @foreach (var node in nodes)
+        {
+            string target = (string)node.Target;
+            string targetAttr = string.IsNullOrEmpty(target) ? null : target;
+            string relAttr = target == "_blank" ? "noopener" : null;
+            <li class="dzp-sidenav__item">
+                @if (node.Enabled)
+                {
+                    <a href="@node.Url" target="@targetAttr" rel="@relAttr" class="dzp-sidenav__link @(node.Selected ? "is-selected" : "")" aria-current="@(node.Selected ? "page" : null)">@node.Text</a>
+                }
+                else
+                {
+                    <span class="dzp-sidenav__link dzp-sidenav__link--disabled">@node.Text</span>
+                }
+                @if (node.HasChildren())
+                {
+                    @RenderNodes(node.Children, level + 1)
+                }
+            </li>
+        }
+    </ul>
+}
+
+<nav class="dzp-sidenav" aria-label="Sections">
+    @RenderNodes(Model.Source.root.Children, 1)
+</nav>

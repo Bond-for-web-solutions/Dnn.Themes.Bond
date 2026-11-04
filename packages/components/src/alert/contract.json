@@ -1,0 +1,15 @@
+{
+  "component": "alert",
+  "contractVersion": 1,
+  "block": "bond-alert",
+  "elements": ["title"],
+  "modifiers": ["success", "warning", "danger"],
+  "tokens": ["--bond-alert-padding", "--bond-alert-radius"],
+  "accessibility": "Use role=\"status\" for passive messages and role=\"alert\" only for urgent errors. Colour is never the only signal: include a title.",
+  "examples": [
+    "<div class=\"bond-alert\" role=\"status\"><span class=\"bond-alert__title\">Info</span> Your changes were saved as a draft.</div>",
+    "<div class=\"bond-alert bond-alert--success\" role=\"status\"><span class=\"bond-alert__title\">Success</span> Profile updated.</div>",
+    "<div class=\"bond-alert bond-alert--warning\" role=\"status\"><span class=\"bond-alert__title\">Warning</span> Your session expires soon.</div>",
+    "<div class=\"bond-alert bond-alert--danger\" role=\"alert\"><span class=\"bond-alert__title\">Error</span> The file could not be uploaded.</div>"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "name": "@bond/foundation",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Opt-in base rules, layout primitives and utilities. Deliberately tiny: DNN modules must keep their own look.",
+  "type": "module",
+  "exports": {
+    "./base.css": "./src/base.css",
+    "./layout.css": "./src/layout.css",
+    "./utilities.css": "./src/utilities.css"
+  },
+  "bond": {
+    "layer": 2
+  },
+  "dependencies": {
+    "@bond/tokens": "workspace:*"
+  }
+}

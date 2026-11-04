@@ -1,0 +1,18 @@
+{
+  "component": "auth-card",
+  "contractVersion": 1,
+  "block": "bond-auth",
+  "elements": ["card", "header", "title", "subtitle", "row", "remember", "checkbox", "link", "footer"],
+  "modifiers": [],
+  "elementModifiers": ["native--hidden"],
+  "uses": ["card", "field", "button"],
+  "tokens": ["--bond-auth-outer-padding", "--bond-auth-max-width", "--bond-auth-gap", "--bond-auth-padding", "--bond-auth-padding-sm", "--bond-auth-title-size", "--bond-auth-link-color", "--bond-auth-link-color-hover"],
+  "javascript": {
+    "module": "@bond/components/auth-card.js",
+    "init": "initAuthCard({ loginTitle, loginSubtitle, resetTitle, resetSubtitle })",
+    "dnnDependencies": [".dnnLoginService input[id$=_txtUsername]", "input[id$=_txtPassword]", "a[id$=_cmdLogin]", ".dnnSendPassword a[id$=_cmdSendPassword]"],
+    "failMode": "The native form is left untouched when DNN's markup differs, the login button is missing, or the form has controls the card does not mirror (captcha, verification code)."
+  },
+  "accessibility": "Real <label for> on every input; autocomplete hints (username/current-password/email); Enter submits; the native form stays in the DOM for DNN's validators.",
+  "examples": []
+}

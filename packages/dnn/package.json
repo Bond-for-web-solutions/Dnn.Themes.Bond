@@ -1,0 +1,14 @@
+{
+  "name": "@bond/dnn",
+  "version": "1.0.0",
+  "private": true,
+  "description": "DNN integration: shared skin files (control registrations, doctype) and runtime helpers for DNN's WebForms lifecycle.",
+  "type": "module",
+  "exports": {
+    "./ready.js": "./src/ready.js"
+  },
+  "bond": {
+    "layer": 1,
+    "skinOverlay": "skin"
+  }
+}

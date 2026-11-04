@@ -1,0 +1,26 @@
+/* bond-alert - inline status message. Contract: ./contract.json */
+.bond-alert {
+  --_bond-alert-fg: var(--bond-color-info);
+  --_bond-alert-bg: var(--bond-color-info-bg);
+
+  display: flex;
+  gap: var(--bond-space-3);
+  padding: var(--bond-alert-padding, var(--bond-space-3) var(--bond-space-4));
+  color: var(--bond-color-text);
+  background: var(--_bond-alert-bg);
+  border-left: 4px solid var(--_bond-alert-fg);
+  border-radius: var(--bond-alert-radius, var(--bond-radius-md));
+}
+
+.bond-alert__title {
+  font-weight: var(--bond-font-weight-semibold);
+  color: var(--_bond-alert-fg);
+}
+
+.bond-alert--success { --_bond-alert-fg: var(--bond-color-success); --_bond-alert-bg: var(--bond-color-success-bg); }
+.bond-alert--warning { --_bond-alert-fg: var(--bond-color-warning); --_bond-alert-bg: var(--bond-color-warning-bg); }
+.bond-alert--danger { --_bond-alert-fg: var(--bond-color-danger); --_bond-alert-bg: var(--bond-color-danger-bg); }
+
+@media (--bond-forced-colors) {
+  .bond-alert { border: 1px solid CanvasText; }
+}

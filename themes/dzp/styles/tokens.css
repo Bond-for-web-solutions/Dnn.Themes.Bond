@@ -1,0 +1,23 @@
+/* DZP brand tokens (scaffold theme - see themes/dzp/README.md). */
+:root {
+  --dzp-navy-900: #0f1b2d;
+  --dzp-navy-800: #17263d;
+  --dzp-navy-700: #22385a;
+  --dzp-teal-500: #14a3a3;
+  --dzp-teal-700: #0b7676;
+  --dzp-slate-50: #f5f7fa;
+
+  --bond-font-sans: "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+  --bond-color-bg: var(--dzp-slate-50);
+  --bond-color-surface: #ffffff;
+  --bond-color-surface-sunken: #eef1f5;
+  --bond-color-text: #1b2533;
+  --bond-color-border: #d8dee8;
+  --bond-color-accent: var(--dzp-teal-700);
+  --bond-color-accent-strong: #075757;
+  --bond-color-focus: var(--dzp-teal-700);
+  --bond-color-focus-ring: rgba(20, 163, 163, 0.25);
+  --bond-radius-md: 0.375rem;
+  --bond-button-radius: 999px;
+  --bond-card-radius: 0.75rem;
+}

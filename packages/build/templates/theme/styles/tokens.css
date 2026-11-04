@@ -1,0 +1,10 @@
+/* Brand tokens: override shared defaults from @bond/tokens here. Keep brand
+   values in this file only; components read tokens, never hex values. */
+:root {
+  --__PREFIX__-brand: #0b6bcb;
+  --__PREFIX__-brand-strong: #08529c;
+
+  --bond-color-accent: var(--__PREFIX__-brand);
+  --bond-color-accent-strong: var(--__PREFIX__-brand-strong);
+  --bond-color-focus: var(--__PREFIX__-brand-strong);
+}

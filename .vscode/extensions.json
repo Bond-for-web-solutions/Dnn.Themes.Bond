@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "augustocdias.tasks-shell-input",
+    "stylelint.vscode-stylelint",
+    "dbaeumer.vscode-eslint",
+    "editorconfig.editorconfig",
+    "ms-playwright.playwright"
+  ]
+}

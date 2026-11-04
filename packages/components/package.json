@@ -1,0 +1,22 @@
+{
+  "name": "@bond/components",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Themeable, documented UI components (CSS + optional progressive-enhancement JS). Each component has a contract.json.",
+  "type": "module",
+  "exports": {
+    "./button.css": "./src/button/button.css",
+    "./field.css": "./src/field/field.css",
+    "./card.css": "./src/card/card.css",
+    "./alert.css": "./src/alert/alert.css",
+    "./auth-card.css": "./src/auth-card/auth-card.css",
+    "./auth-card.js": "./src/auth-card/auth-card.js"
+  },
+  "bond": {
+    "layer": 3
+  },
+  "dependencies": {
+    "@bond/dnn": "workspace:*",
+    "@bond/tokens": "workspace:*"
+  }
+}

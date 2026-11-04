@@ -1,0 +1,20 @@
+/* Container styles (-> Containers/<name>/container.css, auto-loaded by DNN
+   wherever one of these containers is used - possibly under ANOTHER theme's
+   skin). Therefore: no :root tokens here (the build rejects them, BOND353),
+   and every token read has a fallback. */
+.dzp-box {
+  margin-bottom: var(--bond-space-6, 1.5rem);
+  padding: var(--bond-space-6, 1.5rem);
+  background: var(--bond-color-surface, #fff);
+  border: 1px solid var(--bond-color-border, #d9dce1);
+  border-radius: var(--bond-radius-lg, 0.625rem);
+}
+
+.dzp-box__title {
+  margin: 0 0 var(--bond-space-4, 1rem);
+  font-family: var(--bond-font-heading, inherit);
+  font-size: var(--bond-font-size-lg, 1.125rem);
+  font-weight: var(--bond-font-weight-semibold, 600);
+  line-height: var(--bond-line-height-tight, 1.25);
+  color: var(--bond-color-text, #1f2328);
+}

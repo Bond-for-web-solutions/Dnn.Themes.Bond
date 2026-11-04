@@ -1,11 +1,10 @@
 <dnn:META ID="mobileScale" runat="server" Name="viewport" Content="width=device-width, initial-scale=1.0" />
 
-<!-- Self-hosted MuseoSans web fonts (loaded before skin.css) -->
-<dnn:DnnCssInclude runat="server" FilePath="resources/css/fonts.css" Priority="1" PathNameAlias="SkinPath" />
+<!-- Stylesheets are NOT included here: DNN registers skin.css (theme bundle:
+     fonts, tokens, shared components, Bond styles) on every layout and
+     <layout>.css (e.g. splash.css) on its own layout automatically, at the
+     correct priority after DNN's default.css. -->
 
-<!-- Native skin stylesheet -->
-<dnn:DnnCssInclude runat="server" FilePath="resources/css/skin.css" Priority="2" PathNameAlias="SkinPath" />
-
-<!-- Auth restyle (hides native login + reset-password forms, JS builds a flex card) -->
-<dnn:DnnCssInclude runat="server" FilePath="resources/css/login.css" Priority="3" PathNameAlias="SkinPath" />
-<dnn:DnnJsInclude runat="server" FilePath="resources/js/login.js" PathNameAlias="SkinPath" />
+<!-- Theme behaviour (header menu toggle, login/reset card). Loaded at the end
+     of the form so it never blocks rendering. -->
+<dnn:DnnJsInclude runat="server" FilePath="resources/js/theme.js" PathNameAlias="SkinPath" ForceProvider="DnnFormBottomProvider" />

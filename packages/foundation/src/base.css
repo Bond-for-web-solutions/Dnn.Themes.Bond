@@ -1,0 +1,8 @@
+/* @bond/foundation/base.css - the ONLY element-level rules shared packages ship.
+   It is opt-in: a theme imports it explicitly and must allowlist the selectors
+   in theme.json "globalSelectors". No margin/padding/list/heading resets -
+   DNN's default.css already resets, and anything more would restyle third-party
+   modules. See docs/css-architecture.md#global-rules. */
+
+/* stylelint-disable-next-line bond/selector-namespace -- border-box sizing is the one global default themes opt into */
+*, *::before, *::after { box-sizing: border-box; }

@@ -1,0 +1,9 @@
+{
+  "css.validate": false,
+  "stylelint.validate": ["css"],
+  "files.eol": "\n",
+  "json.schemas": [
+    { "fileMatch": ["themes/*/theme.json"], "url": "./packages/build/schema/theme.schema.json" }
+  ],
+  "search.exclude": { "publish/**": true, "**/node_modules": true }
+}

@@ -1,0 +1,19 @@
+<!-- layout: default -->
+<!-- A DNN core admin-style form (dnnForm markup from default.css' own vocabulary).
+     Used by the isolation test: theme CSS must not change its box model. -->
+<div class="DnnModule DnnModule-Admin DnnModule-90"><div class="DNNModuleContent">
+  <div class="dnnForm dnnClear" id="dnn-admin-form">
+    <fieldset>
+      <div class="dnnFormItem"><div class="dnnLabel"><label for="adm-name">Display name</label></div><input type="text" id="adm-name" value="Jane"></div>
+      <div class="dnnFormItem"><div class="dnnLabel"><label for="adm-mail">Email</label></div><input type="email" id="adm-mail" value="jane@example.org"></div>
+      <div class="dnnFormItem"><div class="dnnLabel"><label for="adm-bio">Bio</label></div><textarea id="adm-bio">Hello</textarea></div>
+      <div class="dnnFormItem"><div class="dnnLabel"><label for="adm-role">Role</label></div><select id="adm-role"><option>Editor</option></select></div>
+      <div class="dnnFormItem"><input type="checkbox" id="adm-ok"><span>Agree</span></div>
+    </fieldset>
+    <ul class="dnnActions dnnClear"><li><a class="dnnPrimaryAction" href="#save">Save</a></li><li><a class="dnnSecondaryAction" href="#cancel">Cancel</a></li></ul>
+    <table class="dnnGrid"><tr class="dnnGridHeader"><td>Name</td><td>Role</td></tr><tr class="dnnGridItem"><td>Jane</td><td>Editor</td></tr></table>
+    <h2 class="dnnFormSectionHead"><a href="#section">Advanced settings</a></h2>
+    <p>Plain paragraph inside a core module.</p>
+    <ul class="dnn-admin-list"><li>List item</li></ul>
+  </div>
+</div></div>
