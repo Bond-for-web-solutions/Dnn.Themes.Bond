@@ -13,7 +13,7 @@ pnpm build <theme> | build:all             # production -> publish/<theme>/{them
 node packages/build/bin/bond.mjs build <id> --mode development   # readable + maps, no ZIP
 pnpm dev <theme>                           # watch
 pnpm check && pnpm lint && pnpm test       # architecture, Stylelint/ESLint, 75 integration tests
-pnpm test:visual                           # Playwright: screenshots, CSS isolation, behaviour, Bond 1.0 parity
+pnpm test:visual                           # Playwright in Chrome, Edge, Firefox: screenshots, CSS isolation, behaviour, Bond 1.0 parity
 pnpm bond affected --base origin/main       # which themes a change touches
 ```
 

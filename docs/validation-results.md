@@ -14,7 +14,7 @@ stable), plus Linux in Docker (`node:24-bookworm`,
 | `pnpm build:all` | pass: Bond ~6 s (Windows Defender lock on the fresh ZIP; < 2 s on Linux), DZP 0.2–0.5 s |
 | `pnpm validate` | pass (both themes) |
 | `pnpm test`, integration | **75 / 75 pass** on Windows and on Linux (`node:24-bookworm`) |
-| `pnpm test:visual`, Playwright | **47 / 47 pass** on Windows (system Chrome) and on Linux (Playwright image); baselines stable on re-run |
+| `pnpm test:visual`, Playwright | **144 / 144 pass** (48 tests × Chrome, Edge, Firefox) on Windows (system Chrome) and on Linux (Playwright image); baselines stable on re-run |
 | `pnpm audit --audit-level high` | pass; 1 **moderate**: `minimatch <11.0.1` (GHSA-g3hv-75wg-m249) via ESLint, dev-only, inputs are our own config globs, accepted |
 | Cross-OS determinism | Bond `fa1b3e9c…bc9f3fb`, DZP `16295efe…560b035`: byte-identical on Windows and Linux |
 
@@ -67,7 +67,7 @@ A separate reviewer (read-only, not anchored on the implementation) reported 11 
 - **VS Code UI:** tasks were validated by executing their exact command lines
   and by unit-testing the problem matcher regex, not by clicking them in VS Code.
 - **Lab performance metrics** (FCP/LCP/CLS/INP): not measured, as that needs a running DNN site.
-- **Real browsers other than Chromium/Chrome.**
+- **Safari / WebKit** (Chrome, Edge and Firefox are covered by the Playwright suite).
 
 ## Remaining risks
 

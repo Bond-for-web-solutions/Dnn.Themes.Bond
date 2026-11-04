@@ -5,7 +5,7 @@
 | Architecture | `pnpm check` | yes | boundaries, layers, cycles, identities |
 | Lint | `pnpm lint` | yes | CSS namespace/specificity rules, JS security rules |
 | Integration (75 tests) | `pnpm test` | yes (Linux + Windows) | publish contract, ZIP/manifest, shared code included, isolation between themes, determinism, scoped clean, 23 failure modes, deploy guards, contracts, lint rules fire, VS Code tasks |
-| Visual + browser (47 tests) | `pnpm test:visual` | yes (Linux) | page + component screenshots per theme, CSS guarantees G1–G5, JS behaviour, Bond 1.0 parity |
+| Visual + browser (48 tests × 3 browsers) | `pnpm test:visual` | yes (Linux) | page + component screenshots per theme, CSS guarantees G1–G5, JS behaviour, Bond 1.0 parity, in **Chrome/Chromium, Edge and Firefox** |
 | End-to-end on real DNN | `pnpm test:e2e` | no (opt-in) | layouts per page, resource loading, login card, admin |
 
 Integration tests write only to `bond-test-*` folders in the OS temp dir
@@ -42,6 +42,14 @@ because Bond sets `--bond-button-letter-spacing`.
 Screenshots use an absolute budget (`maxDiffPixels: 20`). A ratio hid a
 two-link colour change on a full page during development.
 
+## Browsers
+
+Every spec runs in three Playwright projects: Chrome (locally the installed Chrome; in CI
+Playwright's Chromium), **Edge** (the installed Microsoft Edge, `channel: msedge`) and
+**Firefox** (Playwright's Firefox build; install once with `pnpm exec playwright install firefox`).
+Each browser has its own baselines (`__screenshots__/<platform>/<browser>/`) because font
+rendering differs. Run one browser with `pnpm test:visual --project firefox`.
+
 ## Updating baselines
 
 Only after reviewing the diff in the Playwright report:
@@ -50,7 +58,7 @@ Only after reviewing the diff in the Playwright report:
 pnpm test:visual:update                 # Windows baselines (system Chrome)
 # Linux baselines, identical to CI:
 docker run --rm -v "$PWD:/src:ro" -v "$PWD/tests/visual/__screenshots__:/out" \
-  mcr.microsoft.com/playwright:v1.64.1-noble bash -c 'cp -r /src /work && cd /work && rm -rf node_modules */*/node_modules && npm i -g pnpm@12.14.0 && pnpm install --frozen-lockfile && CI=1 pnpm exec playwright test --config tests/playwright.config.mjs --update-snapshots && cp -r tests/visual/__screenshots__/linux /out/'
+  mcr.microsoft.com/playwright:v1.64.1-noble bash -c 'cp -r /src /work && cd /work && rm -rf node_modules */*/node_modules && npm i -g pnpm@12.14.0 && pnpm install --frozen-lockfile && pnpm exec playwright install --with-deps msedge && CI=1 pnpm exec playwright test --config tests/playwright.config.mjs --update-snapshots && cp -r tests/visual/__screenshots__/linux /out/'
 ```
 
 Baselines live in `tests/visual/__screenshots__/<platform>/<project>/` and

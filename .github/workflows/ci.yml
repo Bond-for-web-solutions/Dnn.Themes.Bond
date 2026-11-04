@@ -89,7 +89,8 @@ jobs:
           node-version-file: .node-version
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm exec playwright install --with-deps chromium
+      - name: Browsers (Chromium, Firefox, Edge)
+        run: pnpm exec playwright install --with-deps chromium firefox msedge
       - name: Impact analysis
         if: github.event_name == 'pull_request'
         env:
@@ -97,7 +98,7 @@ jobs:
         run: |
           echo "### Themes affected by this PR" >> "$GITHUB_STEP_SUMMARY"
           node packages/build/bin/bond.mjs affected --base "origin/$BASE_REF" | sed 's/^/- /' >> "$GITHUB_STEP_SUMMARY"
-      - name: Playwright (screenshots, isolation guarantees, behaviour, migration parity)
+      - name: Playwright in Chromium, Edge and Firefox (screenshots, isolation, behaviour, migration parity)
         run: pnpm run test:visual
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: failure()

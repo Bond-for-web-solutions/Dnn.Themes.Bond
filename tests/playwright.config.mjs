@@ -26,8 +26,12 @@ export default defineConfig({
     reducedMotion: 'reduce',
     trace: 'retain-on-failure',
   },
+  // Every spec runs in all three browsers; each gets its own baselines because
+  // font rasterisation differs. Run one with: pnpm test:visual --project firefox
   projects: [
     { name: useSystemChrome ? 'chrome' : 'chromium', use: { ...devices['Desktop Chrome'], ...(useSystemChrome ? { channel: 'chrome' } : {}) } },
+    { name: 'msedge', use: { ...devices['Desktop Edge'], channel: 'msedge' } },
+    { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
   ],
   webServer: {
     command: 'node support/server.mjs',
