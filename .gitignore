@@ -12,6 +12,8 @@ node_modules/
 
 # Test output
 tests/test-results/
+# Visual baselines are per machine (created on the first run), not shared through git
+tests/visual/__screenshots__/
 tests/playwright-report/
 tests/blob-report/
 /test-results/

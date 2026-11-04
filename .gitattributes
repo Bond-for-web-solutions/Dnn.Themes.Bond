@@ -31,5 +31,3 @@
 *.pdf binary
 *.zip binary
 
-# Visual-regression baselines are binary; review them as images, not diffs
-tests/visual/**/*.png binary -diff linguist-generated

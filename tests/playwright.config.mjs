@@ -16,6 +16,9 @@ export default defineConfig({
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? [['list'], ['html', { open: 'never', outputFolder: 'playwright-report' }]] : [['list']],
   // Baselines are per OS + browser build; never compare Windows pixels with Linux pixels.
+  // They are git-ignored and per machine: a missing baseline is created (test passes),
+  // an existing one is compared. Re-record deliberately with --update-snapshots.
+  updateSnapshots: 'missing',
   snapshotPathTemplate: '{testDir}/__screenshots__/{platform}{/projectName}/{testFilePath}/{arg}{ext}',
   expect: {
     // Absolute budget, not a ratio: a ratio on a full page hides small component changes.
