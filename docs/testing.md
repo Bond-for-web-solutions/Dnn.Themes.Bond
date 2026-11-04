@@ -61,8 +61,11 @@ docker run --rm -v "$PWD:/src:ro" -v "$PWD/tests/visual/__screenshots__:/out" \
   mcr.microsoft.com/playwright:v1.64.1-noble bash -c 'cp -r /src /work && cd /work && rm -rf node_modules */*/node_modules && npm i -g pnpm@12.14.0 && pnpm install --frozen-lockfile && pnpm exec playwright install --with-deps msedge && CI=1 pnpm exec playwright test --config tests/playwright.config.mjs --update-snapshots && cp -r tests/visual/__screenshots__/linux /out/'
 ```
 
-Baselines live in `tests/visual/__screenshots__/<platform>/<project>/` and
-are committed. Review them as images.
+Baselines live in `tests/visual/__screenshots__/<platform>/<browser>/` and are **git-ignored**:
+each machine keeps its own. A missing baseline is created on the first run (the test passes);
+after that, every run is compared against it. In CI the folder starts empty, so CI checks
+isolation, behaviour and Bond 1.0 parity but cannot catch pixel changes. Run `pnpm test:visual`
+locally before and after a shared component change to see which themes it alters.
 
 ## Real DNN end-to-end
 
