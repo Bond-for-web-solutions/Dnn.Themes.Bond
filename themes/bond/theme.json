@@ -1,0 +1,53 @@
+{
+  "$schema": "../../packages/build/schema/theme.schema.json",
+  "id": "bond",
+  "prefix": "bond",
+  "dnn": {
+    "packageName": "DNN.Themes.Bond",
+    "friendlyName": "DNN.Themes.Bond",
+    "description": "A modern, responsive DNN 10 skin built with Bond CSS 4.1. Features a clean design with mobile-first responsive layout, sticky navigation, hero sections, and custom containers.",
+    "skinName": "DNN.Themes.Bond",
+    "containerPackageName": "DNN.Themes.Bond Containers",
+    "containerFriendlyName": "DNN.Themes.Bond Containers",
+    "containerDescription": "Containers for the DNN.Themes.Bond skin.",
+    "containerName": "DNN.Themes.Bond",
+    "coreVersion": "10.00.00",
+    "owner": {
+      "name": "DNN.Themes.Bond",
+      "organization": "DNN.Themes.Bond",
+      "url": "https://example.com",
+      "email": "info@example.com"
+    },
+    "license": "package/License.txt",
+    "releaseNotes": "package/ReleaseNotes.txt"
+  },
+  "styles": {
+    "skin.css": "styles/skin.css"
+  },
+  "scripts": {
+    "resources/js/theme.js": "scripts/theme.js"
+  },
+  "globalSelectors": [
+    "*",
+    "::after",
+    "::before",
+    ":root",
+    "body",
+    "body > form",
+    "img"
+  ],
+  "csp": {
+    "inlineScripts": "error"
+  },
+  "budgets": {
+    "skin.css": {
+      "brotli": 4500
+    },
+    "splash.css": {
+      "brotli": 1500
+    },
+    "resources/js/theme.js": {
+      "brotli": 2500
+    }
+  }
+}

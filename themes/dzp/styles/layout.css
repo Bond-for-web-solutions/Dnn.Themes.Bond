@@ -1,0 +1,54 @@
+.dzp-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.dzp-main {
+  flex: 1 0 auto;
+  width: 100%;
+  padding-top: var(--bond-space-8);
+  padding-bottom: var(--bond-space-8);
+}
+
+.dzp-nav {
+  padding-top: var(--bond-space-4);
+  padding-bottom: var(--bond-space-4);
+  border-bottom: 1px solid var(--bond-color-border);
+}
+
+.dzp-nav__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--bond-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dzp-nav__link {
+  display: inline-block;
+  padding: var(--bond-space-2) var(--bond-space-3);
+  border-radius: var(--bond-radius-md);
+}
+
+.dzp-nav__link:is(:link, :visited) {
+  color: var(--bond-color-text);
+  text-decoration: none;
+}
+
+.dzp-nav__link:hover,
+.dzp-nav__link.is-selected {
+  color: var(--bond-color-accent-strong);
+  background: var(--bond-color-surface-sunken);
+}
+
+.dzp-nav__link--disabled { color: var(--bond-color-text-disabled); }
+
+.dzp-footer {
+  padding-top: var(--bond-space-6);
+  padding-bottom: var(--bond-space-6);
+  font-size: var(--bond-font-size-sm);
+  color: var(--bond-color-text-subtle);
+  border-top: 1px solid var(--bond-color-border);
+}

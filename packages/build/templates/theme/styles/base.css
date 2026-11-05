@@ -1,0 +1,8 @@
+/* Page base - element selectors are allowlisted in theme.json "globalSelectors". */
+
+/* stylelint-disable-next-line bond/selector-namespace -- page base for this theme's layouts */
+body {
+  font-family: var(--bond-font-sans);
+  color: var(--bond-color-text);
+  background: var(--bond-color-bg);
+}

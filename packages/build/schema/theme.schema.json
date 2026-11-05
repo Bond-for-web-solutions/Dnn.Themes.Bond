@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dnn-themes.local/theme.schema.json",
+  "title": "DNN theme configuration (themes/<id>/theme.json)",
+  "description": "Validated at build time by @bond/build (workspace.mjs loadTheme). Version comes from the theme's package.json.",
+  "type": "object",
+  "required": ["id", "prefix", "dnn"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,30}$", "description": "Must equal the folder name." },
+    "prefix": { "type": "string", "pattern": "^[a-z][a-z0-9]{1,11}$", "description": "CSS namespace (e.g. bond -> .bond-header). Unique across themes; not bond/dnn." },
+    "dnn": {
+      "type": "object",
+      "required": ["packageName", "friendlyName", "description", "skinName", "coreVersion", "owner", "license", "releaseNotes"],
+      "additionalProperties": false,
+      "properties": {
+        "packageName": { "type": "string", "description": "DNN package identity. Changing it makes DNN treat the theme as a different extension." },
+        "friendlyName": { "type": "string" },
+        "description": { "type": "string" },
+        "skinName": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{1,99}$", "description": "Folder under Portals/_default/Skins/." },
+        "containerPackageName": { "type": "string" },
+        "containerFriendlyName": { "type": "string" },
+        "containerDescription": { "type": "string" },
+        "containerName": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{1,99}$", "description": "Folder under Portals/_default/Containers/." },
+        "coreVersion": { "type": "string", "pattern": "^\\d{2}\\.\\d{2}\\.\\d{2}$" },
+        "owner": {
+          "type": "object",
+          "properties": { "name": { "type": "string" }, "organization": { "type": "string" }, "url": { "type": "string" }, "email": { "type": "string" } }
+        },
+        "license": { "type": "string" },
+        "releaseNotes": { "type": "string" }
+      }
+    },
+    "styles": { "$ref": "#/$defs/outputMap", "description": "Skin-root output -> source. skin.css is auto-loaded on every layout; <layout>.css only on that layout." },
+    "containerStyles": { "$ref": "#/$defs/outputMap", "description": "Container-folder output -> source (container.css is auto-loaded wherever these containers are used)." },
+    "scripts": { "$ref": "#/$defs/outputMap", "description": "Skin-root output -> source; include with <dnn:DnnJsInclude FilePath=... PathNameAlias=\"SkinPath\" />." },
+    "globalSelectors": { "type": "array", "items": { "type": "string" }, "description": "Exact unscoped selectors allowed in compiled CSS (audit BOND354)." },
+    "layoutsWithoutContentPane": { "type": "array", "items": { "type": "string" } },
+    "maxImportant": { "type": "integer", "minimum": 0, "default": 0 },
+    "allowRemoteUrls": { "type": "boolean", "default": false },
+    "csp": {
+      "type": "object",
+      "properties": { "inlineScripts": { "enum": ["error", "warning", "off"] } },
+      "additionalProperties": false
+    },
+    "budgets": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": { "bytes": { "type": "integer" }, "gzip": { "type": "integer" }, "brotli": { "type": "integer" } },
+        "additionalProperties": false
+      }
+    }
+  },
+  "$defs": {
+    "outputMap": { "type": "object", "additionalProperties": { "type": "string" } }
+  }
+}

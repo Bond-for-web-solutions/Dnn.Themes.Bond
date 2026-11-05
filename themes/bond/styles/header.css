@@ -1,0 +1,307 @@
+/* ==========================================================================
+   Header, top bar, navigation (menus/header/HeaderMenu.cshtml)
+   Breakpoints: --bond-sm 640px, --bond-lg 1024px. No decorative motion, only
+   functional hover/menu transitions.
+   ========================================================================== */
+.bond-header {
+  position: sticky;
+  top: 0;
+  z-index: var(--bond-z-sticky);
+  box-shadow: 0 1px 3px rgba(var(--bond-ink-rgb), 0.06);
+}
+
+/* ---- Top bar (user / login) - desktop only ---- */
+.bond-topbar {
+  display: none;
+  color: var(--bond-color-text-muted);
+  background: var(--bond-color-surface-sunken);
+  border-bottom: 1px solid var(--bond-color-border);
+}
+
+@media (--bond-lg) {
+  .bond-topbar { display: block; }
+}
+
+.bond-topbar__inner {
+  display: flex;
+  height: 2.5rem;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--bond-space-4);
+  font-size: 0.8125rem;
+  letter-spacing: var(--bond-letter-spacing-wide);
+}
+
+.bond-topbar__link:is(:link, :visited) {
+  color: var(--bond-color-text);
+  font-weight: var(--bond-font-weight-medium);
+  text-decoration: none;
+  transition: color var(--bond-duration-fast);
+}
+
+.bond-topbar__link:hover { color: var(--bond-color-accent); }
+
+.bond-topbar__user:is(:link, :visited) {
+  color: var(--bond-color-accent);
+  text-decoration: none;
+  transition: color var(--bond-duration-fast);
+}
+
+.bond-topbar__user:hover { color: var(--bond-color-text); }
+
+/* ---- Main header (logo + nav) ---- */
+.bond-header__main {
+  background: var(--bond-color-surface);
+  border-bottom: 1px solid var(--bond-color-border);
+}
+
+.bond-header__inner {
+  display: flex;
+  height: 5rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bond-header__logo {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+}
+
+.bond-header__logo img {
+  height: 3rem;
+  width: auto;
+}
+
+/* Desktop navigation wrapper */
+.bond-nav { display: none; }
+
+@media (--bond-lg) {
+  .bond-nav {
+    display: flex;
+    align-items: center;
+    gap: var(--bond-space-2);
+  }
+}
+
+/* ---- Menu (shared by desktop + mobile via RenderNodes) ---- */
+.bond-menu {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bond-menu--root {
+  width: 100%;
+  flex-direction: column;
+  gap: var(--bond-space-2);
+}
+
+@media (--bond-lg) {
+  .bond-menu--root { flex-direction: row; }
+}
+
+.bond-menu--sub {
+  flex-direction: column;
+  padding: var(--bond-space-1) 0;
+}
+
+.bond-menu__item { position: relative; }
+
+/* Reveal a direct-child flyout on hover or keyboard focus within. */
+.bond-menu__item:hover > .bond-submenu,
+.bond-menu__item:focus-within > .bond-submenu {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Top-level link. :is(:link, :visited) outranks DNN's a:visited (0,1,1),
+   which is why Bond 1.0 needed !important here. */
+.bond-nav-link {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--bond-space-2) var(--bond-space-4);
+  font-weight: var(--bond-font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--bond-letter-spacing-wider);
+  color: var(--bond-color-text);
+  border-radius: var(--bond-radius-md);
+  text-decoration: none;
+  transition: background-color var(--bond-duration-fast), color var(--bond-duration-fast);
+}
+
+.bond-nav-link:is(:link, :visited) {
+  color: var(--bond-color-text);
+  text-decoration: none;
+}
+
+.bond-nav-link:hover {
+  color: var(--bond-color-accent-strong);
+  background: rgba(var(--bond-cyan-rgb), 0.12);
+}
+
+.bond-nav-link.is-selected {
+  color: var(--bond-color-accent-strong);
+  background: rgba(var(--bond-cyan-rgb), 0.16);
+}
+
+.bond-nav-link:focus-visible,
+.bond-submenu-link:focus-visible {
+  outline: 2px solid var(--bond-color-focus);
+  outline-offset: 2px;
+}
+
+.bond-nav-link--disabled {
+  color: rgba(var(--bond-ink-rgb), 0.35);
+  cursor: default;
+}
+
+/* Sub-level link */
+.bond-submenu-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--bond-space-2) var(--bond-space-4);
+  color: var(--bond-color-text);
+  text-decoration: none;
+  transition: background-color var(--bond-duration-fast), color var(--bond-duration-fast);
+}
+
+.bond-submenu-link:is(:link, :visited) {
+  color: var(--bond-color-text);
+  text-decoration: none;
+}
+
+.bond-submenu-link:hover {
+  color: var(--bond-color-accent-strong);
+  background: var(--bond-color-surface);
+}
+
+.bond-submenu-link.is-selected {
+  color: var(--bond-color-accent-strong);
+  font-weight: var(--bond-font-weight-medium);
+  background: var(--bond-color-surface);
+}
+
+.bond-submenu-link--disabled {
+  display: block;
+  padding: var(--bond-space-2) var(--bond-space-4);
+  color: var(--bond-color-text-disabled);
+  cursor: default;
+}
+
+.bond-submenu-link--disabled.is-selected {
+  color: var(--bond-color-accent-strong);
+  font-weight: var(--bond-font-weight-medium);
+}
+
+/* Chevron icon */
+.bond-menu-icon {
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+  margin-left: var(--bond-space-1);
+}
+
+.bond-nav-link .bond-menu-icon { color: rgba(var(--bond-ink-rgb), 0.4); }
+.bond-submenu-link .bond-menu-icon { color: var(--bond-color-text-subtle); }
+
+/* Flyout panel */
+.bond-submenu {
+  position: absolute;
+  z-index: var(--bond-z-dropdown);
+  width: 14rem;
+  background: var(--bond-color-surface-raised);
+  border-radius: var(--bond-radius-md);
+  box-shadow: 0 12px 28px -8px rgba(var(--bond-ink-rgb), 0.18), 0 0 0 1px var(--bond-color-border);
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity var(--bond-duration-fast) var(--bond-easing-standard), visibility var(--bond-duration-fast) var(--bond-easing-standard);
+}
+
+.bond-submenu--root { top: 100%; left: 0; }
+.bond-submenu--sub { top: 0; left: 100%; }
+
+/* ---- Hamburger (mobile toggle) ---- */
+.bond-hamburger {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: var(--bond-size-touch-target);
+  height: var(--bond-size-touch-target);
+  padding: 10px;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.bond-hamburger span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: var(--bond-color-text);
+  border-radius: 2px;
+  transition: transform var(--bond-duration-base) ease, opacity var(--bond-duration-base) ease;
+}
+
+.bond-hamburger.is-open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.bond-hamburger.is-open span:nth-child(2) { opacity: 0; }
+.bond-hamburger.is-open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+.bond-hamburger:focus-visible {
+  outline: 2px solid var(--bond-color-focus);
+  outline-offset: 2px;
+}
+
+@media (--bond-lg) {
+  .bond-hamburger { display: none; }
+}
+
+/* ---- Mobile menu (collapsible) ---- */
+.bond-mobile-menu {
+  display: none;
+  background: var(--bond-color-surface);
+  border-top: 1px solid var(--bond-color-border);
+}
+
+.bond-mobile-menu.is-open { display: block; }
+
+@media (--bond-lg) {
+  .bond-mobile-menu,
+  .bond-mobile-menu.is-open { display: none; }
+}
+
+.bond-mobile-menu__nav { padding: var(--bond-space-4); }
+
+.bond-mobile-menu__footer {
+  padding: var(--bond-space-3) var(--bond-space-4);
+  border-top: 1px solid var(--bond-color-border);
+}
+
+.bond-mobile-menu__footer-inner {
+  display: flex;
+  align-items: center;
+  gap: var(--bond-space-3);
+  font-size: var(--bond-font-size-sm);
+}
+
+.bond-mobile-menu__user:is(:link, :visited) {
+  color: var(--bond-color-text-muted);
+  text-decoration: none;
+}
+
+.bond-mobile-menu__login:is(:link, :visited) {
+  color: var(--bond-color-accent);
+  font-size: var(--bond-font-size-xs);
+  font-weight: var(--bond-font-weight-medium);
+  text-decoration: none;
+}
+
+@media (--bond-reduced-motion) {
+  .bond-nav-link,
+  .bond-submenu-link,
+  .bond-submenu,
+  .bond-hamburger span { transition: none; }
+}

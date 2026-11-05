@@ -1,0 +1,31 @@
+/* Layout primitives. */
+
+/* Centered max-width wrapper with responsive gutters. */
+.bond-container {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: var(--bond-container-max, var(--bond-size-container));
+  padding-left: var(--bond-container-gutter, var(--bond-space-4));
+  padding-right: var(--bond-container-gutter, var(--bond-space-4));
+}
+
+@media (--bond-sm) {
+  .bond-container {
+    padding-left: var(--bond-container-gutter-sm, var(--bond-space-6));
+    padding-right: var(--bond-container-gutter-sm, var(--bond-space-6));
+  }
+}
+
+@media (--bond-lg) {
+  .bond-container {
+    padding-left: var(--bond-container-gutter-lg, var(--bond-space-8));
+    padding-right: var(--bond-container-gutter-lg, var(--bond-space-8));
+  }
+}
+
+/* Vertical rhythm: children separated by a consistent gap. */
+.bond-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bond-stack-gap, var(--bond-space-4));
+}

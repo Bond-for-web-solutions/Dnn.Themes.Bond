@@ -1,0 +1,33 @@
+{
+  "version": "01.01.00",
+  "git": "06008657b6eb652ac1ca856be6b8d95777170e92",
+  "package": "817d3a1d4012d1f8f7affcf1cdc6b8e913f0aac963f1a573b31bb33a58622eed",
+  "skin": [
+    "default.ascx",
+    "menus/footer/FooterMenu.cshtml",
+    "menus/footer/menudef.xml",
+    "menus/header/HeaderMenu.cshtml",
+    "menus/header/menudef.xml",
+    "partials/_includes.ascx",
+    "partials/_registers.ascx",
+    "resources/font/MuseoSans/MuseoSans_100.otf",
+    "resources/font/MuseoSans/MuseoSans_100Italic.otf",
+    "resources/font/MuseoSans/MuseoSans_300.otf",
+    "resources/font/MuseoSans/MuseoSans_300Italic.otf",
+    "resources/font/MuseoSans/MuseoSans_500.otf",
+    "resources/font/MuseoSans/MuseoSans_500_Italic.otf",
+    "resources/font/MuseoSans/MuseoSans_700.otf",
+    "resources/font/MuseoSans/MuseoSans_700Italic.otf",
+    "resources/font/MuseoSans/MuseoSans_900.otf",
+    "resources/font/MuseoSans/MuseoSans_900Italic.otf",
+    "resources/img/bond-for-web-solutions-logo.png",
+    "resources/js/theme.js",
+    "skin.css",
+    "skin.doctype.xml",
+    "splash.ascx",
+    "splash.css"
+  ],
+  "container": [
+    "None.ascx"
+  ]
+}

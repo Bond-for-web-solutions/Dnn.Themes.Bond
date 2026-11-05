@@ -1,0 +1,196 @@
+/* ==========================================================================
+   @bond/splash - "website under construction" layout (-> <skin>/splash.css).
+   The build compiles this for every theme that depends on @bond/splash
+   (package.json "bond.styles"). DNN auto-loads <layout>.css next to the
+   layout at priority 20, ONLY on pages using splash.ascx, so nothing here can
+   affect other layouts.
+
+   ISOLATED BY DESIGN: the splash must look the same in every theme. So it
+   reads none of the theme's --bond-* tokens, brings its own font (under its
+   own family name) and logo, and pins every value it would otherwise inherit
+   from the theme's skin.css or DNN's default.css (font, line height, margins,
+   box sizing). The values are Bond's; DNN.Themes.Bond renders exactly as it
+   did when the splash still lived in that theme.
+   ========================================================================== */
+@import "@bond/tokens/media.css";
+
+/* Own family name: a theme's "MuseoSans" faces can never replace this one.
+   Only weight 500 is used (body text asks for 400, which resolves to 500). */
+@font-face {
+  font-family: "Bond Splash Sans";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../assets/font/MuseoSans_500.otf") format("opentype");
+}
+
+.bond-splash {
+  /* Private values (Bond palette). Declared on the element itself, so a
+     theme cannot change them through :root tokens. */
+  --bond-splash-ink: #2b2b2b;
+  --bond-splash-ink-rgb: 43, 43, 43;
+  --bond-splash-grey: #5a5a5a;
+  --bond-splash-subtle: #8a8175;
+  --bond-splash-accent: #5abcd2;
+  --bond-splash-mist: #c3d1d8;
+  --bond-splash-cream-50: #faf5ee;
+  --bond-splash-cream-100: #f4ede4;
+  --bond-splash-cream-200: #efe6d9;
+  --bond-splash-ease: cubic-bezier(0.22, 0.7, 0.25, 1);
+
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh; /* dynamic viewport height: no jump from the mobile address bar */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(20px, 6vw, 40px);
+  font-family: "Bond Splash Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: normal;
+  text-align: center;
+  text-transform: none;
+  color: var(--bond-splash-ink);
+  /* Subtle gradient for depth instead of a flat colour */
+  background: radial-gradient(120% 90% at 50% 0%, var(--bond-splash-cream-50) 0%, var(--bond-splash-cream-100) 46%, var(--bond-splash-cream-200) 100%);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.bond-splash__inner {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(22px, 5vw, 32px);
+  width: 100%;
+  max-width: 600px;
+}
+
+/* Logo as CSS background so the skin needs no SkinPath code block. */
+.bond-splash__logo {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  max-width: clamp(200px, 62vw, 360px);
+  aspect-ratio: 515 / 116; /* intrinsic size of the logo PNG */
+  background: url("../assets/img/bond-for-web-solutions-logo.png") center / contain no-repeat;
+  animation: bond-splash-logo-in 0.8s var(--bond-splash-ease) 0.05s both;
+}
+
+/* Font and margins are pinned to what DNN's default.css gives an h1/p, so a
+   theme's heading or paragraph rules cannot reach the splash. */
+.bond-splash__title {
+  margin: 16px 0 12px;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: clamp(22px, 5.2vw, 30px);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--bond-splash-ink);
+  animation: bond-splash-fade-up 0.7s var(--bond-splash-ease) 0.2s both;
+}
+
+.bond-splash__text {
+  max-width: 460px;
+  margin: 0 0 18px;
+  padding: 0;
+  font-size: clamp(15px, 3.6vw, 17px);
+  font-weight: 400;
+  line-height: 1.7;
+  color: var(--bond-splash-grey);
+  animation: bond-splash-fade-up 0.7s var(--bond-splash-ease) 0.33s both;
+}
+
+/* ContentPane: invisible while empty (no extra flex gap); modules placed here
+   get a left-aligned column (values from Bond 1.0's splash.css). */
+.bond-splash__contentpane:empty { display: none; }
+
+.bond-splash__contentpane {
+  width: 100%;
+  max-width: 440px;
+  text-align: left;
+}
+
+/* Divider as an "in progress" bar */
+.bond-splash__rule {
+  position: relative;
+  box-sizing: border-box;
+  width: 200px;
+  max-width: 70%;
+  height: 3px;
+  margin: 8px auto;
+  overflow: hidden;
+  background: rgba(var(--bond-splash-ink-rgb), 0.1);
+  border: 0;
+  border-radius: 999px;
+  animation: bond-splash-fade-up 0.7s var(--bond-splash-ease) 0.46s both;
+}
+
+.bond-splash__rule::after {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 38%;
+  content: "";
+  background: linear-gradient(90deg, transparent, var(--bond-splash-accent) 50%, transparent);
+  border-radius: inherit;
+  animation: bond-splash-progress 2s ease-in-out infinite;
+}
+
+.bond-splash__footer {
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--bond-splash-subtle);
+  animation: bond-splash-fade-up 0.7s var(--bond-splash-ease) 0.6s both;
+}
+
+.bond-splash__link:is(:link, :visited) {
+  color: var(--bond-splash-subtle);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 200ms ease;
+}
+
+.bond-splash__link:hover { color: var(--bond-splash-ink); }
+
+/* Animations (staggered entrance; each rule above references one). Names
+   carry the block prefix so a theme's keyframes cannot replace them. */
+@keyframes bond-splash-fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bond-splash-logo-in {
+  from { opacity: 0; transform: translateY(12px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes bond-splash-progress {
+  0% { transform: translateX(-130%); }
+  100% { transform: translateX(420%); }
+}
+
+/* Respect reduced motion: no movement, static divider */
+@media (--bond-reduced-motion) {
+  .bond-splash__logo,
+  .bond-splash__title,
+  .bond-splash__text,
+  .bond-splash__rule,
+  .bond-splash__footer { animation: none; }
+
+  .bond-splash__rule {
+    width: 48px;
+    background: var(--bond-splash-mist);
+  }
+
+  .bond-splash__rule::after { display: none; }
+}

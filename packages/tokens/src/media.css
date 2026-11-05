@@ -1,0 +1,11 @@
+/* Breakpoints. Custom properties cannot be used inside @media, so breakpoints
+   are compile-time @custom-media (resolved by Lightning CSS; nothing ships).
+   Import this file first in every entry point. */
+@custom-media --bond-sm (min-width: 640px);
+@custom-media --bond-md (min-width: 768px);
+@custom-media --bond-lg (min-width: 1024px);
+@custom-media --bond-xl (min-width: 1280px);
+@custom-media --bond-below-sm (max-width: 639px);
+@custom-media --bond-below-lg (max-width: 1023px);
+@custom-media --bond-reduced-motion (prefers-reduced-motion: reduce);
+@custom-media --bond-forced-colors (forced-colors: active);

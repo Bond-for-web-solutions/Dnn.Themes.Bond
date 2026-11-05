@@ -1,0 +1,4 @@
+__FRIENDLY_NAME__ v1.0.0
+========================
+
+Initial release, generated from the bond theme template.

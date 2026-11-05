@@ -1,0 +1,42 @@
+{
+  "version": "01.00.00",
+  "git": "0600865",
+  "package": "ce621ed487831ce3e69d718c60c65cfdfa7bdf93d7e1da105481947d444ce234",
+  "source": "Reconstructed from install/DNN.Themes.Bond_01.00.00_Install.zip (legacy MSBuild output)",
+  "skin": [
+    "default.ascx",
+    "menus/footer/FooterMenu.cshtml",
+    "menus/footer/menudef.xml",
+    "menus/header/HeaderMenu.cshtml",
+    "menus/header/menudef.xml",
+    "partials/_includes.ascx",
+    "partials/_registers.ascx",
+    "resources/css/fonts.css",
+    "resources/css/login.css",
+    "resources/css/skin.css",
+    "resources/css/splash.css",
+    "resources/font/MuseoSans/MuseoSans-100.otf",
+    "resources/font/MuseoSans/MuseoSans-100Italic.otf",
+    "resources/font/MuseoSans/MuseoSans-300.otf",
+    "resources/font/MuseoSans/MuseoSans-300Italic.otf",
+    "resources/font/MuseoSans/MuseoSans-700Italic.otf",
+    "resources/font/MuseoSans/MuseoSans-900Italic.otf",
+    "resources/font/MuseoSans/MuseoSans_100.otf",
+    "resources/font/MuseoSans/MuseoSans_100Italic.otf",
+    "resources/font/MuseoSans/MuseoSans_300.otf",
+    "resources/font/MuseoSans/MuseoSans_300Italic.otf",
+    "resources/font/MuseoSans/MuseoSans_500.otf",
+    "resources/font/MuseoSans/MuseoSans_500_Italic.otf",
+    "resources/font/MuseoSans/MuseoSans_700.otf",
+    "resources/font/MuseoSans/MuseoSans_700Italic.otf",
+    "resources/font/MuseoSans/MuseoSans_900.otf",
+    "resources/font/MuseoSans/MuseoSans_900Italic.otf",
+    "resources/img/bond-for-web-solutions-logo.png",
+    "resources/js/login.js",
+    "skin.doctype.xml",
+    "splash.ascx"
+  ],
+  "container": [
+    "None.ascx"
+  ]
+}

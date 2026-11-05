@@ -1,0 +1,32 @@
+/* bond-card - surface with optional header/body/footer. Contract: ./contract.json */
+.bond-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bond-card-gap, var(--bond-space-4));
+  padding: var(--bond-card-padding, var(--bond-space-6));
+  background: var(--bond-card-bg, var(--bond-color-surface));
+  border: var(--bond-border-width) solid var(--bond-card-border-color, var(--bond-color-border));
+  border-radius: var(--bond-card-radius, var(--bond-radius-lg));
+  box-shadow: var(--bond-card-shadow, var(--bond-shadow-md));
+}
+
+/* margin: 0 neutralises DNN's default.css heading margins (h1–h6 get 1rem/.75rem). */
+.bond-card__title {
+  margin: 0;
+  font-family: var(--bond-font-heading);
+  font-size: var(--bond-card-title-size, var(--bond-font-size-xl));
+  font-weight: var(--bond-font-weight-bold);
+  line-height: var(--bond-line-height-tight);
+  color: var(--bond-color-text);
+}
+
+.bond-card__body { color: var(--bond-color-text); }
+
+.bond-card__footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--bond-space-3);
+  align-items: center;
+}
+
+.bond-card--flat { box-shadow: none; }

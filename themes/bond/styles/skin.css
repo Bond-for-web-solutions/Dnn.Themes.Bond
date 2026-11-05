@@ -1,0 +1,33 @@
+/* ==========================================================================
+   DNN.Themes.Bond - theme bundle entry (-> Skins/DNN.Themes.Bond/skin.css).
+   DNN auto-loads skin.css on every Bond layout at priority 15: after
+   default.css (5) and module CSS (10), before containers (25) and the site's
+   portal.css (35), which stays the admin's last-word override.
+   Order = cascade tiers (docs/css-architecture.md#tiers):
+     tokens -> theme tokens -> base -> layout primitives -> components -> theme -> overrides
+   ========================================================================== */
+
+/* 1. Tokens: shared defaults, then Bond's brand values */
+@import "@bond/tokens/media.css";
+@import "@bond/tokens/tokens.css";
+@import "./tokens.css";
+@import "./fonts.css";
+
+/* 2. Base (the only element-level rules; allowlisted in theme.json) */
+@import "@bond/foundation/base.css";
+@import "./base.css";
+
+/* 3. Layout primitives + utilities */
+@import "@bond/foundation/layout.css";
+@import "@bond/foundation/utilities.css";
+
+/* 4. Shared components Bond uses (dependencies first) */
+@import "@bond/components/card.css";
+@import "@bond/components/field.css";
+@import "@bond/components/button.css";
+@import "@bond/components/auth-card.css";
+
+/* 5. Bond theme */
+@import "./layout.css";
+@import "./header.css";
+@import "./footer.css";

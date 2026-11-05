@@ -1,0 +1,22 @@
+{
+  "$comment": "Public API of bond-button. Removing or renaming anything here is a BREAKING change (see docs/component-guidelines.md#contracts).",
+  "component": "button",
+  "contractVersion": 1,
+  "block": "bond-button",
+  "elements": [],
+  "modifiers": ["block", "secondary", "ghost", "sm"],
+  "tokens": [
+    "--bond-button-padding-y", "--bond-button-padding-x", "--bond-button-font-size", "--bond-button-font-weight",
+    "--bond-button-line-height", "--bond-button-letter-spacing", "--bond-button-color", "--bond-button-color-hover",
+    "--bond-button-bg", "--bond-button-bg-hover", "--bond-button-border-width", "--bond-button-border-color", "--bond-button-radius"
+  ],
+  "accessibility": "Use <button> for actions and <a href> for navigation. Disabled anchors need aria-disabled=\"true\" and no href.",
+  "examples": [
+    "<button type=\"button\" class=\"bond-button\">Primary</button>",
+    "<a class=\"bond-button bond-button--secondary\" href=\"#\">Secondary link</a>",
+    "<button type=\"button\" class=\"bond-button bond-button--ghost\">Ghost</button>",
+    "<button type=\"button\" class=\"bond-button bond-button--sm\">Small</button>",
+    "<button type=\"button\" class=\"bond-button\" disabled>Disabled</button>",
+    "<button type=\"button\" class=\"bond-button bond-button--block\">Block</button>"
+  ]
+}

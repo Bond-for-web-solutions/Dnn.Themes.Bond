@@ -1,0 +1,103 @@
+/* ==========================================================================
+   bond-auth - restyled DNN login + reset-password card (migrated from Bond's
+   resources/css/login.css). auth-card.js hides the native DNN forms
+   (.dnnLoginService / .dnnSendPassword) and builds this card, mirroring values
+   into the hidden native controls so DNN's postback + validation still work.
+   Requires (imported before this file): card.css, field.css, button.css.
+   Contract: ./contract.json
+   ========================================================================== */
+
+/* Native form: auth-card.js also sets the `hidden` attribute (removing it from
+   the tab order and accessibility tree); this rule is the fallback if other CSS
+   forces a display value on DNN's form. Kept in the DOM for postback wiring. */
+.bond-auth__native--hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Centre the card in the available space. */
+.bond-auth {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--bond-auth-outer-padding, var(--bond-space-10) var(--bond-space-4));
+}
+
+.bond-auth__card {
+  width: 100%;
+  max-width: var(--bond-auth-max-width, 26rem);
+  gap: var(--bond-auth-gap, var(--bond-space-5));
+  padding: var(--bond-auth-padding, var(--bond-space-8));
+}
+
+@media (--bond-sm) {
+  .bond-auth__card { padding: var(--bond-auth-padding-sm, var(--bond-space-10)); }
+}
+
+.bond-auth__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bond-space-1-5);
+}
+
+.bond-auth__title {
+  font-size: var(--bond-auth-title-size, var(--bond-font-size-xl));
+  font-weight: var(--bond-font-weight-bold);
+  color: var(--bond-color-text);
+}
+
+.bond-auth__subtitle {
+  font-size: var(--bond-font-size-sm);
+  color: var(--bond-color-text-subtle);
+}
+
+.bond-auth__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--bond-space-3);
+}
+
+.bond-auth__remember {
+  display: flex;
+  align-items: center;
+  gap: var(--bond-space-2);
+  font-size: var(--bond-font-size-sm);
+  color: var(--bond-color-text-muted);
+  cursor: pointer;
+}
+
+.bond-auth__checkbox {
+  flex: 0 0 auto;
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--bond-color-accent);
+  cursor: pointer;
+}
+
+.bond-auth__link,
+.bond-auth__link:visited {
+  font-size: var(--bond-font-size-sm);
+  font-weight: var(--bond-font-weight-medium);
+  color: var(--bond-auth-link-color, var(--bond-color-accent));
+  text-decoration: none;
+  transition: color var(--bond-duration-fast);
+}
+
+.bond-auth__link:hover {
+  color: var(--bond-auth-link-color-hover, var(--bond-color-accent-strong));
+  text-decoration: underline;
+}
+
+.bond-auth__footer {
+  display: flex;
+  justify-content: center;
+  gap: var(--bond-space-4);
+}

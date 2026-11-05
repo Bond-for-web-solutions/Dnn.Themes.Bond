@@ -1,0 +1,40 @@
+{
+  "$schema": "../../packages/build/schema/theme.schema.json",
+  "id": "__THEME_ID__",
+  "prefix": "__PREFIX__",
+  "dnn": {
+    "packageName": "__PACKAGE_NAME__",
+    "friendlyName": "__FRIENDLY_NAME__",
+    "description": "__FRIENDLY_NAME__ theme for DNN 10.",
+    "skinName": "__PACKAGE_NAME__",
+    "containerPackageName": "__PACKAGE_NAME__ Containers",
+    "containerFriendlyName": "__FRIENDLY_NAME__ Containers",
+    "containerDescription": "Containers for the __FRIENDLY_NAME__ theme.",
+    "containerName": "__PACKAGE_NAME__",
+    "coreVersion": "10.00.00",
+    "owner": {
+      "name": "TODO",
+      "organization": "TODO",
+      "url": "https://example.com",
+      "email": "info@example.com"
+    },
+    "license": "package/License.txt",
+    "releaseNotes": "package/ReleaseNotes.txt"
+  },
+  "styles": {
+    "skin.css": "styles/skin.css"
+  },
+  "containerStyles": {
+    "container.css": "styles/container.css"
+  },
+  "scripts": {
+    "resources/js/theme.js": "scripts/theme.js"
+  },
+  "globalSelectors": ["*", "::after", "::before", ":root", "body"],
+  "csp": { "inlineScripts": "error" },
+  "budgets": {
+    "skin.css": { "brotli": 4000 },
+    "resources/js/theme.js": { "brotli": 2000 },
+    "splash.css": { "brotli": 1500 }
+  }
+}

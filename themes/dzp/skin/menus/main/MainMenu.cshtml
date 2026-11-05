@@ -1,0 +1,23 @@
+@using DotNetNuke.Web.DDRMenu;
+@inherits DotNetNuke.Web.Razor.DotNetNukeWebPage<dynamic>
+
+<nav class="dzp-nav bond-container" aria-label="Main Navigation">
+    <ul class="dzp-nav__list">
+        @foreach (var node in Model.Source.root.Children)
+        {
+            string target = (string)node.Target;
+            string targetAttr = string.IsNullOrEmpty(target) ? null : target;
+            string relAttr = target == "_blank" ? "noopener" : null;
+            <li class="dzp-nav__item">
+                @if (node.Enabled)
+                {
+                    <a href="@node.Url" target="@targetAttr" rel="@relAttr" class="dzp-nav__link @(node.Selected ? "is-selected" : "")">@node.Text</a>
+                }
+                else
+                {
+                    <span class="dzp-nav__link dzp-nav__link--disabled">@node.Text</span>
+                }
+            </li>
+        }
+    </ul>
+</nav>

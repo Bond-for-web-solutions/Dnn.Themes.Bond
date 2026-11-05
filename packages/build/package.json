@@ -1,0 +1,26 @@
+{
+  "name": "@bond/build",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Build, validation, packaging and safe local deployment for DNN themes (bond CLI).",
+  "type": "module",
+  "bin": {
+    "bond": "./bin/bond.mjs"
+  },
+  "exports": {
+    "./stylelint-plugin": "./stylelint/plugin.mjs",
+    "./package.json": "./package.json"
+  },
+  "bond": {
+    "layer": 0,
+    "kind": "tooling"
+  },
+  "dependencies": {
+    "esbuild": "0.28.2",
+    "lightningcss": "1.33.0",
+    "postcss-selector-parser": "7.1.7"
+  },
+  "peerDependencies": {
+    "stylelint": "^17.16.0"
+  }
+}

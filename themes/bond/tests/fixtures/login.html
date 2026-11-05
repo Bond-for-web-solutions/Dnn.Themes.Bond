@@ -1,0 +1,74 @@
+<!-- layout: default -->
+<!-- DNN 10 login page: Admin/Authentication/Login.ascx + AuthenticationServices/DNN/Login.ascx
+     as rendered in module 412. theme.js replaces it with the bond-auth card. -->
+<header class="bond-header">
+  <div class="bond-topbar"><div class="bond-container"><div class="bond-topbar__inner"><a href="#login" class="bond-topbar__link">Login</a></div></div></div>
+  <div class="bond-header__main"><div class="bond-container"><div class="bond-header__inner">
+    <div class="bond-header__logo"><a href="#home"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='48'%3E%3Crect width='160' height='48' rx='8' fill='%235abcd2'/%3E%3C/svg%3E" alt="Bond" width="160" height="48"></a></div>
+    <nav class="bond-nav" aria-label="Main Navigation">
+      <ul class="bond-menu bond-menu--root">
+        <li class="bond-menu__item"><a href="#home" class="bond-nav-link is-selected">Home</a></li>
+        <li class="bond-menu__item"><a href="#services" class="bond-nav-link">Services<svg class="bond-menu-icon" aria-hidden="true" focusable="false" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg></a>
+          <div class="bond-submenu bond-submenu--root"><ul class="bond-menu bond-menu--sub">
+            <li class="bond-menu__item"><a href="#web" class="bond-submenu-link is-selected">Web design</a></li>
+            <li class="bond-menu__item"><a href="#dnn" class="bond-submenu-link">DNN development</a></li>
+            <li class="bond-menu__item"><span class="bond-submenu-link bond-submenu-link--disabled">Coming soon</span></li>
+          </ul></div>
+        </li>
+        <li class="bond-menu__item"><a href="#about" class="bond-nav-link">About</a></li>
+        <li class="bond-menu__item"><span class="bond-nav-link bond-nav-link--disabled">Disabled</span></li>
+      </ul>
+    </nav>
+    <button type="button" class="bond-hamburger" data-bond-menu-toggle aria-controls="bond-mobile-menu" aria-expanded="false" aria-label="Toggle navigation"><span></span><span></span><span></span></button>
+  </div></div></div>
+  <div id="bond-mobile-menu" class="bond-mobile-menu">
+    <nav class="bond-mobile-menu__nav" aria-label="Mobile Navigation"><ul class="bond-menu bond-menu--root">
+      <li class="bond-menu__item"><a href="#home" class="bond-nav-link is-selected">Home</a></li>
+      <li class="bond-menu__item"><a href="#about" class="bond-nav-link">About</a></li>
+    </ul></nav>
+    <div class="bond-mobile-menu__footer"><div class="bond-mobile-menu__footer-inner"><a href="#login" class="bond-mobile-menu__login">Login</a></div></div>
+  </div>
+</header>
+<main class="bond-main">
+  <div id="dnn_ContentPane" class="bond-content">
+    <div class="DnnModule DnnModule-Authentication DnnModule-412"><a name="412"></a>
+      <div id="dnn_ctr412_ContentPane"><div id="dnn_ctr412_ModuleContent" class="DNNModuleContent ModAuthenticationC">
+        <div class="dnnForm dnnLogin dnnClear"><div id="dnn_ctr412_Login_pnlLogin"><div class="loginContent">
+          <div id="dnn_ctr412_Login_pnlLoginContainer" class="LoginPanel" style="display:block;">
+            <div id="dnn_ctr412_Login_DNN">
+              <div class="dnnForm dnnLoginService dnnClear">
+                <div class="dnnFormItem"><div class="dnnLabel"><label id="dnn_ctr412_Login_Login_DNN_plUsername" for="dnn_ctr412_Login_Login_DNN_txtUsername" class="dnnFormLabel">Username:</label></div>
+                  <input name="dnn$ctr412$Login$Login_DNN$txtUsername" type="text" id="dnn_ctr412_Login_Login_DNN_txtUsername"></div>
+                <div class="dnnFormItem"><div class="dnnLabel"><label id="dnn_ctr412_Login_Login_DNN_plPassword" for="dnn_ctr412_Login_Login_DNN_txtPassword" class="dnnFormLabel">Password:</label></div>
+                  <input name="dnn$ctr412$Login$Login_DNN$txtPassword" type="password" id="dnn_ctr412_Login_Login_DNN_txtPassword"></div>
+                <div class="dnnFormItem"><span id="dnn_ctr412_Login_Login_DNN_lblLoginRememberMe" class="dnnFormLabel"></span>
+                  <span class="dnnLoginRememberMe"><input id="dnn_ctr412_Login_Login_DNN_chkCookie" type="checkbox" name="dnn$ctr412$Login$Login_DNN$chkCookie"><label for="dnn_ctr412_Login_Login_DNN_chkCookie">Remember Login</label></span></div>
+                <div class="dnnFormItem"><label id="dnn_ctr412_Login_Login_DNN_lblLogin" for="dnn_ctr412_Login_Login_DNN_cmdLogin" class="dnnFormLabel"></label>
+                  <a id="dnn_ctr412_Login_Login_DNN_cmdLogin" title="Login" class="dnnPrimaryAction" href="#postback-login">Login</a>
+                  <a id="dnn_ctr412_Login_Login_DNN_cancelLink" class="dnnSecondaryAction" href="http://127.0.0.1/">Cancel</a></div>
+                <div class="dnnFormItem"><span class="dnnFormLabel">&nbsp;</span><div class="dnnLoginActions"><ul class="dnnActions dnnClear">
+                  <li id="dnn_ctr412_Login_Login_DNN_liPassword"><a id="dnn_ctr412_Login_Login_DNN_passwordLink" class="dnnSecondaryAction" href="http://127.0.0.1/Login?ctl=SendPassword">Reset Password</a></li>
+                </ul></div></div>
+              </div>
+            </div>
+          </div>
+        </div></div></div>
+      </div></div>
+    </div>
+  </div>
+</main>
+<footer class="bond-footer">
+  <div class="bond-footer__accent"></div>
+  <div class="bond-container bond-footer__body"><div class="bond-footer__grid">
+    <div class="bond-footer__left">
+      <nav aria-label="Footer Navigation"><ul class="bond-footer__nav-list">
+        <li class="bond-footer__nav-item"><a href="#home" class="bond-footer__link is-selected">Home</a></li>
+        <li class="bond-footer__nav-item"><a href="#services" class="bond-footer__link">Services</a></li>
+        <li class="bond-footer__nav-item"><span class="bond-footer__link bond-footer__link--disabled">Disabled</span></li>
+      </ul></nav>
+      <div class="bond-footer__meta"><a class="bond-footer__meta-link" href="#terms">Terms</a><span class="bond-footer__sep" aria-hidden="true">|</span><a class="bond-footer__meta-link" href="#privacy">Privacy</a></div>
+      <div class="bond-footer__copyright">Copyright 2026 by Bond</div>
+    </div>
+    <div class="bond-footer__logo"><a href="#home"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='48'%3E%3Crect width='160' height='48' rx='8' fill='%235abcd2'/%3E%3C/svg%3E" alt="Bond" width="160" height="48"></a></div>
+  </div></div>
+</footer>

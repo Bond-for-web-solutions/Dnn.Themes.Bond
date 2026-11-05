@@ -1,0 +1,15 @@
+/* Utilities: single-purpose, prefixed "bond-u-". */
+
+/* Hidden visually, still announced by screen readers and focusable children
+   keep working (e.g. native DNN controls whose postback wiring we reuse). */
+.bond-u-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

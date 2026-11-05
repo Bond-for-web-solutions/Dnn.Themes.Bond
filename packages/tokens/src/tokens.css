@@ -1,0 +1,92 @@
+/* ==========================================================================
+   @bond/tokens - neutral defaults. Themes override any of these in their own
+   styles/tokens.css (imported right after this file). Components read only
+   tokens, never hard-coded brand values. Contract: docs/component-guidelines.md
+   Naming: --bond-<category>-<role>[-<variant>]
+   ========================================================================== */
+:root {
+  /* ---- Color: semantic roles ---- */
+  --bond-color-bg: #ffffff;
+  --bond-color-surface: #ffffff;
+  --bond-color-surface-raised: #ffffff;
+  --bond-color-surface-sunken: #f4f4f5;
+  --bond-color-text: #1f2328;
+  --bond-color-text-muted: #4b5563;
+  --bond-color-text-subtle: #6b7280;
+  --bond-color-text-disabled: #9ca3af;
+  --bond-color-border: #d9dce1;
+  --bond-color-accent: #0b6bcb;
+  --bond-color-accent-strong: #08529c;
+  --bond-color-on-accent: #ffffff;
+  --bond-color-focus: #0b6bcb;
+  --bond-color-focus-ring: rgba(11, 107, 203, 0.25);
+  --bond-color-info: #0b6bcb;
+  --bond-color-info-bg: #eaf2fb;
+  --bond-color-success: #1a7f37;
+  --bond-color-success-bg: #e9f6ec;
+  --bond-color-warning: #9a6700;
+  --bond-color-warning-bg: #fff6e0;
+  --bond-color-danger: #c62828;
+  --bond-color-danger-bg: #fdecec;
+
+  /* ---- Typography ---- */
+  --bond-font-sans: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --bond-font-heading: var(--bond-font-sans);
+  --bond-font-mono: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+  --bond-font-size-xs: 0.75rem;
+  --bond-font-size-sm: 0.875rem;
+  --bond-font-size-md: 1rem;
+  --bond-font-size-lg: 1.125rem;
+  --bond-font-size-xl: 1.5rem;
+  --bond-font-size-2xl: 1.875rem;
+  --bond-font-weight-regular: 400;
+  --bond-font-weight-medium: 500;
+  --bond-font-weight-semibold: 600;
+  --bond-font-weight-bold: 700;
+  --bond-line-height-tight: 1.25;
+  --bond-line-height-normal: 1.5;
+  --bond-line-height-relaxed: 1.625;
+  --bond-letter-spacing-wide: 0.02em;
+  --bond-letter-spacing-wider: 0.05em;
+  --bond-letter-spacing-widest: 0.08em;
+
+  /* ---- Spacing (0.25rem steps) ---- */
+  --bond-space-0: 0;
+  --bond-space-1: 0.25rem;
+  --bond-space-1-5: 0.375rem;
+  --bond-space-2: 0.5rem;
+  --bond-space-3: 0.75rem;
+  --bond-space-4: 1rem;
+  --bond-space-5: 1.25rem;
+  --bond-space-6: 1.5rem;
+  --bond-space-8: 2rem;
+  --bond-space-10: 2.5rem;
+  --bond-space-12: 3rem;
+  --bond-space-16: 4rem;
+
+  /* ---- Sizing ---- */
+  --bond-size-container: 80rem;
+  --bond-size-touch-target: 44px;
+
+  /* ---- Shape & elevation ---- */
+  --bond-radius-sm: 0.25rem;
+  --bond-radius-md: 0.5rem;
+  --bond-radius-lg: 0.625rem;
+  --bond-radius-xl: 1rem;
+  --bond-radius-full: 999px;
+  --bond-border-width: 1px;
+  --bond-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --bond-shadow-md: 0 12px 32px -12px rgba(0, 0, 0, 0.18);
+  --bond-shadow-lg: 0 12px 28px -8px rgba(0, 0, 0, 0.2);
+
+  /* ---- Motion ---- */
+  --bond-duration-instant: 50ms;
+  --bond-duration-fast: 150ms;
+  --bond-duration-base: 200ms;
+  --bond-easing-standard: ease-in-out;
+
+  /* ---- Layering (DNN's edit bar / Persona Bar sit far above these) ---- */
+  --bond-z-dropdown: 50;
+  --bond-z-sticky: 50;
+  --bond-z-overlay: 100;
+}

@@ -1,0 +1,52 @@
+/* bond-field - label + control + hint/error. Contract: ./contract.json */
+.bond-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bond-field-gap, var(--bond-space-1-5));
+}
+
+.bond-field__label {
+  font-size: var(--bond-field-label-size, var(--bond-font-size-sm));
+  font-weight: var(--bond-field-label-weight, var(--bond-font-weight-semibold));
+  letter-spacing: var(--bond-field-label-letter-spacing, normal);
+  color: var(--bond-field-label-color, var(--bond-color-text-muted));
+}
+
+/* (0,1,1): ties with module CSS like `.SomeModule input`, and the theme wins ties. */
+.bond-field__input:is(input, select, textarea) {
+  width: 100%;
+  padding: var(--bond-field-padding-y, var(--bond-space-2)) var(--bond-field-padding-x, var(--bond-space-3));
+  font-family: inherit;
+  font-size: var(--bond-field-font-size, var(--bond-font-size-md));
+  color: var(--bond-color-text);
+  background: var(--bond-field-bg, var(--bond-color-surface-raised));
+  border: var(--bond-border-width) solid var(--bond-field-border-color, var(--bond-color-border));
+  border-radius: var(--bond-field-radius, var(--bond-radius-md));
+  transition: border-color var(--bond-duration-fast), box-shadow var(--bond-duration-fast);
+}
+
+.bond-field__input::placeholder { color: var(--bond-color-text-disabled); }
+
+/* Transparent outline keeps focus visible in Windows forced-colors mode,
+   where box-shadow is not painted. */
+.bond-field__input:is(input, select, textarea):focus {
+  outline: 2px solid transparent;
+  border-color: var(--bond-color-accent);
+  box-shadow: 0 0 0 3px var(--bond-color-focus-ring);
+}
+
+.bond-field__hint {
+  font-size: var(--bond-font-size-xs);
+  color: var(--bond-color-text-subtle);
+}
+
+.bond-field__error {
+  font-size: var(--bond-font-size-xs);
+  color: var(--bond-color-danger);
+}
+
+.bond-field--invalid .bond-field__input:is(input, select, textarea) { border-color: var(--bond-color-danger); }
+
+@media (--bond-reduced-motion) {
+  .bond-field__input:is(input, select, textarea) { transition: none; }
+}

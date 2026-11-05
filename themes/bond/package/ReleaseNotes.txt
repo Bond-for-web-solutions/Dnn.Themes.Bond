@@ -1,0 +1,37 @@
+DNN.Themes.Bond v1.1.0 Release Notes
+====================================
+
+Rebuilt on the shared DNN themes monorepo (design tokens + shared components).
+Layouts, panes, containers, menus and package identity are unchanged.
+
+Visible changes
+- Body text now renders in MuseoSans and the page background in Bond cream
+  (#f4ede4), as intended in 1.0. In 1.0 Bond's stylesheets loaded before DNN's
+  default.css, which overrode both (Arial on white).
+- Visited links in the header, footer and top bar keep their colour and are
+  no longer underlined.
+- Keyboard: submenus open on focus; Escape closes the mobile menu.
+
+Fixes
+- Menu items that open in a new window rendered a broken target attribute;
+  they now get target="_blank" rel="noopener".
+- The mobile menu no longer uses inline JavaScript (Content-Security-Policy friendly).
+- The splash layout is now declared in the manifest.
+
+Performance
+- One stylesheet (skin.css) instead of three on every page; one non-blocking
+  script. Compressed CSS and JS are smaller than in 1.0.
+- Six duplicate font files are no longer shipped (install ZIP 502 KB -> 325 KB).
+
+Upgrade notes
+- Install over 1.0.0. Obsolete files from 1.0.0 (resources/css/*.css,
+  resources/js/login.js, duplicate MuseoSans-*.otf) are removed automatically.
+
+Requirements
+- DNN Platform 10.0.0 or later.
+
+---------------------------------------------------------------------------
+
+DNN.Themes.Bond v1.0.0
+- Initial release: default and splash layouts, None container, header and
+  footer DDRMenu templates, MuseoSans fonts, restyled login/reset card.

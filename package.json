@@ -1,0 +1,40 @@
+{
+  "name": "dnn-themes",
+  "private": true,
+  "description": "Monorepo for independently deployable DNN themes built on a shared design system.",
+  "license": "MIT",
+  "type": "module",
+  "packageManager": "pnpm@12.14.0",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "bond": "node packages/build/bin/bond.mjs",
+    "menu": "node packages/build/bin/bond.mjs menu",
+    "build": "node packages/build/bin/bond.mjs build",
+    "build:all": "node packages/build/bin/bond.mjs build --all --mode production",
+    "dev": "node packages/build/bin/bond.mjs watch",
+    "clean": "node packages/build/bin/bond.mjs clean",
+    "deploy:local": "node packages/build/bin/bond.mjs deploy",
+    "validate": "node packages/build/bin/bond.mjs validate --all",
+    "affected": "node packages/build/bin/bond.mjs affected",
+    "check": "node packages/build/bin/bond.mjs check",
+    "lint": "stylelint \"packages/*/src/**/*.css\" \"themes/*/styles/**/*.css\" && eslint .",
+    "lint:css": "stylelint \"packages/*/src/**/*.css\" \"themes/*/styles/**/*.css\"",
+    "lint:js": "eslint .",
+    "test": "node --test --test-concurrency=1 \"tests/integration/*.test.mjs\"",
+    "test:visual": "playwright test --config tests/playwright.config.mjs",
+    "test:visual:update": "playwright test --config tests/playwright.config.mjs --update-snapshots",
+    "test:e2e": "playwright test --config tests/e2e/playwright.config.mjs",
+    "verify": "node packages/build/bin/bond.mjs check && stylelint \"packages/*/src/**/*.css\" \"themes/*/styles/**/*.css\" && eslint . && node packages/build/bin/bond.mjs build --all --mode production && node packages/build/bin/bond.mjs validate --all && node --test --test-concurrency=1 \"tests/integration/*.test.mjs\""
+  },
+  "devDependencies": {
+    "@bond/build": "workspace:*",
+    "@eslint/js": "10.0.1",
+    "@playwright/test": "1.64.1",
+    "eslint": "10.13.0",
+    "eslint-plugin-no-unsanitized": "4.1.5",
+    "globals": "17.13.0",
+    "stylelint": "17.16.0"
+  }
+}

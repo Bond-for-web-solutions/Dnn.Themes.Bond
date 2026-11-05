@@ -1,0 +1,14 @@
+{
+  "name": "@bond/tokens",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Design tokens (CSS custom properties) and breakpoints (@custom-media) shared by all themes.",
+  "type": "module",
+  "exports": {
+    "./tokens.css": "./src/tokens.css",
+    "./media.css": "./src/media.css"
+  },
+  "bond": {
+    "layer": 1
+  }
+}

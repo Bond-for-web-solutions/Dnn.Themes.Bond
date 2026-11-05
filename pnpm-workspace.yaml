@@ -1,0 +1,22 @@
+# pnpm workspace - see docs/monorepo.md and docs/security.md
+packages:
+  - packages/*
+  - themes/*
+
+# ---- Supply-chain hardening (docs/security.md#dependencies) ----
+# Refuse versions published less than 7 days ago (minutes). Most malicious
+# releases are detected and unpublished within hours/days.
+minimumReleaseAge: 10080
+# Transitive deps may not come from git repos / tarball URLs.
+blockExoticSubdeps: true
+# Fail if a package's publish trust level drops (e.g. provenance disappears).
+trustPolicy: no-downgrade
+# Lifecycle (postinstall) scripts are blocked by default; strictDepBuilds makes
+# an unreviewed build script fail the install instead of being silently skipped.
+strictDepBuilds: true
+allowBuilds:
+  # esbuild's postinstall only verifies/optimises its platform binary; the
+  # binary is resolved from an optionalDependency without it.
+  esbuild: false
+
+engineStrict: true

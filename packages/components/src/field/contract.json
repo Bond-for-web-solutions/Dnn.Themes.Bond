@@ -1,0 +1,16 @@
+{
+  "component": "field",
+  "contractVersion": 1,
+  "block": "bond-field",
+  "elements": ["label", "input", "hint", "error"],
+  "modifiers": ["invalid"],
+  "tokens": [
+    "--bond-field-gap", "--bond-field-label-size", "--bond-field-label-weight", "--bond-field-label-letter-spacing", "--bond-field-label-color",
+    "--bond-field-padding-y", "--bond-field-padding-x", "--bond-field-font-size", "--bond-field-bg", "--bond-field-border-color", "--bond-field-radius"
+  ],
+  "accessibility": "The label's for= must match the input id. Link hint/error text with aria-describedby; set aria-invalid=\"true\" together with bond-field--invalid.",
+  "examples": [
+    "<div class=\"bond-field\"><label class=\"bond-field__label\" for=\"ex-name\">Name</label><input class=\"bond-field__input\" id=\"ex-name\" placeholder=\"Jane Doe\"><span class=\"bond-field__hint\">As on your ID</span></div>",
+    "<div class=\"bond-field bond-field--invalid\"><label class=\"bond-field__label\" for=\"ex-mail\">Email</label><input class=\"bond-field__input\" id=\"ex-mail\" aria-invalid=\"true\" aria-describedby=\"ex-mail-err\" value=\"not-an-email\"><span class=\"bond-field__error\" id=\"ex-mail-err\">Enter a valid email address</span></div>"
+  ]
+}

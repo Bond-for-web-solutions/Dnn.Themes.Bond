@@ -2,26 +2,286 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Build DNN Theme",
-      "type": "shell",
-      "command": "dotnet",
+      "label": "DNN: Build Theme…",
+      "detail": "Production build + install ZIP for the theme you pick.",
+      "type": "process",
+      "command": "node",
       "args": [
+        "${workspaceFolder}/packages/build/bin/bond.mjs",
         "build",
-        "${workspaceFolder}/DNN.Themes.Bond.proj",
-        "-c",
-        "Release"
+        "${input:theme}",
+        "--mode",
+        "production"
       ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "build",
       "presentation": {
-        "echo": true,
         "reveal": "always",
-        "focus": false,
-        "panel": "shared"
+        "panel": "dedicated",
+        "clear": true,
+        "showReuseMessage": false
       },
-      "group": {
-        "kind": "build",
-        "isDefault": true
+      "problemMatcher": {
+        "owner": "bond",
+        "fileLocation": "absolute",
+        "pattern": {
+          "regexp": "^(?:\\u001b\\[[0-9;]*m)*(.+?)\\((\\d+),(\\d+)\\): (error|warning|info) (BOND\\d+): (.*?)(?:\\u001b\\[[0-9;]*m)*$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "severity": 4,
+          "code": 5,
+          "message": 6
+        }
+      }
+    },
+    {
+      "label": "DNN: Build All (Production)",
+      "detail": "Every theme, independently.",
+      "type": "process",
+      "command": "node",
+      "args": [
+        "${workspaceFolder}/packages/build/bin/bond.mjs",
+        "build",
+        "--all",
+        "--mode",
+        "production"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
       },
-      "problemMatcher": ["$msCompile"]
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true,
+        "showReuseMessage": false
+      },
+      "problemMatcher": {
+        "owner": "bond",
+        "fileLocation": "absolute",
+        "pattern": {
+          "regexp": "^(?:\\u001b\\[[0-9;]*m)*(.+?)\\((\\d+),(\\d+)\\): (error|warning|info) (BOND\\d+): (.*?)(?:\\u001b\\[[0-9;]*m)*$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "severity": 4,
+          "code": 5,
+          "message": 6
+        }
+      }
+    },
+    {
+      "label": "DNN: Publish Theme Locally…",
+      "detail": "Copy the validated build to the LOCAL DNN site in .env.",
+      "type": "process",
+      "command": "node",
+      "args": [
+        "${workspaceFolder}/packages/build/bin/bond.mjs",
+        "deploy",
+        "${input:theme}"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true,
+        "showReuseMessage": false
+      },
+      "problemMatcher": {
+        "owner": "bond",
+        "fileLocation": "absolute",
+        "pattern": {
+          "regexp": "^(?:\\u001b\\[[0-9;]*m)*(.+?)\\((\\d+),(\\d+)\\): (error|warning|info) (BOND\\d+): (.*?)(?:\\u001b\\[[0-9;]*m)*$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "severity": 4,
+          "code": 5,
+          "message": 6
+        }
+      }
+    },
+    {
+      "label": "DNN: Check Architecture",
+      "detail": "Package boundaries, layers, theme identities.",
+      "type": "process",
+      "command": "node",
+      "args": [
+        "${workspaceFolder}/packages/build/bin/bond.mjs",
+        "check"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true,
+        "showReuseMessage": false
+      },
+      "problemMatcher": {
+        "owner": "bond",
+        "fileLocation": "absolute",
+        "pattern": {
+          "regexp": "^(?:\\u001b\\[[0-9;]*m)*(.+?)\\((\\d+),(\\d+)\\): (error|warning|info) (BOND\\d+): (.*?)(?:\\u001b\\[[0-9;]*m)*$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "severity": 4,
+          "code": 5,
+          "message": 6
+        }
+      }
+    },
+    {
+      "label": "DNN: Lint",
+      "detail": "Stylelint + ESLint.",
+      "type": "process",
+      "command": "node",
+      "args": [
+        "${workspaceFolder}/packages/build/bin/bond.mjs",
+        "script",
+        "lint"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true,
+        "showReuseMessage": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "DNN: Test (integration)",
+      "detail": "node:test suite.",
+      "type": "process",
+      "command": "node",
+      "args": [
+        "${workspaceFolder}/packages/build/bin/bond.mjs",
+        "script",
+        "test"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true,
+        "showReuseMessage": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "DNN: Test (visual + isolation)",
+      "detail": "Playwright screenshots, CSS isolation, behaviour.",
+      "type": "process",
+      "command": "node",
+      "args": [
+        "${workspaceFolder}/packages/build/bin/bond.mjs",
+        "script",
+        "test:visual"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true,
+        "showReuseMessage": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "DNN: Create New Theme…",
+      "detail": "Scaffold themes/<id> (the only command that asks you to type).",
+      "type": "process",
+      "command": "node",
+      "args": [
+        "${workspaceFolder}/packages/build/bin/bond.mjs",
+        "create-theme",
+        "${input:newThemeId}",
+        "--prefix",
+        "${input:newThemePrefix}"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true,
+        "showReuseMessage": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "DNN: Install Dependencies",
+      "detail": "pnpm install --frozen-lockfile (pnpm version from package.json).",
+      "type": "process",
+      "command": "corepack",
+      "args": [
+        "pnpm",
+        "install",
+        "--frozen-lockfile"
+      ],
+      "windows": {
+        "command": "corepack.cmd"
+      },
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true,
+        "showReuseMessage": false
+      },
+      "problemMatcher": []
+    }
+  ],
+  "inputs": [
+    {
+      "id": "newThemeId",
+      "type": "promptString",
+      "description": "New theme id (lowercase, e.g. acme)"
+    },
+    {
+      "id": "newThemePrefix",
+      "type": "promptString",
+      "description": "CSS prefix for the new theme (short, lowercase, e.g. acme)"
+    },
+    {
+      "id": "theme",
+      "type": "command",
+      "command": "shellCommand.execute",
+      "args": {
+        "command": "node",
+        "commandArgs": [
+          "packages/build/bin/bond.mjs",
+          "list-themes"
+        ],
+        "cwd": "${workspaceFolder}",
+        "fieldSeparator": "|",
+        "description": "Theme (scanned from themes/ right now)",
+        "rememberPrevious": true,
+        "taskId": "bond-theme"
+      }
     }
   ]
 }

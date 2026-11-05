@@ -1,0 +1,4 @@
+DNN.Themes.DZP v1.0.0
+========================
+
+Initial release, generated from the bond theme template.

@@ -1,0 +1,33 @@
+# Store text with LF in the repository. The build additionally normalises text
+# to LF, so packages are byte-identical whether checked out on Windows or Linux.
+* text=auto
+
+*.ascx text
+*.cshtml text
+*.css text
+*.js text
+*.mjs text
+*.json text
+*.xml text
+*.md text
+*.yml text
+*.yaml text
+
+# PowerShell scripts and Windows batch files keep CRLF
+*.ps1 text eol=crlf
+*.cmd text eol=crlf
+*.bat text eol=crlf
+
+# Binary assets
+*.png binary
+*.jpg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.otf binary
+*.ttf binary
+*.woff binary
+*.woff2 binary
+*.pdf binary
+*.zip binary
+
