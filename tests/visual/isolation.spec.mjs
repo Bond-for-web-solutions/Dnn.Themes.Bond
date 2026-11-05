@@ -93,7 +93,7 @@ test('G4 layout bundles load only on their own layout', async ({ page }) => {
   expect(hasSplashRule).toBe(false);
 });
 
-for (const [theme, name] of [['bond', 'default'], ['bond', 'login'], ['bond', 'splash'], ['dzp', 'default'], ['dzp', 'dashboard']]) {
+for (const [theme, name] of [['bond', 'default'], ['bond', 'login'], ['bond', 'splash'], ['dzp', 'default'], ['dzp', 'dashboard'], ['dzp', 'splash']]) {
   test(`G5 ${theme}/${name}: no console errors or failed requests`, async ({ page }) => {
     const problems = [];
     page.on('console', (m) => { if (m.type() === 'error') problems.push(`console: ${m.text()}`); });
@@ -105,3 +105,23 @@ for (const [theme, name] of [['bond', 'default'], ['bond', 'login'], ['bond', 's
     expect(problems).toEqual([]);
   });
 }
+
+// The shared splash (@bond/splash) reads none of the theme's tokens: it must
+// render identically under every theme's skin.css.
+test('shared splash looks the same in every theme', async ({ page }) => {
+  const PROPS = ['fontFamily', 'fontSize', 'fontWeight', 'lineHeight', 'letterSpacing', 'color', 'backgroundImage', 'marginTop', 'marginBottom',
+    'paddingTop', 'paddingLeft', 'width', 'height', 'maxWidth', 'gap', 'borderTopLeftRadius'];
+  const SELECTORS = ['.bond-splash', '.bond-splash__inner', '.bond-splash__logo', '.bond-splash__title', '.bond-splash__text', '.bond-splash__rule',
+    '.bond-splash__footer', '.bond-splash__link'];
+  const read = async (theme) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto(`/fixture/${theme}/splash`);
+    await page.evaluate(async () => { await document.fonts.ready; });
+    return page.evaluate(({ props, selectors }) => Object.fromEntries(selectors.map((s) => {
+      const el = document.querySelector(s); const cs = getComputedStyle(el); const box = el.getBoundingClientRect();
+      // The logo URL differs only by the theme's own skin folder.
+      return [s, { ...Object.fromEntries(props.map((p) => [p, p === 'backgroundImage' ? cs[p].replace(/^.*\/resources\//, '') : cs[p]])), box: [box.x, box.y, box.width, box.height].map(Math.round) }];
+    })), { props: PROPS, selectors: SELECTORS });
+  };
+  expect(await read('dzp')).toEqual(await read('bond'));
+});

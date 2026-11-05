@@ -101,6 +101,7 @@ function legacyPage(name) {
     .replace(/<div id="dnn_ContentPane" class="bond-splash__contentpane[^"]*"><\/div>\s*/, '') // 1.0 splash had no pane
     .replace(/bond-footer__meta-link/g, '')
     .replace(/bond-splash__link/g, '')
+    .replace(/bond-splash__logo/g, 'bond-logo') // renamed in @bond/splash (BEM, no generic .bond-logo)
     .replace(/id="bond-mobile-menu"/g, 'id="mobile-menu"');
   // Bond 1.0: fonts(1), skin(2), login(3) BEFORE default.css(5); splash.css at 130.
   const css = ['/legacy-asset/resources/css/fonts.css', '/legacy-asset/resources/css/skin.css', '/legacy-asset/resources/css/login.css', '/dnn/default.css'];

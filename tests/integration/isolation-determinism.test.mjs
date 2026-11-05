@@ -4,7 +4,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
-import { tempDir, run, treeHashes } from './helpers.mjs';
+import { tempDir, run, treeHashes, cloneTheme } from './helpers.mjs';
 import { isSharedClass } from '../../packages/build/lib/shared-classes.mjs';
 
 test('building DZP leaves Bond\'s published output byte-for-byte unchanged', () => {
@@ -47,6 +47,25 @@ test('cross-theme isolation: no theme bundle contains another theme\'s classes',
   assert.ok(!fs.readdirSync(path.join(P, 'dzp', 'theme', 'Skins')).includes('DNN.Themes.Bond'));
 });
 
+test('shared splash: every theme ships the same, self-contained splash layout', () => {
+  const P = tempDir();
+  assert.equal(run(['build', '--all'], { BOND_PUBLISH_ROOT: P }).code, 0);
+  const skinDir = (id, name) => path.join(P, id, 'theme', 'Skins', name);
+  const bond = skinDir('bond', 'DNN.Themes.Bond'); const dzp = skinDir('dzp', 'DNN.Themes.DZP');
+  assert.equal(fs.readFileSync(path.join(dzp, 'splash.ascx'), 'utf8'), fs.readFileSync(path.join(bond, 'splash.ascx'), 'utf8'));
+  // Same compiled CSS apart from the per-theme banner line: theme tokens never reach it.
+  const body = (dir) => fs.readFileSync(path.join(dir, 'splash.css'), 'utf8').replace(/^\/\*![^*]*\*\/\n/, '');
+  assert.equal(body(dzp), body(bond));
+  assert.ok(!/var\(--bond-(?!splash-)/.test(body(bond)), 'splash.css reads only its own --bond-splash-* values');
+  for (const f of ['resources/vendor/splash/assets/img/bond-for-web-solutions-logo.png', 'resources/vendor/splash/assets/font/MuseoSans_500.otf']) {
+    assert.ok(fs.existsSync(path.join(dzp, f)), `dzp lacks ${f}`);
+  }
+  // Self-contained: it includes only the shared control registrations, no theme partials or scripts.
+  const ascx = fs.readFileSync(path.join(dzp, 'splash.ascx'), 'utf8');
+  assert.deepEqual([...ascx.matchAll(/#include file="([^"]+)"/g)].map((m) => m[1]), ['partials/_registers.ascx']);
+  assert.ok(!/DnnJsInclude|DnnCssInclude/.test(ascx));
+});
+
 test('clean removes only the requested theme and refuses unknown or traversal ids', () => {
   const P = tempDir();
   assert.equal(run(['build', '--all'], { BOND_PUBLISH_ROOT: P }).code, 0);
@@ -68,4 +87,18 @@ test('BOND_PUBLISH_ROOT outside the temp dir is refused', () => {
   const r = run(['build', 'dzp'], { BOND_PUBLISH_ROOT: path.resolve('publish-elsewhere') });
   assert.equal(r.code, 1);
   assert.match(r.out, /BOND_PUBLISH_ROOT must be/);
+});
+
+test('a theme can replace the shared splash with its own layout and stylesheet', () => {
+  const X = tempDir(); const P = tempDir();
+  const t = cloneTheme('dzp', 'zz-own-splash', X);
+  t.edit('skin/splash.ascx', () => '<!--#include file="partials/_registers.ascx" -->\n<div id="ContentPane" class="dzp-splash" runat="server"></div>\n');
+  t.edit('styles/layouts/splash.css', () => '.dzp-splash { color: rgb(1, 2, 3); }\n');
+  const c = t.cfg(); c.styles['splash.css'] = 'styles/layouts/splash.css'; t.setCfg(c);
+  const r = run(['build', 'zz-own-splash', '--mode', 'development'], { BOND_EXTRA_THEMES: X, BOND_PUBLISH_ROOT: P });
+  assert.equal(r.code, 0, r.out);
+  const skin = path.join(P, 'zz-own-splash', 'theme', 'Skins', 'Test.zz-own-splash');
+  assert.match(fs.readFileSync(path.join(skin, 'splash.ascx'), 'utf8'), /dzp-splash/);
+  const css = fs.readFileSync(path.join(skin, 'splash.css'), 'utf8');
+  assert.ok(css.includes('.dzp-splash') && !css.includes('.bond-splash'), 'theme stylesheet replaced the shared one');
 });

@@ -116,6 +116,27 @@ are safe.
   Theme assets live in `themes/<id>/assets/` and map to `resources/…`; shared
   package assets map to `resources/vendor/<pkg>/…`.
 
+## Shared layouts (package `skinOverlay` + `bond.styles`)
+
+A shared package can ship a whole layout to every theme that depends on it.
+`@bond/splash` does this for `splash.ascx` ("website under construction"):
+
+```json
+"bond": { "layer": 2, "skinOverlay": "skin", "styles": { "splash.css": "src/splash.css" } }
+```
+
+- `skinOverlay` copies `skin/splash.ascx` to the skin root, so DNN offers it as a layout.
+- `bond.styles` makes the build compile `src/splash.css` to `<skin>/splash.css` for every
+  dependent theme, with the same audit and budgets as theme CSS. DNN loads it only on that layout.
+- A theme replaces either one with its own `skin/splash.ascx` or a `theme.json` `styles`
+  entry with the same output name (logged as BOND202).
+- `bond check` rejects a malformed `bond.styles` entry (BOND912).
+
+The splash reads none of the theme's tokens and brings its own font and logo, so it looks
+the same in every theme (integration test "shared splash", visual test "shared splash looks
+the same in every theme"). To use it while a site is being built: DNN → Settings → Site
+Settings → default page layout `splash` (or per page: Page Settings → Appearance).
+
 ## Validation rules (DNN-specific)
 
 | Code | Rule | Why |

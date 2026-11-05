@@ -33,6 +33,7 @@ dnn-themes/
             │                                       │
             └──────────────► @bond/tokens (L1) ◄─────┘
 
+   @bond/splash (L2) ──► @bond/dnn, @bond/tokens: the shared splash layout, in every theme.
    @bond/build (tooling) - runs the build; nothing imports it at runtime.
 ```
 
@@ -46,10 +47,12 @@ undeclared imports fail to resolve, and the build rejects them explicitly (BOND1
 
 ```text
 bond build bond
-  ├─ resolve dependency closure (tokens, dnn, foundation, components)
-  ├─ overlay shared skin files (@bond/dnn/skin -> partials/_registers.ascx, skin.doctype.xml)
+  ├─ resolve dependency closure (tokens, dnn, foundation, splash, components)
+  ├─ overlay shared skin files (@bond/dnn/skin -> partials/_registers.ascx, skin.doctype.xml;
+  │   @bond/splash/skin -> splash.ascx)
   ├─ copy themes/bond/skin/ and containers/ (text normalised to LF)
-  ├─ Lightning CSS: bundle styles/skin.css (+ layouts/*.css), resolve @bond/* imports,
+  ├─ Lightning CSS: bundle styles/skin.css (+ layouts/*.css, + package "bond.styles" such as
+  │   @bond/splash -> splash.css), resolve @bond/* imports,
   │   lower nesting/custom-media for the browser baseline, minify, copy url() assets
   ├─ esbuild: bundle scripts/theme.js (+ layout scripts) into IIFE classic scripts
   ├─ validate: ASCX/DNN rules, menus, CSS audit, budgets, secrets, forbidden files

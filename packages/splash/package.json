@@ -1,0 +1,21 @@
+{
+  "name": "@bond/splash",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Shared 'website under construction' layout (splash.ascx + splash.css). Self-contained: it looks the same in every theme that depends on it.",
+  "type": "module",
+  "exports": {
+    "./splash.css": "./src/splash.css"
+  },
+  "bond": {
+    "layer": 2,
+    "skinOverlay": "skin",
+    "styles": {
+      "splash.css": "src/splash.css"
+    }
+  },
+  "dependencies": {
+    "@bond/dnn": "workspace:*",
+    "@bond/tokens": "workspace:*"
+  }
+}

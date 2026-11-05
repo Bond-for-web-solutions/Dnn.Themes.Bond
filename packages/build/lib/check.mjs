@@ -18,6 +18,18 @@ export function checkWorkspace(ws) {
     if (p.kind === 'package' && !p.name.startsWith('@bond/')) diag.error('BOND901', `Shared packages must use the @bond/ scope (${p.name}).`, loc);
     if (p.kind === 'package' && !Number.isInteger(p.bond.layer)) diag.error('BOND902', `${p.name} needs an integer "bond.layer" in package.json.`, loc);
     if (p.kind === 'package' && !p.json.exports && p.name !== '@bond/build') diag.error('BOND903', `${p.name} needs an "exports" map - it is the package's public API.`, loc);
+    // "bond.styles": CSS outputs a package adds to every dependent theme's skin (e.g. splash.css for a shared layout).
+    if (p.kind === 'package' && p.bond.styles !== undefined) {
+      const styles = p.bond.styles;
+      if (!styles || typeof styles !== 'object' || Array.isArray(styles)) diag.error('BOND912', `${p.name}: "bond.styles" must be an object of output -> source.`, loc);
+      else {
+        for (const [out, src] of Object.entries(styles)) {
+          const abs = typeof src === 'string' ? path.join(p.dir, src) : '';
+          if (!/^[A-Za-z0-9_.\-/]+\.css$/.test(out) || out.startsWith('/') || out.split('/').includes('..')) diag.error('BOND912', `${p.name}: "bond.styles" output "${out}" must be a relative .css path.`, loc);
+          if (!abs || !isInside(path.join(p.dir, 'src'), abs) || !fs.existsSync(abs)) diag.error('BOND912', `${p.name}: "bond.styles" source "${src}" must be an existing file under src/.`, loc);
+        }
+      }
+    }
 
     const all = { ...p.json.dependencies, ...p.json.devDependencies, ...p.json.peerDependencies };
     for (const [dep, spec] of Object.entries(all)) {

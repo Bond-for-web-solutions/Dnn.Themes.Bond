@@ -12,7 +12,7 @@ pnpm menu                                  # pick command + theme in the termina
 pnpm build <theme> | build:all             # production -> publish/<theme>/{theme,packages,reports}; no theme = pick from a list
 node packages/build/bin/bond.mjs build <id> --mode development   # readable + maps, no ZIP
 pnpm dev <theme>                           # watch
-pnpm check && pnpm lint && pnpm test       # architecture, Stylelint/ESLint, 75 integration tests
+pnpm check && pnpm lint && pnpm test       # architecture, Stylelint/ESLint, 85 integration tests
 pnpm test:visual                           # Playwright in Chrome, Edge, Firefox: screenshots, CSS isolation, behaviour, Bond 1.0 parity
 pnpm bond affected --base origin/main       # which themes a change touches
 ```

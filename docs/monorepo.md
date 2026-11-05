@@ -7,6 +7,7 @@
 | `packages/tokens` (L1) | design tokens, breakpoints | `tokens.css`, `media.css` | - |
 | `packages/dnn` (L1) | DNN integration: shared skin overlay, `onDnnReady()` | `ready.js`, `skin/` overlay | - |
 | `packages/foundation` (L2) | opt-in base, `.bond-container`, `.bond-stack`, `.bond-u-*` | `base.css`, `layout.css`, `utilities.css` | tokens |
+| `packages/splash` (L2) | shared `splash.ascx` layout + its `splash.css`, logo, font; self-contained (reads no theme tokens) | `skin/` overlay, `bond.styles`, `splash.css` | tokens, dnn |
 | `packages/components` (L3) | button, field, card, alert, auth-card | one entry per component (see `exports`) | tokens, dnn |
 | `packages/build` (tooling) | `bond` CLI, Stylelint rule, theme template, schema | CLI commands | (npm tooling only) |
 | `themes/<id>` (leaf) | one DNN extension | its install ZIP | any `@bond/*` package |

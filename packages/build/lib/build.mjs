@@ -152,7 +152,7 @@ function validateStage({ theme, stage, roots, diag, mode, ownPrefix, foreignPref
     const file = stage.files.get(stage.key(o.root, o.path));
     const a = auditCss({ code: file.data.toString('utf8'), filename: o.path, ownPrefix, foreignPrefixes, container: o.root === 'container' });
     audits[`${o.root}/${o.path}`] = a;
-    const loc = { file: path.join(theme.dir, o.src) };
+    const loc = { file: o.entry };
     if (a.layers) diag.error('BOND350', `@layer found (${a.layers}). DNN's default.css and module CSS are unlayered, so layered theme rules lose to all of them - see docs/css-architecture.md#why-no-cascade-layers.`, loc);
     if (a.important > maxImportant) diag.error('BOND351', `${a.important} !important declaration(s) (budget ${maxImportant}).`, loc);
     if (a.foreignClasses.length) diag.error('BOND352', `Classes owned by another theme leak into this bundle: ${a.foreignClasses.slice(0, 8).join(', ')}`, loc);
@@ -281,27 +281,38 @@ export async function buildTheme(ws, id, opts = {}) {
     }
     if (theme.hasContainers) copyTree(stage, path.join(theme.dir, 'containers'), 'container', theme.pkg.name, { mode });
 
-    // 2. CSS entry points.
+    // 2. CSS entry points. Shared packages may declare skin outputs in
+    //    package.json "bond.styles" (e.g. @bond/splash -> splash.css, the
+    //    stylesheet of the layout it overlays); the theme's own theme.json
+    //    "styles" entry with the same output path replaces it.
     const cssOutputs = [];
     const assetSources = new Map();
+    const cssEntries = new Map();
+    for (const p of closure.slice(0, -1)) {
+      for (const [outPath, src] of Object.entries(p.bond.styles || {})) cssEntries.set(`skin:${outPath}`, { root: 'skin', outPath, entry: path.join(p.dir, src), origin: p.name });
+    }
     for (const [root, map] of [['skin', theme.config.styles || {}], ['container', theme.config.containerStyles || {}]]) {
       for (const [outPath, src] of Object.entries(map)) {
-        const entry = path.join(theme.dir, src);
-        const res = await compileCss({ entry, outPath, mode, ownerOf, theme });
-        for (const w of res.warnings) diag.warn('BOND111', w.message, w);
-        let code = `${banner}\n${res.code}`;
-        if (res.map) {
-          stage.put(root, `${outPath}.map`, Buffer.from(res.map), 'compiler');
-          code += `\n/*# sourceMappingURL=${path.posix.basename(outPath)}.map */\n`;
-        }
-        stage.put(root, outPath, Buffer.from(code, 'utf8'), 'compiler', diag, entry);
-        cssOutputs.push({ root, path: outPath, src });
-        for (const a of res.assets) {
-          const k = `${root}:${a.out}`;
-          if (assetSources.has(k) && assetSources.get(k) !== a.src) throw new BondError(`Two different files map to ${a.out}: ${rel(assetSources.get(k))} and ${rel(a.src)}`, 'BOND126');
-          assetSources.set(k, a.src);
-          stage.put(root, a.out, fs.readFileSync(a.src), 'asset', null, a.src);
-        }
+        const prev = cssEntries.get(`${root}:${outPath}`);
+        if (prev) diag.info('BOND202', `${root}/${outPath} from ${prev.origin} overridden by ${theme.pkg.name}`);
+        cssEntries.set(`${root}:${outPath}`, { root, outPath, entry: path.join(theme.dir, src), origin: theme.pkg.name });
+      }
+    }
+    for (const { root, outPath, entry } of cssEntries.values()) {
+      const res = await compileCss({ entry, outPath, mode, ownerOf, theme });
+      for (const w of res.warnings) diag.warn('BOND111', w.message, w);
+      let code = `${banner}\n${res.code}`;
+      if (res.map) {
+        stage.put(root, `${outPath}.map`, Buffer.from(res.map), 'compiler');
+        code += `\n/*# sourceMappingURL=${path.posix.basename(outPath)}.map */\n`;
+      }
+      stage.put(root, outPath, Buffer.from(code, 'utf8'), 'compiler', diag, entry);
+      cssOutputs.push({ root, path: outPath, entry });
+      for (const a of res.assets) {
+        const k = `${root}:${a.out}`;
+        if (assetSources.has(k) && assetSources.get(k) !== a.src) throw new BondError(`Two different files map to ${a.out}: ${rel(assetSources.get(k))} and ${rel(a.src)}`, 'BOND126');
+        assetSources.set(k, a.src);
+        stage.put(root, a.out, fs.readFileSync(a.src), 'asset', null, a.src);
       }
     }
 

@@ -25,7 +25,7 @@ DNN lets every page choose its layout (Page Settings → Appearance), and pages
 may even use layouts from different themes.
 
 - **CSS:** DNN registers `skin.css` on every layout of the theme and
-  `<layout>.css` only on that layout. So `splash.css` (Bond) and
+  `<layout>.css` only on that layout. So `splash.css` (shared, from `@bond/splash`) and
   `dashboard.css` (DZP) never load elsewhere (test G4).
 - **JS:** `resources/js/theme.js` is included from `_includes.ascx` on every
   layout. Every initialiser is a no-op when its markup is absent. A layout that

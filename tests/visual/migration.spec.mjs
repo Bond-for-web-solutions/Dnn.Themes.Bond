@@ -48,7 +48,7 @@ const PAIRS = {
   splash: [
     ['splash', '.bond-splash', '.bond-splash'],
     ['inner', '.bond-splash__inner', '.bond-splash__inner'],
-    ['logo', '.bond-logo', '.bond-logo'],
+    ['logo', '.bond-logo', '.bond-splash__logo'],
     ['title', '.bond-splash__title', '.bond-splash__title'],
     ['text', '.bond-splash__text', '.bond-splash__text'],
     ['rule', '.bond-splash__rule', '.bond-splash__rule'],

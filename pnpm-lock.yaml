@@ -220,6 +220,15 @@ importers:
         specifier: workspace:*
         version: link:../tokens
 
+  packages/splash:
+    dependencies:
+      '@bond/dnn':
+        specifier: workspace:*
+        version: link:../dnn
+      '@bond/tokens':
+        specifier: workspace:*
+        version: link:../tokens
+
   packages/tokens: {}
 
   themes/bond:
@@ -233,6 +242,9 @@ importers:
       '@bond/foundation':
         specifier: workspace:*
         version: link:../../packages/foundation
+      '@bond/splash':
+        specifier: workspace:*
+        version: link:../../packages/splash
       '@bond/tokens':
         specifier: workspace:*
         version: link:../../packages/tokens
@@ -248,6 +260,9 @@ importers:
       '@bond/foundation':
         specifier: workspace:*
         version: link:../../packages/foundation
+      '@bond/splash':
+        specifier: workspace:*
+        version: link:../../packages/splash
       '@bond/tokens':
         specifier: workspace:*
         version: link:../../packages/tokens

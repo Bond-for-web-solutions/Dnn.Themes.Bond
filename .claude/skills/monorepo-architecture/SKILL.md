@@ -14,6 +14,7 @@ Rules and rationale: `docs/monorepo.md` and ADR-1/2 in `docs/architecture.md`.
 | a token / breakpoint | `packages/tokens` |
 | DNN-generic (identical ASCX partial, WebForms helper) | `packages/dnn` (`skin/` overlay or `src/`) |
 | layout primitive or utility | `packages/foundation` |
+| a whole layout every theme ships (splash) | its own package: `skin/` overlay + `bond.styles` (see `packages/splash`) |
 | reusable UI with a contract | `packages/components/src/<name>/` |
 | specific to one site/brand | `themes/<id>/` |
 | build/validation tooling | `packages/build` |

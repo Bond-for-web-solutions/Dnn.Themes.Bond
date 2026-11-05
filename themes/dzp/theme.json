@@ -52,6 +52,9 @@
     "dashboard.css": {
       "brotli": 1500
     },
+    "splash.css": {
+      "brotli": 1500
+    },
     "resources/js/dashboard.js": {
       "brotli": 800
     }

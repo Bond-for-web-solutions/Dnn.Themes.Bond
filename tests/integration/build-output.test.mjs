@@ -29,7 +29,7 @@ test('publish contract: staged theme, versioned package, checksums, reports', ()
   assert.equal(bm.mode, 'production');
   assert.match(bm.git.sha, /^([0-9a-f]{40}|unknown)$/);
   assert.ok(bm.lockfileSha256, 'lockfile hash recorded');
-  assert.deepEqual(bm.dependencies.map((d) => d.name).sort(), ['@bond-theme/bond', '@bond/components', '@bond/dnn', '@bond/foundation', '@bond/tokens']);
+  assert.deepEqual(bm.dependencies.map((d) => d.name).sort(), ['@bond-theme/bond', '@bond/components', '@bond/dnn', '@bond/foundation', '@bond/splash', '@bond/tokens']);
   assert.ok(bm.dependencies.every((d) => /^[0-9a-f]{64}$/.test(d.contentHash)));
   assert.equal(JSON.parse(fs.readFileSync(path.join(P, 'bond', 'reports', 'validation.json'), 'utf8')).status, 'passed');
   assert.ok(fs.readFileSync(path.join(P, 'bond', 'packages', 'SHA256SUMS'), 'utf8').startsWith(bm.package.sha256));
@@ -51,7 +51,8 @@ test('install ZIP: manifest, root files and nested archives match DNN expectatio
   const res = readZip(entries.get('Resources.zip').data).map((e) => e.name);
   for (const f of ['menus/header/HeaderMenu.cshtml', 'menus/header/menudef.xml', 'menus/footer/FooterMenu.cshtml', 'menus/footer/menudef.xml',
     'partials/_includes.ascx', 'partials/_registers.ascx', 'skin.doctype.xml', 'skin.css', 'splash.css', 'resources/js/theme.js',
-    'resources/img/bond-for-web-solutions-logo.png', 'resources/font/MuseoSans/MuseoSans_500.otf']) {
+    'resources/vendor/splash/assets/img/bond-for-web-solutions-logo.png', 'resources/vendor/splash/assets/font/MuseoSans_500.otf',
+    'resources/font/MuseoSans/MuseoSans_500.otf']) {
     assert.ok(res.includes(f), `Resources.zip lacks ${f}`);
   }
   assert.ok(!res.includes('default.ascx') && !res.includes('splash.ascx'), 'declared layouts live at the ZIP root only');
@@ -74,6 +75,11 @@ test('shared packages are compiled in automatically; no runtime dependency on ot
   // Shared ASCX overlay from @bond/dnn arrived without copying it into the theme.
   assert.ok(fs.existsSync(path.join(skin(), 'partials', '_registers.ascx')));
   assert.ok(!fs.existsSync(path.join(import.meta.dirname, '..', '..', 'themes', 'bond', 'skin', 'partials', '_registers.ascx')));
+  // The splash layout and its stylesheet come from @bond/splash (skin overlay + package.json bond.styles).
+  const bm = JSON.parse(fs.readFileSync(path.join(P, 'bond', 'reports', 'build-manifest.json'), 'utf8'));
+  assert.equal(bm.outputs.find((o) => o.path.endsWith('/splash.ascx')).origin, '@bond/splash');
+  assert.ok(fs.readFileSync(path.join(skin(), 'splash.css'), 'utf8').includes('.bond-splash__logo'));
+  assert.ok(!fs.existsSync(path.join(import.meta.dirname, '..', '..', 'themes', 'bond', 'skin', 'splash.ascx')));
   // Nothing references another extension's folder or a remote host.
   for (const f of ['skin.css', 'splash.css', 'resources/js/theme.js', 'default.ascx', 'splash.ascx', 'partials/_includes.ascx']) {
     const text = fs.readFileSync(path.join(skin(), f), 'utf8');
@@ -100,6 +106,8 @@ test('upgrade from 1.0.0: Cleanup removes exactly the files 1.1.0 no longer ship
     'resources/css/fonts.css', 'resources/css/login.css', 'resources/css/skin.css', 'resources/css/splash.css',
     'resources/font/MuseoSans/MuseoSans-100.otf', 'resources/font/MuseoSans/MuseoSans-100Italic.otf', 'resources/font/MuseoSans/MuseoSans-300.otf',
     'resources/font/MuseoSans/MuseoSans-300Italic.otf', 'resources/font/MuseoSans/MuseoSans-700Italic.otf', 'resources/font/MuseoSans/MuseoSans-900Italic.otf',
+    // The splash logo moved to resources/vendor/splash/ with the shared @bond/splash layout.
+    'resources/img/bond-for-web-solutions-logo.png',
     'resources/js/login.js',
   ]);
   // Never delete something the new version still installs.

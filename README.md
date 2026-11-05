@@ -54,6 +54,7 @@ in `.vscode/tasks.json` calls the same CLI as the terminal and CI.
 ```text
 packages/tokens       design tokens + breakpoints          packages/components  button, field, card, alert, auth-card
 packages/foundation   opt-in base, layout, utilities       packages/dnn         shared DNN skin files, onDnnReady()
+packages/splash       shared splash.ascx + splash.css ("under construction" layout, same in every theme)
 packages/build        bond CLI, validation, packaging, Stylelint rule, theme template
 themes/<id>/          skin/ containers/ styles/ scripts/ assets/ package/ releases/ tests/ theme.json
 tests/                integration (node:test) · visual + isolation (Playwright) · e2e on real DNN (opt-in)
