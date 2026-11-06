@@ -234,15 +234,11 @@
       "label": "DNN: Install Dependencies",
       "detail": "pnpm install --frozen-lockfile (pnpm version from package.json).",
       "type": "process",
-      "command": "corepack",
+      "command": "node",
       "args": [
-        "pnpm",
-        "install",
-        "--frozen-lockfile"
+        "${workspaceFolder}/packages/build/bin/bond.mjs",
+        "install"
       ],
-      "windows": {
-        "command": "corepack.cmd"
-      },
       "options": {
         "cwd": "${workspaceFolder}"
       },

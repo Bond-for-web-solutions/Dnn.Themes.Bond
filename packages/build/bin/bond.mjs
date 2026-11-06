@@ -3,7 +3,7 @@
 // (.vscode/tasks.json) and GitHub Actions. Run `bond help` for usage.
 import { parseArgs } from 'node:util';
 import { loadWorkspace } from '../lib/workspace.mjs';
-import { BondError, paint } from '../lib/util.mjs';
+import { BondError, paint, printOutcome } from '../lib/util.mjs';
 
 const HELP = `bond <command> [options]
 
@@ -14,7 +14,7 @@ const HELP = `bond <command> [options]
   build <theme...> | --all   Build theme(s). --mode production (default) | development
                              --package   also create an install ZIP in development mode
                              --deploy    copy each successful build to the site in .env
-  watch <theme>              Rebuild (development) on theme/shared changes. --deploy
+  watch <theme>              Rebuild (development) on theme/shared changes. --deploy [--prune --adopt]
   validate <theme...> | --all  Re-verify published output, reports and ZIPs (no rebuild)
   clean <theme...> | --all   Delete publish/<theme> (only generated artifacts)
   deploy <theme>             Copy a validated build to the LOCAL DNN site in .env
@@ -24,6 +24,7 @@ const HELP = `bond <command> [options]
   check                      Workspace architecture checks (boundaries, layers, identities)
   create-theme <id>          Scaffold themes/<id>. --prefix <p> --package-name <Name>
   list-themes [--all]        Print themes/ as value|label|description lines (VS Code live picker)
+  install                    pnpm install --frozen-lockfile via corepack (VS Code task)
   script <name>              Run a package.json script (used by VS Code tasks; no pnpm needed)
 `;
 
@@ -90,7 +91,7 @@ async function main() {
         try {
           const res = await buildTheme(ws, id, { mode, package: o.package });
           if (!res.ok) failed++;
-          else if (o.deploy) (await import('../lib/ops.mjs')).deploy(ws, id);
+          else if (o.deploy) (await import('../lib/ops.mjs')).deploy(ws, id, { adopt: o.adopt, prune: o.prune });
         } catch (err) {
           failed++;
           printError(err);
@@ -101,7 +102,7 @@ async function main() {
     case 'watch': {
       const { watchTheme } = await import('../lib/watch.mjs');
       const [id] = await themesArg(ws, { single: true });
-      await watchTheme(id, { deploy: !!o.deploy });
+      await watchTheme(id, { deploy: !!o.deploy, deployOptions: { adopt: o.adopt, prune: o.prune } });
       return 0;
     }
     case 'validate': {
@@ -157,6 +158,13 @@ async function main() {
       if (o.all) console.log('--all|All themes|every theme in themes/');
       return 0;
     }
+    case 'install': {
+      // Same as `corepack pnpm install --frozen-lockfile` (pnpm version from package.json).
+      // A shell is needed on Windows to resolve corepack.cmd; the arguments are constants.
+      const { spawnSync } = await import('node:child_process');
+      const { repoRoot } = await import('../lib/util.mjs');
+      return spawnSync('corepack', ['pnpm', 'install', '--frozen-lockfile'], { cwd: repoRoot, stdio: 'inherit', shell: process.platform === 'win32' }).status ?? 1;
+    }
     case 'script': {
       if (args.length !== 1) throw new BondError('script takes exactly one package.json script name', 'BOND002');
       return (await import('../lib/menu.mjs')).runScript(args[0]);
@@ -175,4 +183,13 @@ function printError(err) {
   }
 }
 
-main().then((code) => { process.exitCode = code; }, (err) => { printError(err); process.exitCode = 1; });
+// Every finished command ends with a green "Done" (or red "Failed") line, except
+// machine-readable output (list-themes, affected --json), help, watch (never
+// finishes; it reports each rebuild) and menu (the command it runs reports).
+function finish(code) {
+  process.exitCode = code;
+  if (!cmd || o.help || cmd === 'help' || ['list-themes', 'menu', 'watch'].includes(cmd) || (cmd === 'affected' && o.json)) return;
+  printOutcome(cmd === 'script' && args[0] ? args[0] : `bond ${process.argv.slice(2).join(' ')}`, code);
+}
+
+main().then(finish, (err) => { printError(err); finish(1); });

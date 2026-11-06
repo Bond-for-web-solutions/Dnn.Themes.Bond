@@ -6,7 +6,7 @@ import path from 'node:path';
 import readline from 'node:readline';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { repoRoot, readJson, BondError } from './util.mjs';
+import { repoRoot, readJson, BondError, printOutcome } from './util.mjs';
 import { loadWorkspace } from './workspace.mjs';
 
 const CLI = fileURLToPath(new URL('../bin/bond.mjs', import.meta.url));
@@ -144,5 +144,8 @@ async function runMenu() {
     ids = picked.value === '--all' ? themes : [picked.value];
   }
   const step = action.run(ids);
-  return step.script ? runScript(step.script) : runCli(step.cli);
+  if (!step.script) return runCli(step.cli); // the child bond process prints its own Done/Failed line
+  const code = runScript(step.script);
+  printOutcome(step.script, code);
+  return code;
 }

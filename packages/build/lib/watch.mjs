@@ -6,13 +6,13 @@ import path from 'node:path';
 import { loadWorkspace, loadTheme, dependencyClosure } from './workspace.mjs';
 import { buildTheme } from './build.mjs';
 import { deploy } from './ops.mjs';
-import { rel } from './util.mjs';
+import { rel, printOutcome } from './util.mjs';
 
 // Markers for the VS Code background problem matcher (.vscode/tasks.json).
 export const WATCH_BEGIN = 'bond: watch build started';
 export const WATCH_END = 'bond: watch build finished';
 
-export async function watchTheme(id, { deploy: deployAfterBuild = false, mode = 'development' } = {}) {
+export async function watchTheme(id, { deploy: deployAfterBuild = false, deployOptions = {}, mode = 'development' } = {}) {
   let ws = loadWorkspace();
   const theme = loadTheme(ws, id);
   const dirs = dependencyClosure(ws, theme.pkg).map((p) => p.dir);
@@ -25,9 +25,11 @@ export async function watchTheme(id, { deploy: deployAfterBuild = false, mode = 
     try {
       ws = loadWorkspace(); // pick up package.json/theme.json edits
       const res = await buildTheme(ws, id, { mode });
+      let ok = res.ok;
       if (res.ok && deployAfterBuild) {
-        try { deploy(ws, id); } catch (e) { console.error(`bond: error ${e.code || 'BOND700'}: deploy skipped: ${e.message}`); }
+        try { deploy(ws, id, deployOptions); } catch (e) { ok = false; console.error(`bond: error ${e.code || 'BOND700'}: deploy skipped: ${e.message}`); }
       }
+      printOutcome(`rebuild ${id}${deployAfterBuild ? ' + deploy' : ''} (still watching)`, ok ? 0 : 1);
     } catch (e) {
       console.error(`bond: error ${e.code || 'BOND001'}: ${e.message}`);
     } finally {

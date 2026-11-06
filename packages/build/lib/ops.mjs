@@ -229,13 +229,20 @@ export function deploy(ws, id, opts = {}) {
     const files = listFiles(pair.src);
     // Case-insensitive: on NTFS "theme.js" and "Theme.js" are the same file.
     const current = new Set(files.map((f) => f.toLowerCase()));
-    const stale = previous && (opts.prune || config.pruneFor(id)) ? (previous.files || []).filter((f) => !current.has(String(f).toLowerCase())) : [];
-    plan.push({ ...pair, files, stale, markerFile });
+    const leftover = (previous?.files || []).map(String).filter((f) => !current.has(f.toLowerCase()));
+    const prune = opts.prune || config.pruneFor(id);
+    const stale = prune ? leftover : [];
+    // Without pruning, files bond deployed before stay bond's: keep them in the
+    // marker so a later --prune can still remove them.
+    const kept = prune ? [] : leftover.filter((f) => isInside(pair.dest, path.join(pair.dest, ...f.split('/'))) && fs.existsSync(path.join(pair.dest, ...f.split('/'))));
+    plan.push({ ...pair, files, stale, kept, markerFile });
   }
 
   console.log(`bond: deploy ${id} ${bm.version} (${bm.mode}, ${bm.git.short}) -> ${siteRoot} (${key})${opts.dryRun ? ' [dry run]' : ''}`);
   for (const step of plan) {
     console.log(`  ${step.files.length} file(s) -> ${step.dest}${step.stale.length ? `; prune ${step.stale.length} stale file(s) previously deployed by bond` : ''}`);
+    for (const f of step.stale) console.log(`    - ${f}`);
+    if (step.kept.length) console.log(`  ${step.kept.length} file(s) from an earlier deploy are no longer in the build; kept (use --prune or ${envKey(id)}_PRUNE=true to remove them)`);
     if (opts.dryRun) continue;
     for (const f of step.files) {
       const to = path.join(step.dest, ...f.split('/'));
@@ -250,8 +257,13 @@ export function deploy(ws, id, opts = {}) {
       if (!isInside(step.dest, victim) || !fs.existsSync(victim)) continue;
       assertNoLinks(siteRoot, victim, loc);
       fs.rmSync(victim);
+      // Remove folders the prune emptied (never dest itself, never a folder with other files).
+      for (let dir = path.dirname(victim); dir !== step.dest && isInside(step.dest, dir); dir = path.dirname(dir)) {
+        if (fs.readdirSync(dir).length) break;
+        fs.rmdirSync(dir);
+      }
     }
-    writeJson(step.markerFile, { theme: id, version: bm.version, mode: bm.mode, git: bm.git.sha, deployedAt: new Date().toISOString(), files: step.files });
+    writeJson(step.markerFile, { theme: id, version: bm.version, mode: bm.mode, git: bm.git.sha, deployedAt: new Date().toISOString(), files: [...step.files, ...step.kept] });
   }
   if (!opts.dryRun) {
     console.log('bond: deployed. DNN caches client resources as ?cdv=<CRM version>: with debug mode on, a refresh is enough; otherwise increment the client resource version (or reinstall the ZIP) to bust caches.');

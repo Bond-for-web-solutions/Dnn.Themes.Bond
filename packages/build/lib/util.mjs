@@ -64,6 +64,12 @@ const colorOn = (stream) => !process.env.NO_COLOR && (process.env.FORCE_COLOR ? 
 const wrap = (open, close) => (text, stream = process.stdout) => (colorOn(stream) ? `\x1b[${open}m${text}\x1b[${close}m` : text);
 export const paint = { red: wrap(31, 39), yellow: wrap(33, 39), green: wrap(32, 39), dim: wrap(2, 22), bold: wrap(1, 22) };
 
+/** Last line of every finished task: green "✔ Done: …" or red "✖ Failed: …". */
+export function printOutcome(label, code) {
+  if (code === 0) console.log(paint.green(`✔ Done: ${label}`));
+  else console.error(paint.red(`✖ Failed: ${label} (exit code ${code})`, process.stderr));
+}
+
 export class BondError extends Error {
   constructor(message, code = 'BOND001', loc = {}) {
     super(message);

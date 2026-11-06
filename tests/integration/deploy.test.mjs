@@ -129,6 +129,29 @@ test('--prune deletes only stale files bond itself deployed before', () => {
   assert.ok(fs.existsSync(path.join(dest, 'customer-upload.png')), 'files bond did not deploy are kept');
 });
 
+test('a deploy without --prune keeps stale files in the marker, so a later --prune still removes them', () => {
+  const dest = path.join(site, 'Portals', '_default', 'Skins', 'DNN.Themes.Bond');
+  const marker = path.join(dest, '.bond-deploy.json');
+  const m = JSON.parse(fs.readFileSync(marker, 'utf8'));
+  fs.mkdirSync(path.join(dest, 'gone', 'deep'), { recursive: true });
+  fs.writeFileSync(path.join(dest, 'gone', 'deep', 'old.js'), 'stale');
+  m.files.push('gone/deep/old.js', 'already-deleted.css');
+  fs.writeFileSync(marker, JSON.stringify(m));
+
+  let r = run(['deploy', 'bond'], config({ siteRoot: site }));
+  assert.equal(r.code, 0, r.out);
+  assert.match(r.out, /1 file\(s\) from an earlier deploy/);
+  const after = JSON.parse(fs.readFileSync(marker, 'utf8')).files;
+  assert.ok(after.includes('gone/deep/old.js'), 'still owned by bond');
+  assert.ok(!after.includes('already-deleted.css'), 'files no longer on disk are dropped');
+
+  r = run(['deploy', 'bond', '--prune'], config({ siteRoot: site }));
+  assert.equal(r.code, 0, r.out);
+  assert.match(r.out, /- gone\/deep\/old\.js/);
+  assert.ok(!fs.existsSync(path.join(dest, 'gone')), 'folders emptied by the prune are removed');
+  assert.ok(!JSON.parse(fs.readFileSync(marker, 'utf8')).files.includes('gone/deep/old.js'));
+});
+
 test('refuses to deploy through a junction/symlink (could point into a repo or another site)', () => {
   const other = tempDir();
   const linkSite = fakeDnnSite(path.join(tempDir(), 'linked'));
