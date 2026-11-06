@@ -7,6 +7,7 @@ is used by the terminal, VS Code tasks and CI. Read `docs/architecture.md` first
 ## Commands
 
 ```bash
+scripts\setup.cmd | sh scripts/setup.sh    # once per machine: Node 24 + pnpm 12.14.0 (Windows | macOS/Linux)
 pnpm install --frozen-lockfile             # pnpm not found? npm install -g pnpm@12.14.0 --allow-scripts=pnpm
 pnpm menu                                  # pick command + theme in the terminal (VS Code: Ctrl+Shift+B)
 pnpm build <theme> | build:all             # production -> publish/<theme>/{theme,packages,reports}; no theme = pick from a list

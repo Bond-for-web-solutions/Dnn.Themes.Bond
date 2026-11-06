@@ -6,6 +6,9 @@ same commands. There is no IDE-only build logic.
 
 ## Prerequisites
 
+- Both can be installed with `scripts\setup.cmd` (Windows) or `sh scripts/setup.sh`
+  (macOS/Linux): versions are read from the files below; an existing Node ≥ 22.12 is kept,
+  otherwise fnm/nvm or the checksum-verified official nodejs.org build is used (user-level, no admin).
 - Node.js **24** (`.node-version`; engines `>=22.12`).
 - pnpm **12.14.0** (`packageManager` in `package.json`):
   install once with `npm install -g pnpm@12.14.0 --allow-scripts=pnpm` (pnpm 12 is a native

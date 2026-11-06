@@ -15,8 +15,21 @@ theme's files.
 Requirements: Node.js 24 (see `.node-version`) and pnpm 12.14.0, the version
 in `package.json`. No Visual Studio or MSBuild needed.
 
+Run the setup script once per machine. It installs that Node and pnpm, keeping a
+Node you already have if it is ≥ 22.12, and needs no admin/sudo:
+
+| OS | Command |
+| --- | --- |
+| Windows | `scripts\setup.cmd` |
+| macOS / Linux | `sh scripts/setup.sh` |
+
+It uses fnm/nvm when installed, otherwise the official nodejs.org build
+(SHA-256 checked) in `%LOCALAPPDATA%\Programs\node` or `~/.local/node`. Pass
+`-Force` / `--force` to reinstall Node. Then open a new terminal and:
+
 ```bash
-npm install -g pnpm@12.14.0 --allow-scripts=pnpm   # once per machine (puts `pnpm` on PATH)
+# manual alternative to the setup script, with Node already installed:
+# npm install -g pnpm@12.14.0 --allow-scripts=pnpm
 pnpm install --frozen-lockfile
 pnpm build bond                            # -> publish/bond/packages/DNN.Themes.Bond_01.01.00_Install.zip
 ```

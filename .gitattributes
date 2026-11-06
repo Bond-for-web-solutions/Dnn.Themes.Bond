@@ -13,6 +13,9 @@
 *.yml text
 *.yaml text
 
+# Shell scripts must keep LF or they fail on macOS/Linux
+*.sh text eol=lf
+
 # PowerShell scripts and Windows batch files keep CRLF
 *.ps1 text eol=crlf
 *.cmd text eol=crlf
