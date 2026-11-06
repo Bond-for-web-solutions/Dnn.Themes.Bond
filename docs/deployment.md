@@ -11,7 +11,7 @@ using a reviewed release ZIP.
    ```ini
    BOND_SITE_ROOT=C:\DNN\bond-dev   # the DNN site for theme "bond" (web.config, bin\, Portals\)
    DZP_SITE_ROOT=C:\DNN\dzp-dev     # one line per theme: folder name in themes/ in capitals
-   BOND_PRUNE=true                  # optional, per theme: remove files bond deployed before that are gone now
+   BOND_PRUNE=true                  # optional, per theme: delete every file in the skin/container folder that the build does not have
 
    SITE_ROOT=C:\DNN\my-dev-site     # optional fallback for themes without their own line
    PRUNE=false                      # optional fallback for <THEME>_PRUNE
@@ -40,7 +40,7 @@ using a reviewed release ZIP.
 | marker belongs to another theme → refuse | BOND713 |
 | no symbolic link or junction anywhere on the destination path; real-path containment before every write | BOND717/715 |
 | `publish/` files must still match `build-manifest.json` hashes | BOND716 |
-| `--prune` deletes only files bond deployed there previously (case-insensitive) | - |
+| `--prune` (or `<THEME>_PRUNE=true`) makes `Skins/<skinName>` and `Containers/<containerName>` mirror the build: every file the build does not have is deleted, files added by hand included, and empty folders are removed (case-insensitive; symbolic links are never followed or deleted). Without it, such files are listed and left. `--dry-run` shows what would be deleted | - |
 
 After a file copy, DNN still serves cached URLs (`?cdv=<n>`). Enable debug
 mode on the dev site, or increment the client resource version

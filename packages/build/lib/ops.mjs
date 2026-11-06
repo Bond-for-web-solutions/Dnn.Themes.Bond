@@ -184,6 +184,16 @@ function assertUntouched(p, bm, loc) {
   for (const f of recorded.keys()) if (!actual.includes(f)) throw new BondError(`Published file missing: ${f}. Rebuild before deploying.`, 'BOND716', loc);
 }
 
+/** Delete empty folders below `dir` (not `dir` itself); links are never followed or removed. */
+function removeEmptyDirs(dir) {
+  for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
+    if (!ent.isDirectory() || ent.isSymbolicLink()) continue;
+    const sub = path.join(dir, ent.name);
+    removeEmptyDirs(sub);
+    if (!fs.readdirSync(sub).length) fs.rmdirSync(sub);
+  }
+}
+
 /**
  * @param {{dryRun?: boolean, adopt?: boolean, prune?: boolean}} opts
  */
@@ -229,20 +239,27 @@ export function deploy(ws, id, opts = {}) {
     const files = listFiles(pair.src);
     // Case-insensitive: on NTFS "theme.js" and "Theme.js" are the same file.
     const current = new Set(files.map((f) => f.toLowerCase()));
-    const leftover = (previous?.files || []).map(String).filter((f) => !current.has(f.toLowerCase()));
+    // Prune mirrors the build: every file in this skin/container folder that the
+    // build does not have is deleted (also files added by hand). Symbolic links
+    // are never listed, so never deleted.
+    const extra = listFiles(pair.dest, { ignore: (name) => name === MARKER }).filter((f) => !current.has(f.toLowerCase()));
     const prune = opts.prune || config.pruneFor(id);
-    const stale = prune ? leftover : [];
-    // Without pruning, files bond deployed before stay bond's: keep them in the
-    // marker so a later --prune can still remove them.
-    const kept = prune ? [] : leftover.filter((f) => isInside(pair.dest, path.join(pair.dest, ...f.split('/'))) && fs.existsSync(path.join(pair.dest, ...f.split('/'))));
-    plan.push({ ...pair, files, stale, kept, markerFile });
+    const stale = prune ? extra : [];
+    const left = prune ? [] : extra;
+    // Files bond deployed before and left in place stay in the marker (history only).
+    const owned = new Set((previous?.files || []).map((f) => String(f).toLowerCase()));
+    const kept = left.filter((f) => owned.has(f.toLowerCase()));
+    plan.push({ ...pair, files, stale, left, kept, markerFile });
   }
 
   console.log(`bond: deploy ${id} ${bm.version} (${bm.mode}, ${bm.git.short}) -> ${siteRoot} (${key})${opts.dryRun ? ' [dry run]' : ''}`);
   for (const step of plan) {
-    console.log(`  ${step.files.length} file(s) -> ${step.dest}${step.stale.length ? `; prune ${step.stale.length} stale file(s) previously deployed by bond` : ''}`);
+    console.log(`  ${step.files.length} file(s) -> ${step.dest}${step.stale.length ? `; prune ${step.stale.length} file(s) not in the build` : ''}`);
     for (const f of step.stale) console.log(`    - ${f}`);
-    if (step.kept.length) console.log(`  ${step.kept.length} file(s) from an earlier deploy are no longer in the build; kept (use --prune or ${envKey(id)}_PRUNE=true to remove them)`);
+    if (step.left.length) {
+      console.log(`  ${step.left.length} file(s) in ${step.dest} are not in the build; left in place (use --prune or ${envKey(id)}_PRUNE=true to remove them):`);
+      for (const f of step.left) console.log(`    ? ${f}`);
+    }
     if (opts.dryRun) continue;
     for (const f of step.files) {
       const to = path.join(step.dest, ...f.split('/'));
@@ -257,12 +274,8 @@ export function deploy(ws, id, opts = {}) {
       if (!isInside(step.dest, victim) || !fs.existsSync(victim)) continue;
       assertNoLinks(siteRoot, victim, loc);
       fs.rmSync(victim);
-      // Remove folders the prune emptied (never dest itself, never a folder with other files).
-      for (let dir = path.dirname(victim); dir !== step.dest && isInside(step.dest, dir); dir = path.dirname(dir)) {
-        if (fs.readdirSync(dir).length) break;
-        fs.rmdirSync(dir);
-      }
     }
+    if (step.stale.length) removeEmptyDirs(step.dest);
     writeJson(step.markerFile, { theme: id, version: bm.version, mode: bm.mode, git: bm.git.sha, deployedAt: new Date().toISOString(), files: [...step.files, ...step.kept] });
   }
   if (!opts.dryRun) {

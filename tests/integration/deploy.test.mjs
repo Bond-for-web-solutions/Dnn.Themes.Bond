@@ -115,21 +115,31 @@ test('refuses a folder deployed by a different theme', () => {
   fs.writeFileSync(marker, original);
 });
 
-test('--prune deletes only stale files bond itself deployed before', () => {
+test('--prune makes the skin folder mirror the build (also files added by hand), and touches nothing outside it', () => {
   const dest = path.join(site, 'Portals', '_default', 'Skins', 'DNN.Themes.Bond');
   const marker = path.join(dest, '.bond-deploy.json');
   const m = JSON.parse(fs.readFileSync(marker, 'utf8'));
   fs.writeFileSync(path.join(dest, 'old-from-bond.css'), 'stale');
-  fs.writeFileSync(path.join(dest, 'customer-upload.png'), 'not ours');
+  fs.writeFileSync(path.join(dest, 'default - Copy.ascx'), 'copied by hand');
+  fs.mkdirSync(path.join(dest, 'empty-folder'));
   m.files.push('old-from-bond.css');
   fs.writeFileSync(marker, JSON.stringify(m));
+
+  const dry = run(['deploy', 'bond', '--dry-run', '--prune'], config({ siteRoot: site }));
+  assert.equal(dry.code, 0, dry.out);
+  assert.match(dry.out, /- default - Copy\.ascx/);
+  assert.ok(fs.existsSync(path.join(dest, 'default - Copy.ascx')), 'dry run deletes nothing');
+
   const r = run(['deploy', 'bond', '--prune'], config({ siteRoot: site }));
   assert.equal(r.code, 0, r.out);
   assert.ok(!fs.existsSync(path.join(dest, 'old-from-bond.css')));
-  assert.ok(fs.existsSync(path.join(dest, 'customer-upload.png')), 'files bond did not deploy are kept');
+  assert.ok(!fs.existsSync(path.join(dest, 'default - Copy.ascx')), 'files the build does not have are removed');
+  assert.ok(!fs.existsSync(path.join(dest, 'empty-folder')), 'empty folders are removed');
+  assert.ok(fs.existsSync(marker), 'the marker stays');
+  assert.equal(fs.readFileSync(path.join(site, 'Portals', '_default', 'Skins', 'Other.Skin', 'default.ascx'), 'utf8'), 'someone else', 'other skins are untouched');
 });
 
-test('a deploy without --prune keeps stale files in the marker, so a later --prune still removes them', () => {
+test('a deploy without --prune lists extra files and leaves them; a later --prune still removes them', () => {
   const dest = path.join(site, 'Portals', '_default', 'Skins', 'DNN.Themes.Bond');
   const marker = path.join(dest, '.bond-deploy.json');
   const m = JSON.parse(fs.readFileSync(marker, 'utf8'));
@@ -140,7 +150,9 @@ test('a deploy without --prune keeps stale files in the marker, so a later --pru
 
   let r = run(['deploy', 'bond'], config({ siteRoot: site }));
   assert.equal(r.code, 0, r.out);
-  assert.match(r.out, /1 file\(s\) from an earlier deploy/);
+  assert.match(r.out, /1 file\(s\) in .* are not in the build; left in place/);
+  assert.match(r.out, /\? gone\/deep\/old\.js/);
+  assert.ok(fs.existsSync(path.join(dest, 'gone', 'deep', 'old.js')));
   const after = JSON.parse(fs.readFileSync(marker, 'utf8')).files;
   assert.ok(after.includes('gone/deep/old.js'), 'still owned by bond');
   assert.ok(!after.includes('already-deleted.css'), 'files no longer on disk are dropped');
