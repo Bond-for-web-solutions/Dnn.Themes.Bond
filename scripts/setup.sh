@@ -47,25 +47,40 @@ node_ok() { # Node on PATH satisfies engines >= 22.12.0
   node -e 'const [a,b]=process.versions.node.split(".").map(Number);process.exit(a>22||(a===22&&b>=12)?0:1)' 2>/dev/null
 }
 
-profile_file() {
-  case "${SHELL:-}" in
-    */zsh)  echo "$HOME/.zshrc" ;;
-    */bash) if [ "$(uname -s)" = Darwin ]; then echo "$HOME/.bash_profile"; else echo "$HOME/.bashrc"; fi ;;
-    *)      echo "$HOME/.profile" ;;
+profile_for() { # shell name or path -> its startup file
+  case "$1" in
+    *zsh)  echo "$HOME/.zshrc" ;;
+    *bash) if [ "$(uname -s)" = Darwin ]; then echo "$HOME/.bash_profile"; else echo "$HOME/.bashrc"; fi ;;
+    *)     echo "$HOME/.profile" ;;
   esac
 }
 
-add_to_path() { # dir: prepend for this run and persist in the shell profile
-  PATH="$1:$PATH"; export PATH
-  profile=$(profile_file)
-  line="export PATH=\"$1:\$PATH\""
-  if [ ! -f "$profile" ] || ! grep -qF "$line" "$profile"; then
-    printf '\n# Added by Dnn.Themes.Bond scripts/setup.sh\n%s\n' "$line" >> "$profile"
-    info "Added $1 to PATH in $profile"
-    RESTART_SHELL=1
+# The login shell ($SHELL) and the shell that ran this script can differ, e.g. a
+# VS Code terminal set to bash while macOS defaults to zsh. Persist PATH for both.
+profile_files() {
+  login=$(profile_for "${SHELL:-}")
+  parent=$(ps -p "$PPID" -o comm= 2>/dev/null | sed 's/^-//' || true)
+  echo "$login"
+  if [ -n "$parent" ]; then
+    current=$(profile_for "$parent")
+    [ "$current" = "$login" ] || echo "$current"
   fi
 }
+
+add_to_path() { # dir: prepend for this run and persist in the shell profile(s)
+  PATH="$1:$PATH"; export PATH
+  line="export PATH=\"$1:\$PATH\""
+  NEW_PATH_LINES="${NEW_PATH_LINES}${line}; "
+  for profile in $(profile_files); do
+    if [ ! -f "$profile" ] || ! grep -qF "$line" "$profile"; then
+      printf '\n# Added by Dnn.Themes.Bond scripts/setup.sh\n%s\n' "$line" >> "$profile"
+      info "Added $1 to PATH in $profile"
+    fi
+  done
+  RESTART_SHELL=1
+}
 RESTART_SHELL=0
+NEW_PATH_LINES=""
 
 install_node_official() {
   case "$(uname -s)" in
@@ -150,5 +165,8 @@ info "pnpm $(pnpm --version)"
 
 echo
 info "Done. Next: pnpm install --frozen-lockfile"
-[ "$RESTART_SHELL" -eq 1 ] && warn "open a new terminal (or run: . $(profile_file)) so PATH changes apply"
+if [ "$RESTART_SHELL" -eq 1 ]; then
+  warn "this terminal does not see the new PATH yet. Open a new terminal, or run:"
+  printf '    %s\n' "$NEW_PATH_LINES" >&2
+fi
 exit 0
