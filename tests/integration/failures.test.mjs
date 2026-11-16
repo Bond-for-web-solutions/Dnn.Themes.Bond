@@ -34,7 +34,7 @@ const CASES = [
   ['undeclared package import', 'BOND105', (t) => t.edit('styles/layout.css', (s) => `@import "@bond/build/stylelint-plugin";\n${s}`)],
   ['relative import escaping the theme', 'BOND103', (t) => t.edit('styles/layout.css', (s) => `@import "../../../packages/tokens/src/tokens.css";\n${s}`)],
   ['secret in a shipped file', 'BOND360', (t) => t.edit('skin/menus/footer/FooterMenu.cshtml', (s) => `${s}\n@* Server=db;User Id=sa;Password=Hunter2!; *@\n`)],
-  ['inline event handler (CSP)', 'BOND330', (t) => t.edit('skin/default.ascx', (s) => s.replace('<main class="bond-main">', '<main class="bond-main" onclick="alert(1)">'))],
+  ['inline event handler (CSP)', 'BOND330', (t) => t.edit('skin/default.ascx', (s) => s.replace('<main id="bond-main" class="bond-main" tabindex="-1">', '<main id="bond-main" class="bond-main" tabindex="-1" onclick="alert(1)">'))],
   ['size budget exceeded', 'BOND371', (t) => { const c = t.cfg(); c.budgets['skin.css'].brotli = 100; t.setCfg(c); }],
   ['remote url() dependency', 'BOND120', (t) => t.edit('styles/layout.css', (s) => `${s}\n.bond-r { background: url("https://cdn.example.com/x.png"); }\n`)],
   ['forbidden file type in skin/', 'BOND361', (t) => fs.writeFileSync(path.join(t.dir, 'skin', 'deploy.ps1'), 'Remove-Item -Recurse C:\\')],

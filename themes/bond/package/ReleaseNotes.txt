@@ -1,3 +1,73 @@
+DNN.Themes.Bond - unreleased (planned 1.2.0): huisstijl 2027
+=============================================================
+
+Design system (huisstijl 2027, brandbook p. 05-12)
+- Palette, type scale (h1 56/62, h2 44/52, h3 24/30, lead 20/30, body 16/26),
+  96px section rhythm and 1248px content width as tokens (styles/tokens.css).
+- Editor building blocks (styles/content.css): label, lead, markering
+  (bond-mark / bond-markeer), eerste-letter facet (koraal, oker, petrol),
+  pill buttons (bond-knop), sections, card grid (bond-tegel), dubbele ring,
+  numbers, citaat with citaattekens, waarden, table, strook, kleurvlakken,
+  photo with corner block. The class names editors already use on
+  bondforwebsolutions.nl keep working.
+- Header: as the design "Kop": strook of 9px + 6px bars, 34px antraciet
+  wordmark + "Sinds 1998" label in koraal-diep (hidden up to 720px), label
+  menu left after the wordmark (28px apart, 2px line: abrikoos on hover,
+  koraal for the current page), 48px "Plan een gesprek" button, 1.5px
+  abrikoos line; compact on scroll (30px wordmark, 44px button). Skip link,
+  hamburger menu below 1200px. Header and footer use the design's 1248px
+  content width with 48px gutters (16px up to 720px).
+- Footer: as the design "Voet": zand with faded colour blocks top right;
+  three columns (wordmark + payoff | "Bond for web solutions · sinds 1998",
+  address, phone and e-mail as arrow links | "Onderwerpen" menu in one
+  column); bottom row copyright | Privacy, Nieuwsbrief, Inloggen. New resx
+  keys Footer.PrivacyUrl (used when Site Settings has no Privacy page),
+  Footer.Newsletter and Footer.NewsletterUrl.
+- Texts and contact details in App_LocalResources/Bond.resx (a site
+  overrides them with Bond.Portal-<id>.resx).
+- Login card texts in Dutch.
+
+New layout "pagina" (pagina.ascx + pagina.css)
+- For content pages built from 2sxc: BondBS5 pane names (HeaderPane,
+  BannerPane, ContentPane, BottonPane, FluidPane), new containers Standaard, fullwidthWithoutPadding and fullwidthWithPadding (same choices as BondBS5), with preview images for the DNN container and layout pickers.
+- No Bootstrap: koi.json declares the own CSS framework "bond", so 2sxc
+  picks the bond/ edition of an app (Blog6 bond/, the new Bond app). Older
+  2sxc views without a bond/ edition lose Bootstrap's grid and buttons.
+- Spacing with flex/grid gap only (no margins, no per-side padding);
+  .bond-container centres with one padding shorthand.
+- Sticky header becomes slightly compact on scroll (.bond-header--compact);
+  blocks marked data-bond-reveal fade up once when they scroll into view
+  (scripts/reveal.js, off with reduced motion, nothing hidden without JS).
+- "Lees meer" links (.bond-more) take an inline SVG arrow
+  (.bond-more__icoon); the CSS arrow stays as fallback for editor HTML.
+
+Accessibility
+- Focus ring 2px koraal-diep everywhere, touch targets >= 24px, reduced
+  motion respected, long words wrap on small screens.
+
+Performance (Lighthouse, see docs/performance.md)
+- MuseoSans as WOFF2 (~25 KB per weight instead of ~62 KB OTF).
+- Google Tag Manager is loaded by the theme at the first interaction or at
+  the latest 4 s after page load (Bond.resx "Analytics.GtmScript", not for
+  administrators). Visitors who leave earlier without interacting are not
+  counted. Switch off DNN's
+  own GTM connector (Settings > Connectors), otherwise DNN keeps loading it
+  in <head> and the theme leaves it alone.
+- resources/js/pagehide.js (0.3 KB, the only script in <head>): routes the
+  "unload" listener of DNN's ASP.NET AJAX to "pagehide" (Chrome deprecation).
+- The old MuseoSans_*.otf files are removed on upgrade (generated Cleanup).
+- MuseoSans also registered as "museo-sans" (the Adobe Fonts name that
+  site CSS uses) and a metric-matched Arial fallback, so the font swap does
+  not move text.
+- Bond layouts reserve the scrollbar gutter (no sideways jump when the
+  scrollbar appears); the login card is built before the first paint.
+- Login card: native checkbox kept (DNN's checkbox plugin skipped).
+
+Requirements
+- DNN Platform 10.0.0 or later.
+
+---------------------------------------------------------------------------
+
 DNN.Themes.Bond v1.1.0 Release Notes
 ====================================
 

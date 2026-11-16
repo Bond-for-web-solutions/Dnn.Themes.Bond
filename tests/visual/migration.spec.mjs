@@ -5,6 +5,11 @@
 // then compares computed styles of the key elements. Expected differences
 // are listed explicitly (docs/migration/bond-legacy-assessment.md#visible-changes);
 // anything else fails. Screenshots of both are attached to the report.
+// Since 1.2.0 the default and login layouts carry the Bond huisstijl 2027
+// (new palette, label navigation, pill buttons, flat cards), so for those only
+// structure is compared (STRUCTURE); the splash still matches 1.0 in full.
+// The 2027 header has no top bar any more (login moved to the footer and the
+// mobile menu), so that pair is gone; see docs/migration/bond-legacy-assessment.md.
 import { test, expect } from '@playwright/test';
 import { execFileSync } from 'node:child_process';
 
@@ -14,13 +19,15 @@ try { execFileSync('git', ['cat-file', '-e', '0600865:resources/css/skin.css'], 
 const PROPS = ['color', 'backgroundColor', 'backgroundImage', 'fontSize', 'fontWeight', 'letterSpacing', 'textTransform', 'textDecorationLine',
   'paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft', 'borderTopColor', 'borderTopWidth', 'borderTopLeftRadius', 'boxShadow',
   'display', 'flexDirection', 'gap', 'justifyContent', 'alignItems', 'position', 'opacity', 'height', 'maxWidth'];
+// Layout-only properties: what the huisstijl rebrand must not change.
+const STRUCTURE = ['display', 'flexDirection', 'justifyContent', 'alignItems', 'position', 'maxWidth'];
+const BRANDED = new Set(['default', 'login']);
 
 // [label, legacy selector, new selector]
 const PAIRS = {
   default: [
     ['header', '.bond-header', '.bond-header'],
     ['header main', '.bond-header__main', '.bond-header__main'],
-    ['topbar', '.bond-topbar', '.bond-topbar'],
     ['container', '.bond-header__main .bond-container', '.bond-header__main .bond-container'],
     ['nav link (selected)', '.bond-nav .bond-nav-link.is-selected', '.bond-nav .bond-nav-link.is-selected'],
     ['nav link', '.bond-nav a[href="#about"]', '.bond-nav a[href="#about"]'],
@@ -29,9 +36,8 @@ const PAIRS = {
     ['submenu link', '.bond-nav a[href="#dnn"]', '.bond-nav a[href="#dnn"]'],
     ['content', '.bond-content', '.bond-content'],
     ['footer', '.bond-footer', '.bond-footer'],
-    ['footer accent', '.bond-footer__accent', '.bond-footer__accent'],
     ['footer link', '.bond-footer a[href="#services"]', '.bond-footer a[href="#services"]'],
-    ['footer meta link', '.bond-footer__meta a[href="#terms"]', '.bond-footer__meta a[href="#terms"]'],
+    ['footer meta link', '.bond-footer__meta a[href="#privacy"]', '.bond-footer__meta a[href="#privacy"]'],
     ['copyright', '.bond-footer__copyright', '.bond-footer__copyright'],
   ],
   login: [
@@ -67,6 +73,10 @@ const EXPECTED = {
   'login|input|height': FONT,
   'login|submit|height': FONT,
   'login|submit|gap': 'flex gap on a text-only button: no visual effect',
+  'default|footer link|display': 'inline-block with 4px block padding: 24px touch target (WCAG 2.5.8), huisstijl 2027',
+  'default|footer meta link|display': 'inline-block with 4px block padding: 24px touch target (WCAG 2.5.8), huisstijl 2027',
+  'default|footer meta link|alignItems': 'inline-flex, centred: 24px touch target without moving the text line, huisstijl 2027',
+  'default|footer|position': 'relative: anchors the decorative colour blocks of the huisstijl 2027 voet',
 };
 
 // url("http://host/a/b/logo.png") -> url(logo.png): same file, new path.
@@ -103,7 +113,7 @@ test.describe('Bond 1.0 -> 1.1 parity', () => {
       for (const [label] of PAIRS[fixture]) {
         expect(legacy[label], `legacy element "${label}" missing`).not.toBeNull();
         expect(current[label], `new element "${label}" missing`).not.toBeNull();
-        for (const p of PROPS) {
+        for (const p of BRANDED.has(fixture) ? STRUCTURE : PROPS) {
           if (normalise(p, legacy[label][p]) !== normalise(p, current[label][p]) && !(`${fixture}|${label}|${p}` in EXPECTED)) diffs.push(`${label} ${p}: ${legacy[label][p]} -> ${current[label][p]}`);
         }
       }
@@ -121,6 +131,6 @@ test.describe('Bond 1.0 -> 1.1 parity', () => {
     expect(legacy.font).toMatch(/Arial/);
     expect(legacy.bg).toBe('rgb(255, 255, 255)');
     expect(current.font).toMatch(/MuseoSans/);
-    expect(current.bg).toBe('rgb(244, 237, 228)');
+    expect(current.bg).toBe('rgb(251, 246, 241)'); // huisstijl 2027 papier
   });
 });

@@ -41,4 +41,4 @@ pnpm test:visual -g "<id>"                                      # fixtures in th
 ```
 
 For real DNN, run `tests/e2e` against a *local* site (see `docs/testing.md`).
-Deploy only via `bond deploy` with `.env`, never by copying into `C:\DNN\*`.
+Deploy only via `bond deploy` with `.env.json`, never by copying into `C:\DNN\*`.

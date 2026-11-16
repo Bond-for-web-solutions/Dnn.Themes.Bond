@@ -14,6 +14,8 @@ node_modules/
 tests/test-results/
 # Visual baselines are per machine (created on the first run), not shared through git
 tests/visual/__screenshots__/
+# Real-site e2e baselines (tests/e2e/*.e2e.mjs): local site content, per machine
+tests/e2e/*-snapshots/
 tests/playwright-report/
 tests/blob-report/
 /test-results/
@@ -23,7 +25,7 @@ tests/**/__actual__/
 # Developer-local configuration - may contain machine paths (never commit)
 .env
 .env.*
-!.env.example
+!.env.example.json
 
 # Editors / OS
 .vs/

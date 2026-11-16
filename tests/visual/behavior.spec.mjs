@@ -5,7 +5,7 @@ test('auth card replaces DNN login form and drives the native controls', async (
   await page.goto('/fixture/bond/login');
   const card = page.locator('.bond-auth[data-bond-auth="login"]');
   await expect(card).toBeVisible();
-  await expect(card.locator('.bond-auth__title')).toHaveText('Welcome back');
+  await expect(card.locator('.bond-auth__title')).toHaveText('Welkom terug');
   // Native form is visually hidden but still in the DOM for DNN's postback wiring.
   const native = page.locator('.dnnLoginService');
   await expect(native).toHaveClass(/bond-auth__native--hidden/);
@@ -69,7 +69,7 @@ test('auth card is rebuilt once per UpdatePanel partial postback', async ({ page
 test('mobile menu toggles with aria-expanded and closes on Escape', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 800 });
   await page.goto('/fixture/bond/default');
-  const toggle = page.getByRole('button', { name: 'Toggle navigation' });
+  const toggle = page.getByRole('button', { name: 'Menu' });
   const menu = page.locator('#bond-mobile-menu');
   await expect(menu).toBeHidden();
   await toggle.click();
@@ -84,7 +84,7 @@ test('mobile menu toggles with aria-expanded and closes on Escape', async ({ pag
 test('mobile menu closes when the viewport grows to desktop', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 800 });
   await page.goto('/fixture/bond/default');
-  await page.getByRole('button', { name: 'Toggle navigation' }).click();
+  await page.getByRole('button', { name: 'Menu' }).click();
   await page.setViewportSize({ width: 1280, height: 800 });
   await expect(page.locator('#bond-mobile-menu')).not.toHaveClass(/is-open/);
 });

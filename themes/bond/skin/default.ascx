@@ -5,7 +5,7 @@
 <dnn:MENU runat="server" id="dnnMENU" MenuStyle="menus/header" NodeSelector="*,0,2" />
 
 <!-- Main Content -->
-<main class="bond-main">
+<main id="bond-main" class="bond-main" tabindex="-1">
   <div id="BannerPane" runat="server"></div>
   <div id="ContentPane" class="bond-content" runat="server"></div>
   <div id="FluidPane" runat="server"></div>

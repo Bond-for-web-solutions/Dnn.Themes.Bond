@@ -6,21 +6,29 @@ using a reviewed release ZIP.
 
 ## Local development site
 
-1. Create `.env` (git-ignored) from `.env.example`:
+1. Create `.env.json` (git-ignored) from `.env.example.json`. One entry per theme folder in `themes/`:
 
-   ```ini
-   BOND_SITE_ROOT=C:\DNN\bond-dev   # the DNN site for theme "bond" (web.config, bin\, Portals\)
-   DZP_SITE_ROOT=C:\DNN\dzp-dev     # one line per theme: folder name in themes/ in capitals
-   BOND_PRUNE=true                  # optional, per theme: delete every file in the skin/container folder that the build does not have
-
-   SITE_ROOT=C:\DNN\my-dev-site     # optional fallback for themes without their own line
-   PRUNE=false                      # optional fallback for <THEME>_PRUNE
+   ```json
+   {
+     "themes": {
+       "bond": { "siteRoot": "C:/DNN/bond-dev", "prune": true, "e2e": { "baseUrl": "http://bond-dev.dnndev.me" } },
+       "dzp": { "siteRoot": "C:/DNN/dzp-dev" }
+     },
+     "siteRoot": "C:/DNN/my-dev-site",
+     "prune": false
+   }
    ```
 
-   Only this file is read (never shell environment variables), so a deploy target can't
-   come from a stray variable. Other tools' variables in `.env` are ignored; near-misses of
-   these settings (`BOND_SITEROOT`, `DZP_PRUNES`) and unknown theme names (`SHOP_SITE_ROOT`)
-   are rejected.
+   - `themes.<id>.siteRoot`: the DNN site (web.config, bin/, Portals/) for a theme folder in `themes/`.
+   - `themes.<id>.prune` (optional): delete every file in the skin/container folder that the build does not have.
+   - `siteRoot` / `prune` (optional): fallbacks for themes without their own entry.
+   - Write Windows paths with forward slashes; a single backslash is invalid JSON.
+   - Keys starting with `$` (`"$comment"`) are notes and are ignored.
+
+   A theme entry can also hold `e2e` settings for the real-site tests against the same site (see [testing.md](testing.md)).
+   For deploy, only this file is read (never shell environment variables), so a deploy target
+   can't come from a stray variable. Unknown keys and near-misses (`siteroot`, `prunes`), wrong
+   types and unknown theme names (`themes.shop`) are rejected.
 
 2. Build, then copy: `pnpm build bond && pnpm deploy:local bond` (or VS Code
    **DNN: Publish Theme Locally…** and pick the theme). To preview first: `pnpm deploy:local bond --dry-run`.
@@ -30,8 +38,8 @@ using a reviewed release ZIP.
 
 | Guard | Code |
 | --- | --- |
-| no `.env` → refuse (the site is never guessed) | BOND700 |
-| no `<THEME>_SITE_ROOT` and no `SITE_ROOT` for the theme / misspelled setting or unknown theme | BOND705 / BOND706 |
+| no `.env.json` → refuse (the site is never guessed) | BOND700 |
+| no `themes.<id>.siteRoot` and no top-level `siteRoot` for the theme / invalid JSON, misspelled or mistyped setting, unknown theme | BOND705 / BOND706 |
 | the site root must be absolute, not a UNC/network path, not overlapping the repo | BOND701–703 |
 | the site root must look like DNN (`web.config`, `bin/DotNetNuke.dll`, `Portals/_default`) | BOND704 |
 | build must exist, have passed validation, and not be followed by a failed rebuild | BOND709–711 |
@@ -40,7 +48,7 @@ using a reviewed release ZIP.
 | marker belongs to another theme → refuse | BOND713 |
 | no symbolic link or junction anywhere on the destination path; real-path containment before every write | BOND717/715 |
 | `publish/` files must still match `build-manifest.json` hashes | BOND716 |
-| `--prune` (or `<THEME>_PRUNE=true`) makes `Skins/<skinName>` and `Containers/<containerName>` mirror the build: every file the build does not have is deleted, files added by hand included, and empty folders are removed (case-insensitive; symbolic links are never followed or deleted). Without it, such files are listed and left. `--dry-run` shows what would be deleted | - |
+| `--prune` (or `"prune": true`) makes `Skins/<skinName>` and `Containers/<containerName>` mirror the build: every file the build does not have is deleted, files added by hand included, and empty folders are removed (case-insensitive; symbolic links are never followed or deleted). Without it, such files are listed and left. `--dry-run` shows what would be deleted | - |
 
 After a file copy, DNN still serves cached URLs (`?cdv=<n>`). Enable debug
 mode on the dev site, or increment the client resource version

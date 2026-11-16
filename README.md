@@ -57,7 +57,7 @@ in `.vscode/tasks.json` calls the same CLI as the terminal and CI.
 | `node packages/build/bin/bond.mjs build bond --mode development` | readable CSS/JS + source maps, no ZIP |
 | `pnpm dev <theme>` | watch a theme and its shared packages |
 | `pnpm validate` | re-verify `publish/` (files, ZIPs, checksums) |
-| `pnpm deploy:local <theme>` | copy to a **local** DNN site set in `.env` |
+| `pnpm deploy:local <theme>` | copy to a **local** DNN site set in `.env.json` |
 | `pnpm check` · `pnpm lint` · `pnpm test` · `pnpm test:visual` | architecture · Stylelint/ESLint · integration · Playwright |
 | `pnpm bond affected --base origin/main` | which themes a change affects |
 | `pnpm bond create-theme <id> --prefix <p>` | scaffold a new theme |

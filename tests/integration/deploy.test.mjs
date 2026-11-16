@@ -19,13 +19,16 @@ function fakeDnnSite(dir) {
   return dir;
 }
 
-// Writes a .env-style file; extra = raw lines (e.g. a misspelled key).
-function config({ siteRoot, prune, extra = [] }, publishRoot = P) {
-  const f = path.join(cfgDir, `cfg-${Math.random().toString(36).slice(2)}.env`);
-  const lines = [`SITE_ROOT=${siteRoot}`];
-  if (prune !== undefined) lines.push(`PRUNE=${prune}`);
-  fs.writeFileSync(f, [...lines, ...extra].join('\n') + '\n');
-  return { BOND_LOCAL_CONFIG: f, BOND_PUBLISH_ROOT: publishRoot };
+// Writes a .env.json file. deploy = extra top-level keys (e.g. a misspelled one).
+function writeJson(name, json) {
+  const f = path.join(cfgDir, name || `cfg-${Math.random().toString(36).slice(2)}.json`);
+  fs.writeFileSync(f, typeof json === 'string' ? json : JSON.stringify(json, null, 2));
+  return f;
+}
+function config({ siteRoot, prune, deploy = {} }, publishRoot = P) {
+  const d = { siteRoot, ...deploy };
+  if (prune !== undefined) d.prune = prune;
+  return { BOND_LOCAL_CONFIG: writeJson(null, d), BOND_PUBLISH_ROOT: publishRoot };
 }
 
 before(() => {
@@ -35,27 +38,33 @@ before(() => {
   assert.equal(run(['build', 'bond'], { BOND_PUBLISH_ROOT: P }).code, 0);
 });
 
-test('refuses without .env (the site is never guessed)', () => {
-  const r = run(['deploy', 'bond'], { BOND_PUBLISH_ROOT: P, BOND_LOCAL_CONFIG: path.join(cfgDir, 'does-not-exist.env') });
+test('refuses without .env.json (the site is never guessed)', () => {
+  const r = run(['deploy', 'bond'], { BOND_PUBLISH_ROOT: P, BOND_LOCAL_CONFIG: path.join(cfgDir, 'does-not-exist.json') });
   assert.equal(r.code, 1);
   assert.match(r.out, /BOND700/);
 });
 
-test('refuses a missing SITE_ROOT and misspelled settings', () => {
-  const empty = path.join(cfgDir, 'empty.env');
-  fs.writeFileSync(empty, '# nothing set\n');
+test('refuses a missing siteRoot, misspelled settings and invalid JSON', () => {
+  const empty = writeJson('empty.json', { $comment: 'nothing set' });
   let r = run(['deploy', 'bond'], { BOND_LOCAL_CONFIG: empty, BOND_PUBLISH_ROOT: P });
   assert.equal(r.code, 1); assert.match(r.out, /BOND705/);
-  r = run(['deploy', 'bond'], config({ siteRoot: site, extra: ['SITEROOT=C:\\typo'] }));
-  assert.equal(r.code, 1); assert.match(r.out, /BOND706/);
+  r = run(['deploy', 'bond'], config({ siteRoot: site, deploy: { siteroot: 'C:/typo' } }));
+  assert.equal(r.code, 1); assert.match(r.out, /BOND706/); assert.match(r.out, /did you mean "siteRoot"/);
+  r = run(['deploy', 'bond'], config({ siteRoot: site, prune: 'yes' }));
+  assert.equal(r.code, 1); assert.match(r.out, /prune must be true or false/);
+  const bad = writeJson('bad.json', '{ "siteRoot": "C:' + String.fromCharCode(92) + 'DNN" }');
+  r = run(['deploy', 'bond'], { BOND_LOCAL_CONFIG: bad, BOND_PUBLISH_ROOT: P });
+  assert.equal(r.code, 1); assert.match(r.out, /BOND706/); assert.match(r.out, /forward slashes/);
 });
 
-test('reads Windows paths with backslashes and comments in .env', () => {
-  const f = path.join(cfgDir, 'win.env');
-  fs.writeFileSync(f, `# my dev site\nSITE_ROOT=${site}\nPRUNE=false   # keep old files\n`);
-  const r = run(['deploy', 'bond', '--dry-run'], { BOND_LOCAL_CONFIG: f, BOND_PUBLISH_ROOT: P });
+test('reads Windows paths (backslashes escaped, or forward slashes) and $comment notes', () => {
+  const f = writeJson('win.json', { $comment: 'my dev site', siteRoot: site, prune: false });
+  let r = run(['deploy', 'bond', '--dry-run'], { BOND_LOCAL_CONFIG: f, BOND_PUBLISH_ROOT: P });
   assert.equal(r.code, 0, r.out);
   assert.ok(r.out.includes(site), 'deploy plan shows the configured site');
+  const fwd = writeJson('fwd.json', { siteRoot: site.split(path.sep).join('/') });
+  r = run(['deploy', 'bond', '--dry-run'], { BOND_LOCAL_CONFIG: fwd, BOND_PUBLISH_ROOT: P });
+  assert.equal(r.code, 0, r.out);
 });
 
 test('refuses paths that are not DNN sites, UNC paths and relative paths', () => {
@@ -194,34 +203,33 @@ test('--prune is case-insensitive (a rename that only changes case keeps the fil
   assert.ok(fs.existsSync(path.join(dest, 'skin.css')));
 });
 
-test('.env may contain other tools\' variables; only near-misses of SITE_ROOT/PRUNE are rejected', () => {
-  const ok = run(['deploy', 'bond', '--dry-run'], config({ siteRoot: site, extra: ['DATABASE_URL=postgres://x', 'NODE_OPTIONS=--max-old-space-size=4096'] }));
-  assert.equal(ok.code, 0, ok.out);
-  const typo = run(['deploy', 'bond', '--dry-run'], config({ siteRoot: site, extra: ['PRUNES=true'] }));
+test('.env.json: a theme may hold e2e settings; unknown or misspelled keys are rejected', () => {
+  const ok = writeJson(null, { siteRoot: site, themes: { bond: { e2e: { baseUrl: 'http://x.dnndev.me' } } } });
+  assert.equal(run(['deploy', 'bond', '--dry-run'], { BOND_LOCAL_CONFIG: ok, BOND_PUBLISH_ROOT: P }).code, 0);
+  const typo = run(['deploy', 'bond', '--dry-run'], config({ siteRoot: site, deploy: { prunes: true } }));
   assert.equal(typo.code, 1);
-  assert.match(typo.out, /BOND706/);
+  assert.match(typo.out, /BOND706/); assert.match(typo.out, /did you mean "prune"/);
+  const top = writeJson(null, { Themes: {}, siteRoot: site });
+  assert.match(run(['deploy', 'bond', '--dry-run'], { BOND_LOCAL_CONFIG: top, BOND_PUBLISH_ROOT: P }).out, /did you mean "themes"/);
 });
 
-test('per-theme sites: <THEME>_SITE_ROOT wins over SITE_ROOT, and a theme without a site is refused', () => {
-  const f = path.join(cfgDir, 'per-theme.env');
-  fs.writeFileSync(f, `BOND_SITE_ROOT=${site}\nSITE_ROOT=${decoy}\n`);
+test('per-theme sites: themes.<id>.siteRoot wins over siteRoot, and a theme without a site is refused', () => {
+  const f = writeJson('per-theme.json', { siteRoot: decoy, themes: { bond: { siteRoot: site } } });
   const r = run(['deploy', 'bond', '--dry-run'], { BOND_LOCAL_CONFIG: f, BOND_PUBLISH_ROOT: P });
   assert.equal(r.code, 0, r.out);
-  assert.ok(r.out.includes(`${site} (BOND_SITE_ROOT)`), r.out);
-  const only = path.join(cfgDir, 'bond-only.env');
-  fs.writeFileSync(only, `BOND_SITE_ROOT=${site}\n`);
+  assert.ok(r.out.includes(`${site} (themes.bond.siteRoot)`), r.out);
+  const only = writeJson('bond-only.json', { themes: { bond: { siteRoot: site } } });
   const d = run(['deploy', 'dzp', '--dry-run'], { BOND_LOCAL_CONFIG: only, BOND_PUBLISH_ROOT: P });
   assert.equal(d.code, 1);
-  assert.match(d.out, /BOND705: No site for theme "dzp": set DZP_SITE_ROOT/);
+  assert.match(d.out, /BOND705: No site for theme "dzp": set themes.dzp.siteRoot/);
 });
 
-test('per-theme typos and unknown themes in .env are reported', () => {
-  for (const [line, hint] of [['BOND_SITEROOT=C:/x', /did you mean BOND_SITE_ROOT/], ['SHOP_SITE_ROOT=C:/x', /no theme "shop"/], ['DZP_PRUNES=true', /did you mean DZP_PRUNE/]]) {
-    const f = path.join(cfgDir, `typo-${Math.random().toString(36).slice(2)}.env`);
-    fs.writeFileSync(f, `SITE_ROOT=${site}\n${line}\n`);
+test('per-theme typos and unknown themes in .env.json are reported', () => {
+  for (const [entry, hint] of [[{ bond: { siteroot: 'C:/x' } }, /did you mean "siteRoot"/], [{ shop: { siteRoot: 'C:/x' } }, /no theme "shop"/], [{ dzp: { prunes: true } }, /did you mean "prune"/]]) {
+    const f = writeJson(null, { siteRoot: site, themes: entry });
     const r = run(['deploy', 'bond', '--dry-run'], { BOND_LOCAL_CONFIG: f, BOND_PUBLISH_ROOT: P });
-    assert.equal(r.code, 1, line);
+    assert.equal(r.code, 1, JSON.stringify(entry));
     assert.match(r.out, /BOND706/);
-    assert.match(r.out, hint, line);
+    assert.match(r.out, hint, JSON.stringify(entry));
   }
 });

@@ -1,86 +1,201 @@
 /* ==========================================================================
-   Header, top bar, navigation (menus/header/HeaderMenu.cshtml)
-   Breakpoints: --bond-sm 640px, --bond-lg 1024px. No decorative motion, only
-   functional hover/menu transitions.
+   Header and navigation (menus/header/HeaderMenu.cshtml), as the huisstijl
+   design "Kop": strook on top (24px gradient bars), papier kopbalk with the
+   antraciet wordmark + "sinds 1998" label, label menu left-aligned after the
+   wordmark, one secondary button. Content width 1248px with 48px gutters
+   (16px up to 720px), as the design's .wrap.
+   Breakpoints: --bond-sm 640px; the full menu from --bond-nav-wide 1200px
+   (six label-style items, wordmark and button do not fit on one line at
+   1024px). No decorative motion, only functional hover/menu transitions.
    ========================================================================== */
+@custom-media --bond-nav-wide (min-width: 1200px);
+
+/* Skip link: first focusable element, visible on focus only. */
+.bond-skip:is(a) {
+  position: absolute;
+  top: var(--bond-space-2);
+  left: var(--bond-space-2);
+  z-index: var(--bond-z-overlay);
+  padding: var(--bond-space-2) var(--bond-space-4);
+  font-weight: var(--bond-font-weight-medium);
+  color: var(--bond-inkt);
+  background: var(--bond-koraal);
+  border-radius: var(--bond-radius-full);
+  transform: translateY(-200%);
+}
+
+.bond-skip:is(:link, :visited) {
+  color: var(--bond-inkt);
+  text-decoration: none;
+}
+
+.bond-skip:focus {
+  outline: 2px solid var(--bond-color-focus);
+  outline-offset: 2px;
+  transform: none;
+}
+
 .bond-header {
+  --bond-container-max: calc(var(--bond-content-max) + 6rem);
+  --bond-container-gutter: 1rem;
+  --bond-container-gutter-sm: 1rem;
+  --bond-container-gutter-lg: 3rem;
+
   position: sticky;
   top: 0;
   z-index: var(--bond-z-sticky);
-  box-shadow: 0 1px 3px rgba(var(--bond-ink-rgb), 0.06);
 }
 
-/* ---- Top bar (user / login) - desktop only ---- */
-.bond-topbar {
-  display: none;
-  color: var(--bond-color-text-muted);
-  background: var(--bond-color-surface-sunken);
-  border-bottom: 1px solid var(--bond-color-border);
+@media (min-width: 721px) {
+  .bond-header { --bond-container-gutter-sm: 3rem; }
 }
 
-@media (--bond-lg) {
-  .bond-topbar { display: block; }
+/* Strook: 24px, two rows of 12px with six soft gradient bars, exactly the
+   design's .kop-strook (same positions, widths, overlaps and z-order; papier
+   shows in the gaps). On load each bar is wiped in from left to right (0.7s,
+   staggered up to 0.3s), as the design; not with reduced motion. */
+@keyframes bond-strook-in {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0); }
 }
 
-.bond-topbar__inner {
-  display: flex;
-  height: 2.5rem;
-  align-items: center;
-  justify-content: flex-end;
-  gap: var(--bond-space-4);
-  font-size: 0.8125rem;
-  letter-spacing: var(--bond-letter-spacing-wide);
+.bond-header__strook {
+  position: relative;
+  display: block;
+  height: 1.5rem;
+  background: var(--bond-papier);
 }
 
-.bond-topbar__link:is(:link, :visited) {
-  color: var(--bond-color-text);
-  font-weight: var(--bond-font-weight-medium);
-  text-decoration: none;
-  transition: color var(--bond-duration-fast);
+/* Stacking comes from the markup order (bar 2 before 1, 5 before 4, so the
+   left bars lie on top where they overlap), not z-index. */
+.bond-header__balk {
+  position: absolute;
+  top: 0;
+  display: block;
+  width: 35%;
+  height: 0.75rem;
+  animation: bond-strook-in 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
-.bond-topbar__link:hover { color: var(--bond-color-accent); }
+.bond-header__balk--1 { left: 0; background: linear-gradient(90deg, var(--bond-papier), var(--bond-abrikoos)); }
+.bond-header__balk--2 { left: 22.75%; background: linear-gradient(90deg, var(--bond-koraal), var(--bond-rosegoud)); animation-delay: 0.12s; }
+.bond-header__balk--3 { left: 70%; width: 30%; background: linear-gradient(90deg, var(--bond-koraal), var(--bond-abrikoos)); animation-delay: 0.24s; }
+.bond-header__balk--4 { top: 0.75rem; left: 0; background: linear-gradient(90deg, var(--bond-abrikoos), var(--bond-koraal)); animation-delay: 0.06s; }
+.bond-header__balk--5 { top: 0.75rem; left: 28%; width: 20%; background: linear-gradient(90deg, var(--bond-rosegoud), var(--bond-abrikoos)); animation-delay: 0.18s; }
+.bond-header__balk--6 { top: 0.75rem; left: 55%; width: 45%; background: linear-gradient(90deg, var(--bond-koraal), var(--bond-oker)); animation-delay: 0.3s; }
 
-.bond-topbar__user:is(:link, :visited) {
-  color: var(--bond-color-accent);
-  text-decoration: none;
-  transition: color var(--bond-duration-fast);
-}
-
-.bond-topbar__user:hover { color: var(--bond-color-text); }
-
-/* ---- Main header (logo + nav) ---- */
+/* ---- Kopbalk (logo + nav + button) ---- */
 .bond-header__main {
   background: var(--bond-color-surface);
-  border-bottom: 1px solid var(--bond-color-border);
+  border-bottom: var(--bond-border-width) solid var(--bond-color-border);
+  transition: box-shadow var(--bond-duration-base) var(--bond-easing-standard);
 }
 
+/* 22px above and below (14px compact); 40px between wordmark, menu and
+   button (12px / 24px up to 720px), as the design's .kop-balk. */
 .bond-header__inner {
   display: flex;
-  height: 5rem;
   align-items: center;
   justify-content: space-between;
+  gap: var(--bond-space-3) var(--bond-space-6);
+  padding: 1.375rem 0;
+  transition: padding var(--bond-duration-base) var(--bond-easing-standard);
 }
+
+@media (min-width: 721px) {
+  .bond-header__inner { gap: var(--bond-space-4) var(--bond-space-10); }
+}
+
+/* Compact on scroll (scripts/header.js toggles .bond-header--compact once the
+   page has scrolled): a little lower, slightly smaller wordmark, soft shadow.
+   The strook sits outside the sticky header, so it has already scrolled away. */
+.bond-header--compact .bond-header__main { box-shadow: 0 6px 18px rgb(90 40 20 / 8%); }
+
+.bond-header--compact .bond-header__inner { padding: 0.875rem 0; }
+
+.bond-header--compact .bond-header__logo img { height: 1.875rem; }
 
 .bond-header__logo {
   display: flex;
   flex-shrink: 0;
   align-items: center;
+  gap: var(--bond-space-4);
+  text-decoration: none;
 }
 
+/* Wordmark >= 80px wide (brandbook: minimum size). */
 .bond-header__logo img {
-  height: 3rem;
   width: auto;
+  height: 2.125rem;
+  transition: height var(--bond-duration-base) var(--bond-easing-standard);
+}
+
+/* "SINDS 1998": huisstijl label (koraal-diep) next to the wordmark; hidden
+   up to 720px, as the design. */
+.bond-header__since {
+  display: none;
+  font-size: var(--bond-type-label);
+  font-weight: var(--bond-font-weight-medium);
+  line-height: 1rem;
+  letter-spacing: var(--bond-letter-spacing-label);
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--bond-koraal-diep);
+}
+
+@media (min-width: 721px) {
+  .bond-header__since { display: inline; }
+}
+
+.bond-header__logo:focus-visible {
+  outline: 2px solid var(--bond-color-focus);
+  outline-offset: 4px;
+}
+
+.bond-header__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--bond-space-2);
+}
+
+/* The header button stays on small screens down to 400px; below that the
+   same button sits in the mobile menu. Sized as the design's secondary
+   button: 48px, 16/22 500, 12px 28px (44px and 10px 24px when compact).
+   (0,2,0): must beat .bond-knop:is(a) (0,1,1), which sets display. */
+.bond-header__actions .bond-header__cta {
+  display: none;
+  min-height: 3rem;
+  padding: 0.75rem 1.75rem;
+  font-size: var(--bond-type-body);
+  line-height: 1.375rem;
+  letter-spacing: 0;
+  white-space: nowrap;
+  transition: translate var(--bond-duration-fast) ease, min-height var(--bond-duration-base) var(--bond-easing-standard), padding var(--bond-duration-base) var(--bond-easing-standard);
+}
+
+/* Hover as the design's .knop2: lifts 1px, stays transparent (no zand fill). */
+.bond-header__actions .bond-header__cta:hover {
+  background: transparent;
+  translate: 0 -1px;
+}
+
+@media (min-width: 400px) {
+  .bond-header__actions .bond-header__cta { display: inline-flex; }
+}
+
+.bond-header--compact .bond-header__actions .bond-header__cta {
+  min-height: 2.75rem;
+  padding: 0.625rem 1.5rem;
 }
 
 /* Desktop navigation wrapper */
 .bond-nav { display: none; }
 
-@media (--bond-lg) {
+@media (--bond-nav-wide) {
   .bond-nav {
     display: flex;
+    flex: 1 1 auto;
     align-items: center;
-    gap: var(--bond-space-2);
   }
 }
 
@@ -95,11 +210,16 @@
 .bond-menu--root {
   width: 100%;
   flex-direction: column;
-  gap: var(--bond-space-2);
+  gap: var(--bond-space-1);
 }
 
-@media (--bond-lg) {
-  .bond-menu--root { flex-direction: row; }
+@media (--bond-nav-wide) {
+  .bond-menu--root {
+    width: auto;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--bond-space-2) 1.75rem;
+  }
 }
 
 .bond-menu--sub {
@@ -116,34 +236,63 @@
   opacity: 1;
 }
 
-/* Top-level link. :is(:link, :visited) outranks DNN's a:visited (0,1,1),
-   which is why Bond 1.0 needed !important here. */
+/* Top-level link: huisstijl "label" (spaced caps, 500). Hover/selected get
+   the 2px koraal underline; koraal-diep is the text colour, never koraal.
+   :is(:link, :visited) outranks DNN's a:visited (0,1,1), which is why Bond
+   1.0 needed !important here. */
 .bond-nav-link {
   display: inline-flex;
+  min-height: var(--bond-size-touch-target);
   align-items: center;
-  padding: var(--bond-space-2) var(--bond-space-4);
-  font-weight: var(--bond-font-weight-semibold);
+  padding: var(--bond-space-2) var(--bond-space-3);
+  font-size: var(--bond-type-label);
+  font-weight: var(--bond-font-weight-medium);
+  line-height: 1rem;
   text-transform: uppercase;
-  letter-spacing: var(--bond-letter-spacing-wider);
+  letter-spacing: var(--bond-letter-spacing-label);
   color: var(--bond-color-text);
   border-radius: var(--bond-radius-md);
   text-decoration: none;
-  transition: background-color var(--bond-duration-fast), color var(--bond-duration-fast);
+  transition: color var(--bond-duration-fast);
 }
+
 
 .bond-nav-link:is(:link, :visited) {
   color: var(--bond-color-text);
   text-decoration: none;
+  /* After the shorthand: it would reset the colour (DNN's a:visited too). */
+  text-decoration-color: var(--bond-koraal);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.5em;
 }
 
-.bond-nav-link:hover {
-  color: var(--bond-color-accent-strong);
-  background: rgba(var(--bond-cyan-rgb), 0.12);
-}
-
+.bond-nav-link:is(a):hover,
 .bond-nav-link.is-selected {
   color: var(--bond-color-accent-strong);
-  background: rgba(var(--bond-cyan-rgb), 0.16);
+  text-decoration-line: underline;
+}
+
+/* Desktop bar, as the design: 10px above and below, no side padding, a 2px
+   line under the label (abrikoos on hover, koraal for the current page);
+   the text stays inkt. */
+.bond-nav .bond-nav-link {
+  min-height: 0;
+  padding: 0.625rem 0;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  transition: border-color var(--bond-duration-fast);
+}
+
+.bond-nav .bond-nav-link:is(a):hover {
+  color: var(--bond-color-text);
+  text-decoration-line: none;
+  border-bottom-color: var(--bond-abrikoos);
+}
+
+.bond-nav .bond-nav-link.is-selected {
+  color: var(--bond-color-text);
+  text-decoration-line: none;
+  border-bottom-color: var(--bond-koraal);
 }
 
 .bond-nav-link:focus-visible,
@@ -153,13 +302,14 @@
 }
 
 .bond-nav-link--disabled {
-  color: rgba(var(--bond-ink-rgb), 0.35);
+  color: var(--bond-color-text-disabled);
   cursor: default;
 }
 
 /* Sub-level link */
 .bond-submenu-link {
   display: flex;
+  min-height: var(--bond-size-touch-target);
   align-items: center;
   justify-content: space-between;
   padding: var(--bond-space-2) var(--bond-space-4);
@@ -201,20 +351,23 @@
   flex-shrink: 0;
   width: 1rem;
   height: 1rem;
-  margin-left: var(--bond-space-1);
 }
 
-.bond-nav-link .bond-menu-icon { color: rgba(var(--bond-ink-rgb), 0.4); }
+/* Space between label and chevron comes from the link's gap. */
+.bond-nav-link,
+.bond-submenu-link { gap: var(--bond-space-1); }
+
+.bond-nav-link .bond-menu-icon { color: var(--bond-color-accent-strong); }
 .bond-submenu-link .bond-menu-icon { color: var(--bond-color-text-subtle); }
 
-/* Flyout panel */
+/* Flyout panel: a huisstijl card (wit, 1.5px abrikoos border, 8px, no shadow) */
 .bond-submenu {
   position: absolute;
   z-index: var(--bond-z-dropdown);
-  width: 14rem;
+  width: 15rem;
   background: var(--bond-color-surface-raised);
+  border: var(--bond-border-width) solid var(--bond-color-border);
   border-radius: var(--bond-radius-md);
-  box-shadow: 0 12px 28px -8px rgba(var(--bond-ink-rgb), 0.18), 0 0 0 1px var(--bond-color-border);
   visibility: hidden;
   opacity: 0;
   transition: opacity var(--bond-duration-fast) var(--bond-easing-standard), visibility var(--bond-duration-fast) var(--bond-easing-standard);
@@ -222,6 +375,19 @@
 
 .bond-submenu--root { top: 100%; left: 0; }
 .bond-submenu--sub { top: 0; left: 100%; }
+
+/* In the mobile menu the tree is always open, indented, no flyouts. */
+.bond-mobile-menu .bond-submenu {
+  position: static;
+  width: auto;
+  padding: 0 0 0 var(--bond-space-4);
+  background: transparent;
+  border: 0;
+  visibility: visible;
+  opacity: 1;
+}
+
+.bond-mobile-menu .bond-menu-icon { display: none; }
 
 /* ---- Hamburger (mobile toggle) ---- */
 .bond-hamburger {
@@ -234,6 +400,7 @@
   padding: 10px;
   background: transparent;
   border: 0;
+  border-radius: var(--bond-radius-md);
   cursor: pointer;
 }
 
@@ -255,35 +422,35 @@
   outline-offset: 2px;
 }
 
-@media (--bond-lg) {
+@media (--bond-nav-wide) {
   .bond-hamburger { display: none; }
 }
 
 /* ---- Mobile menu (collapsible) ---- */
 .bond-mobile-menu {
   display: none;
+  max-height: calc(100dvh - 4.5rem);
+  overflow-y: auto;
   background: var(--bond-color-surface);
-  border-top: 1px solid var(--bond-color-border);
+  border-bottom: 1px solid var(--bond-color-border);
 }
 
 .bond-mobile-menu.is-open { display: block; }
 
-@media (--bond-lg) {
+@media (--bond-nav-wide) {
   .bond-mobile-menu,
   .bond-mobile-menu.is-open { display: none; }
 }
 
-.bond-mobile-menu__nav { padding: var(--bond-space-4); }
+.bond-mobile-menu__nav { padding: var(--bond-space-4) var(--bond-gutter); }
 
-.bond-mobile-menu__footer {
-  padding: var(--bond-space-3) var(--bond-space-4);
-  border-top: 1px solid var(--bond-color-border);
-}
+.bond-mobile-menu__footer { padding: var(--bond-space-4) var(--bond-gutter) var(--bond-space-6); }
 
 .bond-mobile-menu__footer-inner {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: var(--bond-space-3);
+  gap: var(--bond-space-4);
   font-size: var(--bond-font-size-sm);
 }
 
@@ -293,9 +460,11 @@
 }
 
 .bond-mobile-menu__login:is(:link, :visited) {
-  color: var(--bond-color-accent);
-  font-size: var(--bond-font-size-xs);
+  color: var(--bond-color-accent-strong);
+  font-size: var(--bond-type-label);
   font-weight: var(--bond-font-weight-medium);
+  letter-spacing: var(--bond-letter-spacing-label);
+  text-transform: uppercase;
   text-decoration: none;
 }
 
@@ -303,5 +472,13 @@
   .bond-nav-link,
   .bond-submenu-link,
   .bond-submenu,
+  .bond-header__main,
+  .bond-header__inner,
+  .bond-header__logo img,
+  .bond-header__actions .bond-header__cta,
   .bond-hamburger span { transition: none; }
+
+  .bond-header__actions .bond-header__cta:hover { translate: none; }
+
+  .bond-header__balk { animation: none; }
 }

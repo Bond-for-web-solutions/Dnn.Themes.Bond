@@ -1,13 +1,16 @@
 /* MuseoSans, self-hosted. url()s are relative to this source file; the build
    copies each referenced font to resources/font/... (unreferenced files are
-   never shipped). 500 is MuseoSans' regular "book" weight, so body text
+   never shipped). WOFF2 (converted 12-11-2026 from the OTFs next to them with
+   fontTools, outlines and name/licence tables unchanged; the licence allows
+   web-font conversion, confirmed by Bond): ~25 KB per weight instead of ~62 KB.
+   500 is MuseoSans' regular "book" weight, so body text
    (font-weight 400) resolves to it. */
 @font-face {
   font-family: "MuseoSans";
   font-style: normal;
   font-weight: 100;
   font-display: swap;
-  src: url("../assets/font/MuseoSans/MuseoSans_100.otf") format("opentype");
+  src: url("../assets/font/MuseoSans/MuseoSans_100.woff2") format("woff2");
 }
 
 @font-face {
@@ -15,7 +18,7 @@
   font-style: italic;
   font-weight: 100;
   font-display: swap;
-  src: url("../assets/font/MuseoSans/MuseoSans_100Italic.otf") format("opentype");
+  src: url("../assets/font/MuseoSans/MuseoSans_100Italic.woff2") format("woff2");
 }
 
 @font-face {
@@ -23,7 +26,7 @@
   font-style: normal;
   font-weight: 300;
   font-display: swap;
-  src: url("../assets/font/MuseoSans/MuseoSans_300.otf") format("opentype");
+  src: url("../assets/font/MuseoSans/MuseoSans_300.woff2") format("woff2");
 }
 
 @font-face {
@@ -31,7 +34,7 @@
   font-style: italic;
   font-weight: 300;
   font-display: swap;
-  src: url("../assets/font/MuseoSans/MuseoSans_300Italic.otf") format("opentype");
+  src: url("../assets/font/MuseoSans/MuseoSans_300Italic.woff2") format("woff2");
 }
 
 @font-face {
@@ -39,7 +42,7 @@
   font-style: normal;
   font-weight: 500;
   font-display: swap;
-  src: url("../assets/font/MuseoSans/MuseoSans_500.otf") format("opentype");
+  src: url("../assets/font/MuseoSans/MuseoSans_500.woff2") format("woff2");
 }
 
 @font-face {
@@ -47,7 +50,7 @@
   font-style: italic;
   font-weight: 500;
   font-display: swap;
-  src: url("../assets/font/MuseoSans/MuseoSans_500_Italic.otf") format("opentype");
+  src: url("../assets/font/MuseoSans/MuseoSans_500_Italic.woff2") format("woff2");
 }
 
 @font-face {
@@ -55,7 +58,7 @@
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url("../assets/font/MuseoSans/MuseoSans_700.otf") format("opentype");
+  src: url("../assets/font/MuseoSans/MuseoSans_700.woff2") format("woff2");
 }
 
 @font-face {
@@ -63,7 +66,7 @@
   font-style: italic;
   font-weight: 700;
   font-display: swap;
-  src: url("../assets/font/MuseoSans/MuseoSans_700Italic.otf") format("opentype");
+  src: url("../assets/font/MuseoSans/MuseoSans_700Italic.woff2") format("woff2");
 }
 
 @font-face {
@@ -71,7 +74,7 @@
   font-style: normal;
   font-weight: 900;
   font-display: swap;
-  src: url("../assets/font/MuseoSans/MuseoSans_900.otf") format("opentype");
+  src: url("../assets/font/MuseoSans/MuseoSans_900.woff2") format("woff2");
 }
 
 @font-face {
@@ -79,5 +82,124 @@
   font-style: italic;
   font-weight: 900;
   font-display: swap;
-  src: url("../assets/font/MuseoSans/MuseoSans_900Italic.otf") format("opentype");
+  src: url("../assets/font/MuseoSans/MuseoSans_900Italic.woff2") format("woff2");
+}
+
+/* Same files under the Adobe Fonts family name "museo-sans": portal.css and
+   2sxc template CSS on bondforwebsolutions.nl still ask for "museo-sans" (the
+   Adobe kit is no longer loaded, see docs/performance.md). Same URLs, so the
+   browser downloads each file once. */
+@font-face {
+  font-family: "museo-sans";
+  font-style: normal;
+  font-weight: 100;
+  font-display: swap;
+  src: url("../assets/font/MuseoSans/MuseoSans_100.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "museo-sans";
+  font-style: italic;
+  font-weight: 100;
+  font-display: swap;
+  src: url("../assets/font/MuseoSans/MuseoSans_100Italic.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "museo-sans";
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("../assets/font/MuseoSans/MuseoSans_300.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "museo-sans";
+  font-style: italic;
+  font-weight: 300;
+  font-display: swap;
+  src: url("../assets/font/MuseoSans/MuseoSans_300Italic.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "museo-sans";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../assets/font/MuseoSans/MuseoSans_500.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "museo-sans";
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../assets/font/MuseoSans/MuseoSans_500_Italic.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "museo-sans";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../assets/font/MuseoSans/MuseoSans_700.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "museo-sans";
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../assets/font/MuseoSans/MuseoSans_700Italic.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "museo-sans";
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("../assets/font/MuseoSans/MuseoSans_900.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "museo-sans";
+  font-style: italic;
+  font-weight: 900;
+  font-display: swap;
+  src: url("../assets/font/MuseoSans/MuseoSans_900Italic.woff2") format("woff2");
+}
+
+/* Metric-matched fallback (Arial, present on Windows and macOS) shown until
+   MuseoSans has loaded, so the swap does not reflow text (Lighthouse CLS: up
+   to 0.2 on long pages). Values from the font files with fontTools: average
+   advance width on Dutch text (size-adjust) and MuseoSans' ascent 0.94 /
+   descent 0.26 em, divided by size-adjust. */
+@font-face {
+  font-family: "MuseoSans Fallback";
+  font-weight: 100 400;
+  src: local("Arial"), local("ArialMT");
+  size-adjust: 102.7%;
+  ascent-override: 91.5%;
+  descent-override: 25.3%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: "MuseoSans Fallback";
+  font-weight: 500 600;
+  src: local("Arial"), local("ArialMT");
+  size-adjust: 104.2%;
+  ascent-override: 90.2%;
+  descent-override: 24.9%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: "MuseoSans Fallback";
+  font-weight: 700 900;
+  src: local("Arial Bold"), local("Arial-BoldMT");
+  size-adjust: 98.2%;
+  ascent-override: 95.7%;
+  descent-override: 26.5%;
+  line-gap-override: 0%;
 }

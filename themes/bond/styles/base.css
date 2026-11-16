@@ -4,6 +4,11 @@
    body font and background were silently overridden by default.css. */
 
 /* stylelint-disable bond/selector-namespace -- page-level base for Bond layouts; allowlisted in theme.json */
+/* Reserve the vertical scrollbar's width from the first paint: otherwise the
+   scrollbar appears once the page grows taller than the window and every
+   centred block jumps sideways (Windows; Lighthouse desktop CLS up to 0.7). */
+:root:has(.bond-main) { scrollbar-gutter: stable; } /* Bond layouts only: the shared splash stays identical across themes */
+
 body {
   min-height: 100vh;
   display: flex;

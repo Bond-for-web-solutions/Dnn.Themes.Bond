@@ -2,80 +2,130 @@
 @using System.Dynamic;
 @using DotNetNuke.Common;
 @using DotNetNuke.Entities.Portals;
+@using DotNetNuke.Services.Localization;
 @inherits DotNetNuke.Web.Razor.DotNetNukeWebPage<dynamic>
 
 @{
     var ps = PortalSettings.Current;
+    bool isAuth = HttpContext.Current.Request.IsAuthenticated;
+    string skinPath = ps.ActiveTab.SkinPath;
 
-    // Logo
-    string logoSrc = !string.IsNullOrEmpty(ps.LogoFile) ? ps.HomeDirectory + ps.LogoFile : "";
+    // Texts and contact details: App_LocalResources/Bond.resx, overridable per
+    // site (Bond.Portal-<id>.resx). An empty value hides that line.
+    string resx = skinPath + "App_LocalResources/Bond.resx";
+    Func<string, string, string> T = (key, fallback) =>
+    {
+        string v = Localization.GetString(key, resx);
+        return string.IsNullOrWhiteSpace(v) ? fallback : v;
+    };
+
+    // Logo: the huisstijl wordmark in antraciet that ships with the theme. Not the
+    // Site Settings logo: on Bond that is the retired grijsblauw version. A site
+    // can point Header.LogoUrl (resx) at another file.
+    string logoSrc = T("Header.LogoUrl", skinPath + "resources/img/bond-woordmerk-antraciet.svg");
     string homeUrl = Globals.NavigateURL(ps.HomeTabId);
 
-    // Copyright
-    string copyright = string.Format("Copyright {0} by {1}", DateTime.Now.Year, ps.PortalName);
+    string payoff = T("Footer.Payoff", "");
+    string company = T("Footer.Company", "");
+    string address = T("Footer.Address", "");
+    string phone = T("Footer.Phone", "");
+    string email = T("Footer.Email", "");
+    // tel: link: digits and + only ("010 73 71 750" -> "0107371750").
+    var phoneDigits = new System.Text.StringBuilder();
+    foreach (char c in phone) { if (char.IsDigit(c) || c == '+') { phoneDigits.Append(c); } }
+    string phoneHref = phoneDigits.ToString();
 
-    // Terms & Privacy
-    string termsUrl = ps.TermsTabId > -1 ? Globals.NavigateURL(ps.TermsTabId) : "#";
-    string privacyUrl = ps.PrivacyTabId > -1 ? Globals.NavigateURL(ps.PrivacyTabId) : "#";
+    string copyright = string.Format("© {0} {1}", DateTime.Now.Year, T("Footer.Copyright", ps.PortalName));
+    // Privacy: the site's Privacy page (Site Settings), else Footer.PrivacyUrl (resx).
+    string privacyUrl = ps.PrivacyTabId > -1 ? Globals.NavigateURL(ps.PrivacyTabId) : T("Footer.PrivacyUrl", "");
+    string newsletterUrl = T("Footer.NewsletterUrl", "");
+    string loginUrl = Globals.LoginURL(HttpContext.Current.Request.RawUrl, false);
+    string logoutUrl = Globals.NavigateURL(ps.ActiveTab.TabID, "Logoff");
 }
 
 <footer class="bond-footer">
-    <!-- Accent Bar -->
-    <div class="bond-footer__accent"></div>
-
-    <!-- Footer Content -->
     <div class="bond-container bond-footer__body">
-        <div class="bond-footer__grid">
+        <div class="bond-footer__grid" data-bond-reveal>
 
-            <!-- Left: Nav Links -->
-            <div class="bond-footer__left">
-                <nav aria-label="Footer Navigation">
-                    <ul class="bond-footer__nav-list">
-                        @foreach (var node in Model.Source.root.Children)
-                        {
-                            @* Null attribute values are omitted by Razor (see HeaderMenu.cshtml). *@
-                            string target = (string)node.Target;
-                            string targetAttr = string.IsNullOrEmpty(target) ? null : target;
-                            string relAttr = target == "_blank" ? "noopener" : null;
-
-                            <li class="bond-footer__nav-item">
-                                @if (node.Enabled)
-                                {
-                                    <a href="@node.Url" target="@targetAttr" rel="@relAttr" class="bond-footer__link @(node.Selected ? "is-selected" : "")">
-                                        @node.Text
-                                    </a>
-                                }
-                                else
-                                {
-                                    <span class="bond-footer__link bond-footer__link--disabled">
-                                        @node.Text
-                                    </span>
-                                }
-                            </li>
-                        }
-                    </ul>
-                </nav>
-
-                <!-- Terms / Privacy -->
-                <div class="bond-footer__meta">
-                    <a class="bond-footer__meta-link" href="@termsUrl">Terms</a>
-                    <span class="bond-footer__sep" aria-hidden="true">|</span>
-                    <a class="bond-footer__meta-link" href="@privacyUrl">Privacy</a>
-                </div>
-
-                <!-- Copyright -->
-                <div class="bond-footer__copyright">
-                    @copyright
-                </div>
-            </div>
-
-            <!-- Right: Logo watermark -->
-            <div class="bond-footer__logo">
-                @if (!string.IsNullOrEmpty(logoSrc))
+            <!-- 1. Wordmark and payoff -->
+            <div class="bond-footer__column" data-bond-reveal>
+                <a class="bond-footer__logo" href="@homeUrl">
+                    <img src="@logoSrc" alt="@ps.PortalName" width="103" height="34" loading="lazy" />
+                </a>
+                @if (!string.IsNullOrEmpty(payoff))
                 {
-                    <a href="@homeUrl"><img src="@logoSrc" alt="@ps.PortalName" /></a>
+                    <p class="bond-footer__payoff">@payoff</p>
                 }
             </div>
+
+            <!-- 2. Company label, address, phone and e-mail as arrow links -->
+            <div class="bond-footer__column" data-bond-reveal>
+                @if (!string.IsNullOrEmpty(company))
+                {
+                    <p class="bond-footer__heading">@company</p>
+                }
+                <address class="bond-footer__address">
+                    @if (!string.IsNullOrEmpty(address)) { <p class="bond-footer__text">@address</p> }
+                    @if (!string.IsNullOrEmpty(phone))
+                    {
+                        <p class="bond-footer__text"><a class="bond-footer__pijl" href="tel:@phoneHref"><span>@phone</span><svg class="bond-footer__icoon" viewBox="0 0 16 12" width="16" height="12" aria-hidden="true" focusable="false"><path d="M1 6h13M9.5 1.5 14 6l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"/></svg></a></p>
+                    }
+                    @if (!string.IsNullOrEmpty(email))
+                    {
+                        <p class="bond-footer__text"><a class="bond-footer__pijl" href="mailto:@email"><span>@email</span><svg class="bond-footer__icoon" viewBox="0 0 16 12" width="16" height="12" aria-hidden="true" focusable="false"><path d="M1 6h13M9.5 1.5 14 6l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"/></svg></a></p>
+                    }
+                </address>
+            </div>
+
+            <!-- 3. First level of the site menu, one column -->
+            <nav class="bond-footer__column" data-bond-reveal aria-label="@T("Footer.NavLabel", "Footermenu")">
+                <p class="bond-footer__heading">@T("Footer.NavTitle", "Onderwerpen")</p>
+                <ul class="bond-footer__nav-list">
+                    @foreach (var node in Model.Source.root.Children)
+                    {
+                        @* Null attribute values are omitted by Razor (see HeaderMenu.cshtml). *@
+                        string target = (string)node.Target;
+                        string targetAttr = string.IsNullOrEmpty(target) ? null : target;
+                        string relAttr = target == "_blank" ? "noopener" : null;
+                        string current = (bool)node.Selected ? "page" : null;
+
+                        <li class="bond-footer__nav-item">
+                            @if (node.Enabled)
+                            {
+                                <a href="@node.Url" target="@targetAttr" rel="@relAttr" aria-current="@current" class="bond-footer__link @(node.Selected ? "is-selected" : "")">@node.Text</a>
+                            }
+                            else
+                            {
+                                <span class="bond-footer__link bond-footer__link--disabled">@node.Text</span>
+                            }
+                        </li>
+                    }
+                </ul>
+            </nav>
+        </div>
+
+        <!-- Bottom row: copyright left; Privacy, Nieuwsbrief, Inloggen right -->
+        <div class="bond-footer__bottom">
+            <p class="bond-footer__copyright">@copyright</p>
+            <ul class="bond-footer__meta">
+                @if (!string.IsNullOrEmpty(privacyUrl))
+                {
+                    <li><a class="bond-footer__meta-link" href="@privacyUrl">@T("Footer.Privacy", "Privacy")</a></li>
+                }
+                @if (!string.IsNullOrEmpty(newsletterUrl))
+                {
+                    <li><a class="bond-footer__meta-link" href="@newsletterUrl">@T("Footer.Newsletter", "Nieuwsbrief")</a></li>
+                }
+                @* Inloggen for visitors, Uitloggen for signed-in users (Bond 13-11-2026). *@
+                @if (isAuth)
+                {
+                    <li><a class="bond-footer__meta-link" href="@logoutUrl" rel="nofollow">@T("Account.Logout", "Uitloggen")</a></li>
+                }
+                else
+                {
+                    <li><a class="bond-footer__meta-link" href="@loginUrl" rel="nofollow">@T("Account.Login", "Inloggen")</a></li>
+                }
+            </ul>
         </div>
     </div>
 </footer>

@@ -48,16 +48,19 @@ test('G2 bond: components survive DNN default.css (visited links, heading margin
   await page.goto('/fixture/bond/default');
   const btn = page.locator('.Normal a.bond-button');
   await expect(btn).toHaveCSS('text-decoration-line', 'none');
-  await expect(btn).toHaveCSS('color', 'rgb(255, 255, 255)');
-  await expect(page.locator('.bond-nav-link.is-selected').first()).toHaveCSS('text-decoration-line', 'none');
-  await expect(page.locator('.bond-footer__link').nth(1)).toHaveCSS('color', 'rgb(107, 98, 86)');
+  await expect(btn).toHaveCSS('color', 'rgb(56, 62, 66)');
+  // A visited nav link keeps no underline; the selected one carries Bond's own koraal underline, not DNN's.
+  await expect(page.locator('.bond-nav a.bond-nav-link[href="#about"]')).toHaveCSS('text-decoration-line', 'none');
+  await expect(page.locator('.bond-nav-link.is-selected').first()).toHaveCSS('text-decoration-color', 'rgb(252, 159, 130)');
+  // Huisstijl 2027: footer menu links are antraciet (inkt); a:visited must not recolour them.
+  await expect(page.locator('.bond-footer__nav-list .bond-footer__link').nth(1)).toHaveCSS('color', 'rgb(56, 62, 66)');
   await context.clearCookies();
 });
 
 test('G3 bond: shared components win ties against third-party module CSS', async ({ page }) => {
   await page.goto('/fixture/bond/default?module=hostile');
   const link = page.locator('.Normal a.bond-button');
-  await expect(link).toHaveCSS('color', 'rgb(255, 255, 255)');
+  await expect(link).toHaveCSS('color', 'rgb(56, 62, 66)');
   await expect(link).toHaveCSS('text-decoration-line', 'none');
   const button = page.locator('.Normal button.bond-button');
   await expect(button).not.toHaveCSS('background-color', 'rgb(0, 128, 0)');

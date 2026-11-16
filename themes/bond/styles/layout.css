@@ -1,11 +1,25 @@
-/* Page layout (default.ascx). */
+/* Page layout (default.ascx) and the containers (containers/*.ascx).
+   No margins and no per-side padding: centring and gutters come from one
+   padding shorthand (same content box as max-width + auto margins). */
 .bond-main { flex: 1 1 0%; }
 
 .bond-content {
-  margin-left: auto;
-  margin-right: auto;
-  max-width: var(--bond-size-container);
   width: 100%;
-  padding-left: var(--bond-space-8);
-  padding-right: var(--bond-space-8);
+  padding: 0 max(var(--bond-space-8), calc((100% - var(--bond-size-container)) / 2 + var(--bond-space-8)));
 }
+
+/* DNN's login module (Authentication/module.css) gives .LoginPanel a fixed
+   500px width, 50px right padding and a float: on phones it overflows the
+   page. On Bond layouts the panel takes the width it gets; the auth card
+   inside sets its own max width. (0,2,0) beats the module's (0,1,0). */
+/* stylelint-disable-next-line bond/selector-namespace, selector-class-pattern -- DNN core login module class (DesktopModules/Admin/Authentication/module.css) */
+.bond-main .LoginPanel {
+  width: auto;
+  max-width: 100%;
+  padding: 0;
+  float: none;
+}
+
+/* Container Standaard: a module on content width with vertical rhythm.
+   Full-width panes use None (no wrapper, edge to edge). */
+.bond-blok { padding: var(--bond-space-10) 0; }

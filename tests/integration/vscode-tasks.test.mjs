@@ -121,7 +121,7 @@ test('running "DNN: Build Theme…" (theme picked: bond) exactly as VS Code does
 test('"DNN: Publish Theme Locally…" refuses when no local target is configured', () => {
   const t = byLabel.get('DNN: Publish Theme Locally…');
   const P = tempDir();
-  const r = spawnSync(process.execPath, t.args.map((a) => resolve(a, { theme: 'bond' })), { cwd: root, env: { ...process.env, BOND_PUBLISH_ROOT: P, BOND_LOCAL_CONFIG: path.join(P, 'none.env') }, encoding: 'utf8' });
+  const r = spawnSync(process.execPath, t.args.map((a) => resolve(a, { theme: 'bond' })), { cwd: root, env: { ...process.env, BOND_PUBLISH_ROOT: P, BOND_LOCAL_CONFIG: path.join(P, 'none.json') }, encoding: 'utf8' });
   assert.equal(r.status, 1);
   assert.match(r.stdout + r.stderr, /BOND700/);
 });

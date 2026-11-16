@@ -1,0 +1,720 @@
+/* ==========================================================================
+   Huisstijl 2027 building blocks for page content (brandbook p. 05-12).
+   Opt-in classes for editors (HTML module source view, 2sxc templates);
+   nothing here touches module markup on its own, so DNN and third-party
+   module UI keep their box model (isolation G1).
+
+   The editor names used on bondforwebsolutions.nl since November 2026
+   (CSS-logboek: bond-markeer, bond-citaat, bond-knop, bond-op-koraal ...)
+   are supported, so existing content keeps working when a page moves to
+   this theme. Showcase: /bond-huisstijl.
+
+     <p class="bond-label">Werkwijze</p>
+     <h2><span class="bond-facet">K</span>ennis groeit als mensen
+       <span class="bond-mark">elkaar vinden.</span></h2>
+     <p class="bond-lead">...</p>
+     <a class="bond-more" href="...">Lees meer</a>
+   ========================================================================== */
+
+/* ---- Typography ------------------------------------------------------- */
+
+/* Headings in content: DNN's default.css forces Arial on h1-h6. Huisstijl:
+   one family, all headings bold antraciet. Only typography, no box model,
+   so module UI keeps its layout (isolation G1). */
+.bond-content :is(h1, h2, h3, h4, h5, h6) {
+  font-family: var(--bond-font-heading);
+  font-weight: var(--bond-font-weight-bold);
+  letter-spacing: var(--bond-heading-tracking);
+  color: var(--bond-color-text);
+}
+
+/* Running text in the content pane: 16/26 light. Typography only, no box
+   model (isolation G1). Plain links are deliberately left to DNN and module
+   CSS here (isolation G3); the pagina layout styles them in pagina.css. */
+.bond-content {
+  font-weight: var(--bond-font-weight-light);
+  line-height: var(--bond-type-body-line);
+  overflow-wrap: break-word;
+}
+
+.bond-content :is(b, strong) { font-weight: var(--bond-font-weight-bold); }
+
+/* Explicit sizes (also usable on a <p> or <span>). */
+.bond-h1,
+.bond-groot {
+  font-family: var(--bond-font-heading);
+  font-size: var(--bond-type-h1);
+  font-weight: var(--bond-font-weight-bold);
+  line-height: var(--bond-type-h1-line);
+  letter-spacing: var(--bond-heading-tracking);
+  color: var(--bond-color-text);
+}
+
+.bond-h2 {
+  font-family: var(--bond-font-heading);
+  font-size: var(--bond-type-h2);
+  font-weight: var(--bond-font-weight-bold);
+  line-height: var(--bond-type-h2-line);
+  letter-spacing: var(--bond-heading-tracking);
+  color: var(--bond-color-text);
+}
+
+.bond-h3 {
+  font-family: var(--bond-font-heading);
+  font-size: var(--bond-type-h3);
+  font-weight: var(--bond-font-weight-bold);
+  line-height: var(--bond-type-h3-line);
+  color: var(--bond-color-text);
+}
+
+/* Label / eyebrow: spaced caps in koraal-diep (koraal is never text). */
+.bond-label {
+  margin: 0;
+  font-size: var(--bond-type-label);
+  font-weight: var(--bond-font-weight-medium);
+  line-height: 1rem;
+  letter-spacing: var(--bond-letter-spacing-label);
+  text-transform: uppercase;
+  color: var(--bond-koraal-diep);
+}
+
+/* Lead paragraph: 20/30 light, max ~68 characters. */
+.bond-lead {
+  max-width: var(--bond-measure);
+  font-size: var(--bond-type-lead);
+  font-weight: var(--bond-font-weight-light);
+  line-height: var(--bond-type-lead-line);
+  color: var(--bond-color-text);
+}
+
+.bond-lead strong { font-weight: var(--bond-font-weight-bold); }
+
+/* Body copy at the huisstijl size (16/26 light). */
+.bond-tekst {
+  max-width: var(--bond-measure);
+  font-size: var(--bond-type-body);
+  font-weight: var(--bond-font-weight-light);
+  line-height: var(--bond-type-body-line);
+}
+
+.bond-klein {
+  font-size: var(--bond-type-small);
+  font-weight: var(--bond-font-weight-medium);
+  line-height: 1.25rem;
+  color: var(--bond-color-text-muted);
+}
+
+/* Markeerkop: one keyword per heading on a koraal highlight. bond-markeer is
+   the editor name used on the live site. On a koraal field: papier. */
+.bond-mark,
+.bond-markeer {
+  padding: 0 0.375rem;
+  background: linear-gradient(transparent 58%, var(--bond-koraal) 58%);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+.bond-mark--papier,
+.bond-markeer--creme {
+  background: linear-gradient(transparent 58%, var(--bond-papier) 58%);
+}
+
+/* Eerste letter facet (levendig): koraal / oker / petrol, clipped to text. */
+.bond-facet {
+  color: transparent;
+  background: var(--bond-facet);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.bond-facet--rustig { background-image: var(--bond-facet-rustig); }
+
+@media (--bond-forced-colors) {
+  .bond-facet {
+    color: CanvasText;
+    background: none;
+  }
+}
+
+/* ---- Links and buttons ------------------------------------------------ */
+
+/* "Lees meer" link: 2px koraal underline, arrow in koraal-diep. */
+.bond-more:is(a) {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.25rem 0;
+  font-weight: var(--bond-font-weight-medium);
+  color: var(--bond-color-text);
+  text-decoration: underline;
+  text-decoration-color: var(--bond-koraal);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.3em;
+}
+
+.bond-more:is(:link, :visited) {
+  color: var(--bond-color-text);
+  text-decoration-line: underline;
+  /* After the shorthand above (and DNN's a:visited): it resets the colour. */
+  text-decoration-color: var(--bond-koraal);
+}
+
+.bond-more:is(a):hover { color: var(--bond-koraal-diep); }
+
+/* Arrow: an inline SVG (.bond-more__icoon) in templates; editor HTML without
+   the icon keeps a text arrow as fallback. Spacing comes from the flex gap. */
+.bond-more__icoon {
+  flex: none;
+  width: 1rem;
+  height: 0.75rem;
+  color: var(--bond-koraal-diep);
+  transition: transform var(--bond-duration-fast) var(--bond-easing-standard);
+}
+
+.bond-more:is(a):hover .bond-more__icoon { transform: translateX(0.2em); }
+
+.bond-more:not(:has(.bond-more__icoon))::after {
+  content: "\2192";
+  display: inline-block;
+  color: var(--bond-koraal-diep);
+  text-decoration: none;
+  transition: transform var(--bond-duration-fast) var(--bond-easing-standard);
+}
+
+.bond-more:not(:has(.bond-more__icoon)):hover::after { transform: translateX(0.2em); }
+
+.bond-more:focus-visible {
+  outline: 2px solid var(--bond-color-focus);
+  outline-offset: 2px;
+}
+
+/* Editor button (bond-knop): the same pill as the shared .bond-button.
+   Default = secondary (1.5px koraal border, inkt text); --koraal = the one
+   primary button per screen; --papier = the button on a koraal band. */
+.bond-knop:is(a, button) {
+  display: inline-flex;
+  min-height: var(--bond-size-touch-target);
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  padding: var(--bond-button-padding-y) var(--bond-button-padding-x);
+  font-family: var(--bond-font-sans);
+  font-size: var(--bond-button-font-size);
+  font-weight: var(--bond-font-weight-medium);
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  color: var(--bond-inkt);
+  text-decoration: none;
+  background: transparent;
+  border: var(--bond-border-width) solid var(--bond-koraal);
+  border-radius: var(--bond-radius-full);
+  cursor: pointer;
+  transition: background-color var(--bond-duration-fast) var(--bond-easing-standard), border-color var(--bond-duration-fast) var(--bond-easing-standard);
+}
+
+.bond-knop:is(:link, :visited) {
+  color: var(--bond-inkt);
+  text-decoration: none;
+}
+
+.bond-knop:is(a, button):hover { background: var(--bond-zand); }
+
+.bond-knop--koraal:is(a, button) { background: var(--bond-koraal); }
+
+.bond-knop--koraal:is(a, button):hover {
+  background: var(--bond-abrikoos);
+  border-color: var(--bond-abrikoos);
+}
+
+.bond-knop--papier:is(a, button) {
+  background: var(--bond-papier);
+  border-color: var(--bond-papier);
+}
+
+.bond-knop--papier:is(a, button):hover { background: var(--bond-wit); }
+
+.bond-knop--klein:is(a, button) {
+  min-height: 2.25rem;
+  padding: 0.375rem 0.875rem;
+  font-size: var(--bond-type-small);
+}
+
+.bond-knop:is(a, button):focus-visible {
+  outline: 2px solid var(--bond-color-focus);
+  outline-offset: 2px;
+}
+
+.bond-knoppen {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--bond-space-3) var(--bond-space-6);
+}
+
+/* Fact pill (max three under an opening heading). */
+.bond-pil {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.375rem 0.875rem;
+  font-size: var(--bond-type-small);
+  font-weight: var(--bond-font-weight-medium);
+  line-height: 1.25rem;
+  color: var(--bond-inkt);
+  background: var(--bond-wit);
+  border: var(--bond-border-width) solid var(--bond-abrikoos);
+  border-radius: var(--bond-radius-full);
+}
+
+/* ---- Sections and grid ------------------------------------------------ */
+
+/* Full-width section with the 96px rhythm. Grounds: papier (default), wit,
+   zand, abrikoos, oker, petrol; koraal = the one band per page. */
+/* Grid section: the inner wrapper is centred with justify-self (no margins);
+   everything inside is spaced with gap. */
+.bond-sectie {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  padding: var(--bond-section-gap) var(--bond-gutter);
+  overflow-wrap: break-word;
+  color: var(--bond-inkt);
+  background: var(--bond-papier);
+}
+
+.bond-sectie__inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bond-space-6);
+  width: 100%;
+  max-width: var(--bond-content-max);
+  justify-self: center;
+}
+
+.bond-sectie--wit { background: var(--bond-wit); }
+.bond-sectie--zand { background: var(--bond-zand); }
+.bond-sectie--abrikoos { background: var(--bond-abrikoos); }
+.bond-sectie--oker { background: var(--bond-oker); }
+.bond-sectie--koraal { background: var(--bond-koraal); }
+
+/* Petrol is calm: a quote or a closing block, papier text. */
+.bond-sectie--petrol {
+  color: var(--bond-papier);
+  background: var(--bond-petrol);
+}
+
+.bond-sectie--petrol :is(h1, h2, h3, .bond-label, .bond-lead) { color: var(--bond-papier); }
+
+/* Responsive card grid: 1 -> 2 -> 3/4 columns, no breakpoints needed. */
+.bond-raster {
+  display: grid;
+  gap: var(--bond-space-6);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  padding: 0;
+  list-style: none;
+}
+
+.bond-raster--twee { grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); }
+
+/* ---- Cards (tegel): wit, 1.5px abrikoos border, 8px radius, no shadow.
+   Max one koraal and one abrikoos card per row. ------------------------- */
+.bond-tegel {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--bond-space-3);
+  padding: var(--bond-space-6);
+  color: var(--bond-inkt);
+  background: var(--bond-wit);
+  border: var(--bond-border-width) solid var(--bond-abrikoos);
+  border-radius: var(--bond-radius-card);
+}
+
+.bond-tegel--koraal { background: var(--bond-koraal); border-color: var(--bond-koraal); }
+.bond-tegel--abrikoos { background: var(--bond-abrikoos); border-color: var(--bond-abrikoos); }
+.bond-tegel--turquoise { background: var(--bond-turquoise); border-color: var(--bond-turquoise); }
+
+.bond-tegel__titel {
+  margin: 0;
+  font-size: var(--bond-type-h3);
+  font-weight: var(--bond-font-weight-bold);
+  line-height: var(--bond-type-h3-line);
+}
+
+.bond-tegel__tekst {
+  margin: 0;
+  font-weight: var(--bond-font-weight-light);
+  line-height: var(--bond-type-body-line);
+}
+
+/* The block before the link grows, so links line up at the bottom of a row
+   (flex-grow instead of margin-top: auto). */
+.bond-tegel > :has(+ .bond-tegel__voet) { flex-grow: 1; }
+
+/* Labels and small text on coloured cards stay antraciet (contrast). */
+.bond-tegel:is(.bond-tegel--koraal, .bond-tegel--abrikoos, .bond-tegel--turquoise) :is(.bond-label, .bond-klein) { color: var(--bond-inkt); }
+
+/* Dubbele ring: two overlapping, slightly irregular rings as feature icon. */
+.bond-ring {
+  position: relative;
+  display: inline-block;
+  width: 3rem;
+  height: 2.25rem;
+  flex-shrink: 0;
+}
+
+.bond-ring::before,
+.bond-ring::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 3px solid var(--bond-koraal);
+  border-radius: 48% 52% 50% 50% / 50% 46% 54% 50%;
+}
+
+.bond-ring::before { left: 0; }
+
+.bond-ring::after {
+  left: 0.75rem;
+  border-color: var(--bond-rosegoud);
+  border-radius: 52% 48% 47% 53% / 49% 53% 47% 51%;
+}
+
+/* Big numbers (koraal-diep) with a caption. */
+.bond-feiten {
+  display: grid;
+  gap: var(--bond-space-6);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
+  padding: 0;
+  list-style: none;
+}
+
+.bond-feiten > * {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bond-space-2);
+}
+
+.bond-feit__getal {
+  display: block;
+  font-size: var(--bond-type-h2);
+  font-weight: var(--bond-font-weight-bold);
+  line-height: 1;
+  color: var(--bond-koraal-diep);
+}
+
+.bond-feit__tekst {
+  display: block;
+  font-size: var(--bond-type-small);
+  font-weight: var(--bond-font-weight-medium);
+  color: var(--bond-inkt);
+}
+
+/* ---- Quote, values, table -------------------------------------------- */
+
+/* Citaat: inset turquoise frame, citaattekens in the warm colours on top. */
+.bond-citaat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bond-space-4);
+  max-width: 48rem;
+  padding: var(--bond-space-8) clamp(1.25rem, 3vw, 2.25rem);
+  font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.625rem);
+  font-weight: var(--bond-font-weight-bold);
+  line-height: 1.45;
+  color: var(--bond-inkt);
+  background: var(--bond-turquoise);
+  border-radius: var(--bond-radius-card);
+}
+
+.bond-citaat::before {
+  content: "";
+  display: block;
+  width: 3.75rem;
+  height: 2.5rem;
+  background: url("../assets/img/bond-citaattekens.svg") no-repeat 0 0 / contain;
+}
+
+.bond-citaat > p { margin: 0; }
+
+.bond-citaat :is(cite, footer) {
+  display: block;
+  font-size: var(--bond-type-body);
+  font-weight: var(--bond-font-weight-light);
+  font-style: normal;
+}
+
+.bond-citaat--abrikoos { background: var(--bond-abrikoos); }
+
+/* Genummerde waarden: an <ol> as tiles with a facet number. */
+.bond-waarden {
+  display: grid;
+  gap: var(--bond-space-4);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
+  padding: 0;
+  list-style: none;
+  counter-reset: bond-waarde;
+}
+
+.bond-waarden > li {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bond-space-3);
+  padding: var(--bond-space-6) var(--bond-space-5);
+  font-size: 1.25rem;
+  font-weight: var(--bond-font-weight-bold);
+  line-height: 1.3;
+  color: var(--bond-inkt);
+  background: var(--bond-wit);
+  border-top: 8px solid var(--bond-koraal);
+  border-radius: var(--bond-radius-card);
+  counter-increment: bond-waarde;
+}
+
+.bond-waarden > li:nth-child(4n + 2) { border-top-color: var(--bond-abrikoos); }
+.bond-waarden > li:nth-child(4n + 3) { border-top-color: var(--bond-oker); }
+.bond-waarden > li:nth-child(4n + 4) { border-top-color: var(--bond-rosegoud); }
+
+.bond-waarden > li::before {
+  content: counter(bond-waarde);
+  display: block;
+  font-size: 3rem;
+  line-height: 1;
+  color: transparent;
+  background: var(--bond-facet);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* Table without fixed widths; abrikoos rules, no black grid. */
+.bond-tabel {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.bond-tabel :is(th, td) {
+  padding: var(--bond-space-3) var(--bond-space-4);
+  text-align: left;
+  vertical-align: top;
+  border-bottom: var(--bond-border-width) solid var(--bond-abrikoos);
+}
+
+.bond-tabel th { font-weight: var(--bond-font-weight-medium); }
+
+/* Phones: tighter cells, long words may break, so the table fits the screen. */
+@media (--bond-below-sm) {
+  .bond-tabel :is(th, td) {
+    padding: var(--bond-space-3) var(--bond-space-2);
+    overflow-wrap: anywhere;
+    hyphens: auto;
+  }
+}
+
+/* Wide tables scroll inside their wrapper instead of the page. */
+.bond-tabel-wrap {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+/* ---- Fields on coloured grounds --------------------------------------- */
+
+/* Block on koraal (e.g. Contact): everything antraciet, highlight papier. */
+.bond-op-koraal,
+.bond-op-koraal :is(h1, h2, h3, .bond-label, .bond-lead, .bond-klein) { color: var(--bond-inkt); }
+
+.bond-op-koraal :is(.bond-mark, .bond-markeer) {
+  background: linear-gradient(transparent 58%, var(--bond-papier) 58%);
+}
+
+.bond-op-koraal .bond-facet { background-image: var(--bond-facet-op-kleur); }
+
+/* On a koraal field every button is papier (brandbook): a koraal fill or
+   border would disappear into the ground. */
+.bond-op-koraal .bond-knop:is(a, button) {
+  background: var(--bond-papier);
+  border-color: var(--bond-papier);
+}
+
+.bond-op-koraal .bond-knop:is(a, button):hover { background: var(--bond-wit); }
+
+/* On koraal the koraal underline would vanish: papier instead. */
+.bond-op-koraal .bond-more:is(:link, :visited),
+.bond-tegel--koraal .bond-more:is(:link, :visited) { text-decoration-color: var(--bond-papier); }
+
+/* ---- Graphic elements -------------------------------------------------- */
+
+/* Strook: two layers of warm gradient bars (warm colours only). */
+.bond-strook {
+  display: block;
+  height: var(--bond-strook-hoogte);
+  background:
+    linear-gradient(90deg, var(--bond-papier), var(--bond-abrikoos)) 0 0 / 35% 50% no-repeat,
+    linear-gradient(90deg, var(--bond-koraal), var(--bond-rosegoud)) 35% 0 / 35% 50% no-repeat,
+    linear-gradient(90deg, var(--bond-koraal), var(--bond-abrikoos)) 100% 0 / 30% 50% no-repeat,
+    linear-gradient(90deg, var(--bond-abrikoos), var(--bond-koraal)) 0 100% / 35% 50% no-repeat,
+    linear-gradient(90deg, var(--bond-rosegoud), var(--bond-abrikoos)) 35% 100% / 20% 50% no-repeat,
+    linear-gradient(90deg, var(--bond-koraal), var(--bond-oker)) 100% 100% / 45% 50% no-repeat;
+}
+
+/* Kleurvlakken: koraal block in the corner with abrikoos beside it. Put it
+   on a section; its children sit above the blocks. */
+.bond-vlakken {
+  --_bond-vlak-a: clamp(4.5rem, 18vw, 18.75rem);
+  --_bond-vlak-b: clamp(1.75rem, 7vw, 6.875rem);
+
+  position: relative;
+  overflow: hidden;
+}
+
+.bond-vlakken::before,
+.bond-vlakken::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.bond-vlakken::before {
+  width: var(--_bond-vlak-a);
+  aspect-ratio: 5 / 6;
+  background: var(--bond-koraal);
+}
+
+.bond-vlakken::after {
+  right: var(--_bond-vlak-a);
+  width: var(--_bond-vlak-b);
+  aspect-ratio: 11 / 15;
+  background: var(--bond-abrikoos);
+}
+
+.bond-vlakken > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Text never runs over a block: on phones the content starts below them,
+   from 640px it keeps the width of both blocks free on the right. */
+@media (--bond-below-sm) {
+  .bond-vlakken { padding: 6.5rem 0 0; }
+}
+
+@media (--bond-sm) {
+  .bond-vlakken > * { padding: 0 calc(var(--_bond-vlak-a) + var(--_bond-vlak-b)) 0 0; }
+}
+
+/* Blokje over de hoek of a photo: turquoise with oker beside it, 8px corners. */
+.bond-beeld {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--bond-space-2);
+  margin: 0;
+}
+
+.bond-beeld > img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--bond-radius-card);
+}
+
+.bond-beeld::after,
+.bond-beeld::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  aspect-ratio: 1;
+  pointer-events: none;
+}
+
+.bond-beeld::after {
+  right: 0;
+  width: clamp(2.25rem, 11%, 5.25rem);
+  background: var(--bond-turquoise);
+  border-bottom-right-radius: var(--bond-radius-card);
+}
+
+.bond-beeld::before {
+  z-index: 1;
+  right: clamp(2.25rem, 11%, 5.25rem);
+  width: clamp(0.75rem, 3.7%, 1.75rem);
+  background: var(--bond-oker);
+}
+
+.bond-beeld:has(> figcaption)::after,
+.bond-beeld:has(> figcaption)::before { bottom: 2rem; }
+
+.bond-beeld > figcaption {
+  /* Reset: the 2sxc Content stylesheet styles every figcaption as an overlay. */
+  position: static;
+  padding: 0;
+  background: none;
+  font-size: var(--bond-type-small);
+  line-height: 1.5rem;
+  color: var(--bond-color-text-muted);
+}
+
+/* Colour swatch (design-system reference page). */
+.bond-staal {
+  display: flex;
+  min-height: 8rem;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: var(--bond-space-4);
+  font-size: var(--bond-type-small);
+  line-height: 1.25rem;
+  color: var(--bond-inkt);
+  border: var(--bond-border-width) solid var(--bond-abrikoos);
+  border-radius: var(--bond-radius-card);
+}
+
+.bond-staal__naam { font-weight: var(--bond-font-weight-bold); }
+
+.bond-staal--koraal { background: var(--bond-koraal); border-color: var(--bond-koraal); }
+.bond-staal--abrikoos { background: var(--bond-abrikoos); border-color: var(--bond-abrikoos); }
+.bond-staal--rosegoud { background: var(--bond-rosegoud); border-color: var(--bond-rosegoud); }
+.bond-staal--oker { background: var(--bond-oker); border-color: var(--bond-oker); }
+.bond-staal--turquoise { background: var(--bond-turquoise); border-color: var(--bond-turquoise); }
+.bond-staal--petrol { color: var(--bond-papier); background: var(--bond-petrol); border-color: var(--bond-petrol); }
+.bond-staal--koraal-diep { color: var(--bond-papier); background: var(--bond-koraal-diep); border-color: var(--bond-koraal-diep); }
+.bond-staal--inkt { color: var(--bond-papier); background: var(--bond-inkt); border-color: var(--bond-inkt); }
+.bond-staal--inkt-zacht { color: var(--bond-papier); background: var(--bond-inkt-zacht); border-color: var(--bond-inkt-zacht); }
+.bond-staal--papier { background: var(--bond-papier); }
+.bond-staal--zand { background: var(--bond-zand); }
+.bond-staal--wit { background: var(--bond-wit); }
+
+@media (--bond-reduced-motion) {
+  .bond-more::after,
+  .bond-knop:is(a, button) { transition: none; }
+}
+
+/* ---- Scroll-in micro-animations (scripts/reveal.js) ---------------------
+   Templates mark blocks and cards with data-bond-reveal. The start state
+   applies only under body.bond-reveal-aan, which the script sets when motion
+   is allowed, so without JS (or with reduced motion) nothing is hidden. Each
+   element plays once when it enters the viewport (.is-zichtbaar); cards in a
+   row get a small stagger. */
+.bond-reveal-aan [data-bond-reveal] {
+  transition:
+    opacity 1s cubic-bezier(0.16, 0.84, 0.3, 1),
+    transform 1s cubic-bezier(0.16, 0.84, 0.3, 1);
+}
+
+/* As the design's b-op: 48px up and 98% scale to place. */
+.bond-reveal-aan [data-bond-reveal]:not(.is-zichtbaar) {
+  opacity: 0;
+  transform: translateY(3rem) scale(0.98);
+}
+
+.bond-reveal-aan [data-bond-reveal]:nth-child(3n + 2) { transition-delay: 0.15s; }
+.bond-reveal-aan [data-bond-reveal]:nth-child(3n + 3) { transition-delay: 0.3s; }
+@media (--bond-reduced-motion) {
+  .bond-reveal-aan [data-bond-reveal] { transition: none; }
+
+  .bond-reveal-aan [data-bond-reveal]:not(.is-zichtbaar) {
+    opacity: 1;
+    transform: none;
+  }
+}

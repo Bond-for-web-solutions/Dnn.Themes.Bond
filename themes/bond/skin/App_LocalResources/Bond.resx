@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Texts and contact details of the Bond header and footer (menus/*/*.cshtml).
+  A site overrides any value without touching the theme: Persona Bar >
+  Settings > Languages > Edit resources (mode Site) creates
+  Bond.Portal-<id>.resx next to this file; theme upgrades leave it alone.
+  An empty value hides that line.
+-->
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Analytics.GtmScript" xml:space="preserve"><value>https://www.googletagmanager.com/gtm.js?id=GTM-TF8GJL8</value><comment>Google Tag Manager script URL, loaded by the theme after page load. Empty = no GTM. Switch off DNN's own GTM connector (Settings > Connectors), or GTM loads early from DNN instead (the theme then skips its copy).</comment></data>
+  <data name="Header.Since" xml:space="preserve"><value>Sinds 1998</value></data>
+  <data name="Header.LogoUrl" xml:space="preserve"><value></value></data>
+  <data name="Header.LogoAlt" xml:space="preserve"><value>Bond, naar de startpagina</value></data>
+  <data name="Header.SkipLink" xml:space="preserve"><value>Naar de inhoud</value></data>
+  <data name="Header.NavLabel" xml:space="preserve"><value>Hoofdmenu</value></data>
+  <data name="Header.MenuButton" xml:space="preserve"><value>Menu</value></data>
+  <data name="Header.CtaText" xml:space="preserve"><value>Plan een gesprek</value></data>
+  <data name="Header.CtaUrl" xml:space="preserve"><value>/contact</value></data>
+  <data name="Account.Login" xml:space="preserve"><value>Inloggen</value></data>
+  <data name="Account.Logout" xml:space="preserve"><value>Uitloggen</value></data>
+  <data name="Footer.Payoff" xml:space="preserve"><value>Bond. Bouwen, bewaken en verbinden.</value></data>
+  <data name="Footer.Company" xml:space="preserve"><value>Bond for web solutions · sinds 1998</value></data>
+  <data name="Footer.Address" xml:space="preserve"><value>Vlaardingweg 62, Rotterdam</value></data>
+  <data name="Footer.Phone" xml:space="preserve"><value>010 73 71 750</value></data>
+  <data name="Footer.Email" xml:space="preserve"><value>support@bondforwebsolutions.nl</value></data>
+  <data name="Footer.NavTitle" xml:space="preserve"><value>Onderwerpen</value></data>
+  <data name="Footer.NavLabel" xml:space="preserve"><value>Footermenu</value></data>
+  <data name="Footer.ContactTitle" xml:space="preserve"><value>Contact</value></data>
+  <data name="Footer.Copyright" xml:space="preserve"><value>Bond for web solutions</value></data>
+  <data name="Footer.Privacy" xml:space="preserve"><value>Privacy</value></data>
+  <data name="Footer.PrivacyUrl" xml:space="preserve"><value>/privacy</value><comment>Used when Site Settings has no Privacy page. Empty = no link.</comment></data>
+  <data name="Footer.Newsletter" xml:space="preserve"><value>Nieuwsbrief</value></data>
+  <data name="Footer.NewsletterUrl" xml:space="preserve"><value>/inschijven-op-de-nieuwsbrief</value><comment>Newsletter sign-up page (TabID 77 on bondforwebsolutions.nl). Empty = no link.</comment></data>
+</root>

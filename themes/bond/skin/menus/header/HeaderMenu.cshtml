@@ -3,31 +3,48 @@
 @using DotNetNuke.Common;
 @using DotNetNuke.Entities.Portals;
 @using DotNetNuke.Entities.Users;
+@using DotNetNuke.Services.Localization;
 @inherits DotNetNuke.Web.Razor.DotNetNukeWebPage<dynamic>
 
 @{
     var ps = PortalSettings.Current;
     var user = UserController.Instance.GetCurrentUserInfo();
     bool isAuth = HttpContext.Current.Request.IsAuthenticated;
+    string skinPath = ps.ActiveTab.SkinPath;
 
-    // Logo
-    string logoSrc = !string.IsNullOrEmpty(ps.LogoFile) ? ps.HomeDirectory + ps.LogoFile : "";
+    // Texts come from App_LocalResources/Bond.resx (a site overrides them with
+    // Bond.Portal-<id>.resx); the fallback keeps the header usable without it.
+    string resx = skinPath + "App_LocalResources/Bond.resx";
+    Func<string, string, string> T = (key, fallback) =>
+    {
+        string v = Localization.GetString(key, resx);
+        return string.IsNullOrWhiteSpace(v) ? fallback : v;
+    };
+
+    // Logo: the huisstijl wordmark in antraciet that ships with the theme. Not the
+    // Site Settings logo: on Bond that is the retired grijsblauw version. A site
+    // can point Header.LogoUrl (resx) at another file.
+    string logoSrc = T("Header.LogoUrl", skinPath + "resources/img/bond-woordmerk-antraciet.svg");
     string homeUrl = Globals.NavigateURL(ps.HomeTabId);
+    string since = T("Header.Since", "");
+    string ctaText = T("Header.CtaText", "");
+    string ctaUrl = T("Header.CtaUrl", "");
 
-    // Login / Logout
-    string loginUrl = isAuth
-        ? Globals.NavigateURL(ps.ActiveTab.TabID, "Logoff")
-        : Globals.LoginURL(HttpContext.Current.Request.RawUrl, false);
-    string loginText = isAuth ? "Logout" : "Login";
-
-    // User profile
+    string logoutUrl = isAuth ? Globals.NavigateURL(ps.ActiveTab.TabID, "Logoff") : "";
     string userName = isAuth ? user.DisplayName : "";
     string userUrl = isAuth ? Globals.UserProfileURL(user.UserID) : "";
+
+    // Google Tag Manager, loaded by theme.js AFTER the page has loaded (not in
+    // <head>): it costs 0.3-0.5 s main thread on phones. The script URL is site
+    // configuration (Bond.resx "Analytics.GtmScript"), so the theme code holds
+    // no remote host. Not for administrators (as DNN's GTM connector with
+    // TrackForAdmin=false). Empty = no GTM.
+    string gtmScript = T("Analytics.GtmScript", "");
+    bool isAdmin = isAuth && (user.IsSuperUser || user.IsInRole(ps.AdministratorRoleName));
+    string gtmAttr = (!isAdmin && gtmScript.StartsWith("https://", StringComparison.Ordinal)) ? gtmScript : null;
 }
 
-@* Razor omits an attribute whose value is null, so empty targets render nothing.
-   (Bond 1.0 wrote the attribute as an @-encoded string, which produced
-   target=&quot;_blank&quot; - a broken attribute.) *@
+@* Razor omits an attribute whose value is null, so empty targets render nothing. *@
 @helper RenderNodes(dynamic nodes, bool isRoot) {
     <ul class="bond-menu @(isRoot ? "bond-menu--root" : "bond-menu--sub")">
         @foreach (var node in nodes)
@@ -38,13 +55,14 @@
             string relAttr = target == "_blank" ? "noopener" : null;
             string href = (string)node.Url;
             bool selected = (bool)node.Selected;
+            string current = selected ? "page" : null;
 
             <li class="bond-menu__item">
                 @if (isRoot)
                 {
                     if ((bool)node.Enabled)
                     {
-                        <a href="@href" target="@targetAttr" rel="@relAttr" class="bond-nav-link @(selected ? "is-selected" : "")">
+                        <a href="@href" target="@targetAttr" rel="@relAttr" aria-current="@current" class="bond-nav-link @(selected ? "is-selected" : "")">
                             @node.Text
                             @if (hasChildren)
                             {
@@ -65,7 +83,7 @@
                 {
                     if ((bool)node.Enabled)
                     {
-                        <a href="@href" target="@targetAttr" rel="@relAttr" class="bond-submenu-link @(selected ? "is-selected" : "")">
+                        <a href="@href" target="@targetAttr" rel="@relAttr" aria-current="@current" class="bond-submenu-link @(selected ? "is-selected" : "")">
                             @node.Text
                             @if (hasChildren)
                             {
@@ -93,66 +111,71 @@
     </ul>
 }
 
-<header class="bond-header">
-    <!-- Top Bar: User/Login -->
-    <div class="bond-topbar">
-        <div class="bond-container">
-            <div class="bond-topbar__inner">
-                <a href="@loginUrl" class="bond-topbar__link">@loginText</a>
-                @if (isAuth)
-                {
-                    <a href="@userUrl" class="bond-topbar__user">@userName</a>
-                }
-            </div>
-        </div>
-    </div>
+<a class="bond-skip" href="#bond-main">@T("Header.SkipLink", "Naar de inhoud")</a>
 
-    <!-- Main Header: Logo + Nav -->
+<!-- Strook: two rows of warm gradient bars (24px, as the design's kop). Outside
+     the sticky header, so it scrolls away while the menu bar stays. -->
+<span class="bond-header__strook" aria-hidden="true"><span class="bond-header__balk bond-header__balk--2"></span><span class="bond-header__balk bond-header__balk--1"></span><span class="bond-header__balk bond-header__balk--3"></span><span class="bond-header__balk bond-header__balk--5"></span><span class="bond-header__balk bond-header__balk--4"></span><span class="bond-header__balk bond-header__balk--6"></span></span>
+
+<header class="bond-header" data-bond-gtm="@gtmAttr">
+    <!-- Kopbalk: wordmark + since, label menu, one secondary button -->
     <div class="bond-header__main">
         <div class="bond-container">
             <div class="bond-header__inner">
 
-                <!-- Logo -->
-                <div class="bond-header__logo">
-                    @if (!string.IsNullOrEmpty(logoSrc))
+                <a class="bond-header__logo" href="@homeUrl">
+                    <img src="@logoSrc" alt="@T("Header.LogoAlt", ps.PortalName)" width="103" height="34" />
+                    @if (!string.IsNullOrEmpty(since))
                     {
-                        <a href="@homeUrl"><img src="@logoSrc" alt="@ps.PortalName" /></a>
+                        <span class="bond-header__since">@since</span>
                     }
-                </div>
+                </a>
 
-                <!-- Desktop Navigation -->
-                <nav class="bond-nav" aria-label="Main Navigation">
+                <nav class="bond-nav" aria-label="@T("Header.NavLabel", "Hoofdmenu")">
                     @RenderNodes(Model.Source.root.Children, true)
                 </nav>
 
-                <!-- Mobile Menu Button: behaviour lives in resources/js/theme.js
-                     (no inline handler, so a strict Content-Security-Policy works). -->
-                <button type="button"
-                        class="bond-hamburger"
-                        data-bond-menu-toggle
-                        aria-controls="bond-mobile-menu"
-                        aria-expanded="false"
-                        aria-label="Toggle navigation">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
+                <div class="bond-header__actions">
+                    @if (!string.IsNullOrEmpty(ctaText) && !string.IsNullOrEmpty(ctaUrl))
+                    {
+                        <a class="bond-knop bond-header__cta" href="@ctaUrl">@ctaText</a>
+                    }
+
+                    <!-- Mobile menu toggle: behaviour lives in resources/js/theme.js
+                         (no inline handler, so a strict Content-Security-Policy works). -->
+                    <button type="button"
+                            class="bond-hamburger"
+                            data-bond-menu-toggle
+                            aria-controls="bond-mobile-menu"
+                            aria-expanded="false"
+                            aria-label="@T("Header.MenuButton", "Menu")">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Mobile Navigation Menu -->
+    <!-- Mobile navigation -->
     <div id="bond-mobile-menu" class="bond-mobile-menu">
-        <nav class="bond-mobile-menu__nav" aria-label="Mobile Navigation">
+        <nav class="bond-mobile-menu__nav" aria-label="@T("Header.NavLabel", "Hoofdmenu")">
             @RenderNodes(Model.Source.root.Children, true)
         </nav>
         <div class="bond-mobile-menu__footer">
             <div class="bond-mobile-menu__footer-inner">
+                @if (!string.IsNullOrEmpty(ctaText) && !string.IsNullOrEmpty(ctaUrl))
+                {
+                    <a class="bond-knop bond-knop--koraal" href="@ctaUrl">@ctaText</a>
+                }
+                @* No "Inloggen" here (Bond 13-11-2026): visitors sign in via the footer.
+                   Signed-in users see their name and "Uitloggen" (also in the footer). *@
                 @if (isAuth)
                 {
                     <a href="@userUrl" class="bond-mobile-menu__user">@userName</a>
+                    <a href="@logoutUrl" class="bond-mobile-menu__login">@T("Account.Logout", "Uitloggen")</a>
                 }
-                <a href="@loginUrl" class="bond-mobile-menu__login">@loginText</a>
             </div>
         </div>
     </div>

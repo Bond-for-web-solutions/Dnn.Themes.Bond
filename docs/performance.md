@@ -93,14 +93,53 @@ deploy), increment the version or use debug mode.
 ## Fonts
 
 - `font-display: swap` everywhere, and only referenced weights are packaged.
-- **Recommendation (not done):** MuseoSans ships as `.otf` (~65 KB each).
-  WOFF2 versions would be roughly 40–50% smaller, but converting a commercial
-  font may be restricted by its licence. Get WOFF2 files from the vendor
-  (exljbris/MyFonts webfont kit), then swap the `src` in
-  `themes/bond/styles/fonts.css`.
-- Font preloading would help LCP for the 500 weight, but needs a `<link
-  rel=preload>` from the skin. DNN 10.4's resource manager has a `FontResource`
-  model with no skin control yet, so it was not added.
+- MuseoSans ships as **WOFF2** (~25 KB per weight; the OTFs were ~62 KB).
+  Converted 12-11-2026 with fontTools 4.56.0 from the OTFs in
+  `themes/bond/assets/font/MuseoSans/` (outlines and name/licence tables
+  unchanged, `fsType` 0); Bond confirmed the licence allows web-font
+  conversion. Only the WOFF2 files are referenced, so only they are packaged.
+- `<i>` is italic by default: empty icon `<i>`s (Font Awesome is not loaded on
+  Bond pages) made Chrome download the italic face. `pagina.css` sets them to
+  normal and hides the empty ones.
+- Font preloading was tried (Link header) and did **not** improve Lighthouse
+  LCP; not added.
+
+## Lighthouse (local site, 12-11-2026)
+
+Measured with Lighthouse 12.8.2 on the local site behind a small proxy that
+mirrors production's transport (HTTPS, HTTP/2, gzip, HSTS, 301 from HTTP;
+the local IIS has no compression module or https binding). Usercentrics is
+blocked during runs (it traps focus in headless Chrome); it now loads after
+the page anyway, through GTM. What moved mobile Performance from 54-72 (first
+measurement) to a median of 92 (86-96):
+
+| Change | Where |
+| --- | --- |
+| No Adobe Fonts `@import` chain (two render-blocking third-party CSS files; same font loaded twice) | site `portal.css` |
+| Font Awesome JS (356 KB) not activated where no icon is used | 2sxc Blog6 `parts/Assets.cshtml` |
+| Swiper script at the end of the form; first slide `loading=eager` + `fetchpriority=high` | 2sxc Swiper2 |
+| First blog card image eager on /kennis; content images `loading=lazy` | 2sxc Blog6, Content |
+| WOFF2 fonts, no stray italic face | theme |
+| GTM at first interaction or 4 s after load (theme.js), DNN connector off | theme + site |
+| `unload` → `pagehide` for ASP.NET AJAX (Best Practices "deprecated APIs") | theme `pagehide.js` |
+
+Remaining fixed costs on every DNN page: jQuery + jQuery Migrate, ASP.NET
+AJAX and dnncore.js are parser-blocking (DNN core). Bootstrap is gone (Koi
+framework `bond`), which saves ~30 KB gzip CSS on the `pagina` layout.
+
+Also in the table's spirit: `:root:has(.bond-main) { scrollbar-gutter: stable }`
+(the scrollbar appearing after first paint shifted the whole page: CLS up to
+0.12 on /inloggen, 0.7 once on /kennis), metric-matched "MuseoSans Fallback"
+faces, WOFF2 also under the Adobe family name "museo-sans" (portal.css and 2sxc
+CSS still ask for it), the login card built before first paint, content images
+as WebP with srcset and the first one eager.
+
+Result of the last full run (36 pages): Accessibility 100 and Best Practices
+100 on every page, desktop and mobile; SEO 100 except /inloggen (noindex on
+purpose); desktop Performance 90+ on 35 of 36 (one run with a one-off CLS);
+mobile Performance median 92, 26 of 36 at 90+, the rest 86-89. Mobile scores
+vary 2-5 points per run; which pages fall under 90 changes between runs. The
+gap is DNN's fixed cost above (FCP ~2.8 s on simulated slow 4G).
 
 ## Browser baseline
 

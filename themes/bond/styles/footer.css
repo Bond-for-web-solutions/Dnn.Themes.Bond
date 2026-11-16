@@ -1,120 +1,229 @@
-/* Footer (menus/footer/FooterMenu.cshtml). */
+/* Footer (menus/footer/FooterMenu.cshtml), as the huisstijl design "Voet":
+   zand, three columns (wordmark + payoff | company label, address, phone and
+   e-mail as arrow links | label-headed menu), decorative colour blocks top
+   right, bottom row copyright | Privacy, Nieuwsbrief, Inloggen. No divider
+   line, no margins: all spacing is gap. Content width 1248px with 48px
+   gutters (16px up to 720px), as the design's .wrap. */
 .bond-footer {
-  font-size: var(--bond-font-size-sm);
-  line-height: var(--bond-line-height-relaxed);
-  color: var(--bond-color-text-muted);
+  --bond-container-max: calc(var(--bond-content-max) + 6rem);
+  --bond-container-gutter: 1rem;
+  --bond-container-gutter-sm: 1rem;
+  --bond-container-gutter-lg: 3rem;
+
+  position: relative;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  padding: 5.5rem 0 2.5rem;
+  font-size: var(--bond-type-body);
+  font-weight: var(--bond-font-weight-light);
+  line-height: 1.625rem;
+  color: var(--bond-color-text);
   background: var(--bond-color-surface-sunken);
 }
 
-.bond-footer__accent {
-  height: 0.25rem;
-  background: linear-gradient(to right, var(--bond-mist-300), var(--bond-color-accent));
+@media (min-width: 721px) {
+  .bond-footer { --bond-container-gutter-sm: 3rem; }
 }
 
+/* Colour blocks top right: koraal 220x180, abrikoos 96x120 beside it and
+   rosegoud 120x96 below it, each 6px apart, faded towards the left; as the
+   design's voet. Purely decorative (no markup). */
+.bond-footer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 32.5rem;
+  height: 100%;
+  pointer-events: none;
+  background:
+    linear-gradient(var(--bond-koraal), var(--bond-koraal)) right 0 top 0 / 13.75rem 11.25rem no-repeat,
+    linear-gradient(var(--bond-abrikoos), var(--bond-abrikoos)) right 14.125rem top 0 / 6rem 7.5rem no-repeat,
+    linear-gradient(var(--bond-rosegoud), var(--bond-rosegoud)) right 0 top 11.625rem / 7.5rem 6rem no-repeat;
+  opacity: 0.45;
+  mask-image: linear-gradient(90deg, transparent, #000 70%);
+}
+
+/* Grid and bottom row are spaced by gap; above the colour blocks. */
 .bond-footer__body {
-  padding-top: var(--bond-space-10);
-  padding-bottom: var(--bond-space-10);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 3.5rem;
 }
 
 .bond-footer__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--bond-space-12);
+}
+
+@media (min-width: 721px) {
+  .bond-footer__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (min-width: 1101px) {
+  .bond-footer__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+.bond-footer__column,
+.bond-footer__address {
   display: flex;
   flex-direction: column;
-  gap: var(--bond-space-8);
+  align-items: flex-start;
+  gap: var(--bond-space-3);
 }
 
-@media (--bond-lg) {
-  .bond-footer__grid {
-    flex-direction: row;
-    align-items: flex-start;
-    justify-content: space-between;
-  }
+.bond-footer__address { font-style: normal; }
+
+.bond-footer__logo img {
+  width: auto;
+  height: 2.125rem;
 }
 
-.bond-footer__left {
-  display: flex;
-  flex-direction: column;
-  gap: var(--bond-space-4);
+.bond-footer__logo:focus-visible {
+  outline: 2px solid var(--bond-color-focus);
+  outline-offset: 4px;
 }
 
+.bond-footer__payoff {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: var(--bond-font-weight-bold);
+  line-height: 1.875rem;
+  color: var(--bond-color-text);
+  hyphens: auto;
+}
+
+.bond-footer__heading {
+  margin: 0;
+  font-size: var(--bond-type-label);
+  font-weight: var(--bond-font-weight-medium);
+  line-height: 1rem;
+  letter-spacing: var(--bond-letter-spacing-label);
+  text-transform: uppercase;
+  color: var(--bond-koraal-diep);
+}
+
+.bond-footer__text { margin: 0; }
+
+/* Phone and e-mail: arrow links (as .bond-more): 500, 2px koraal line under
+   the text, angular arrow in koraal-diep. */
+.bond-footer__pijl:is(a) {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-weight: var(--bond-font-weight-medium);
+  color: var(--bond-color-text);
+  text-decoration: none;
+}
+
+.bond-footer__pijl:is(:link, :visited) {
+  color: var(--bond-color-text);
+  text-decoration: none;
+}
+
+.bond-footer__pijl span { border-bottom: 2px solid var(--bond-koraal); }
+
+.bond-footer__icoon {
+  flex: none;
+  width: 1rem;
+  height: 0.75rem;
+  overflow: visible;
+  color: var(--bond-koraal-diep);
+  transition: transform var(--bond-duration-fast) var(--bond-easing-standard);
+}
+
+.bond-footer__pijl:hover .bond-footer__icoon { transform: translateX(3px); }
+
+/* Menu: one column. */
 .bond-footer__nav-list {
   display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
+  flex-direction: column;
   gap: var(--bond-space-2);
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-@media (--bond-below-sm) {
-  .bond-footer__nav-list { flex-direction: column; }
-}
-
-.bond-footer__nav-item { display: flex; }
-
-.bond-footer__link {
-  padding: var(--bond-space-2) var(--bond-space-4);
-  color: var(--bond-color-text-muted);
-  text-decoration: none;
-  transition: background-color var(--bond-duration-fast), color var(--bond-duration-fast);
-}
-
-.bond-footer__link:is(:link, :visited) {
-  color: var(--bond-color-text-muted);
-  text-decoration: none;
-}
-
-.bond-footer__link:hover {
+/* Menu and bottom-row links: inkt, a 2px koraal line on hover (as the
+   design, no mark for the current page; aria-current tells it). The line is a border, where the design puts it;
+   transparent keeps the height steady. */
+.bond-footer__link,
+.bond-footer__meta-link {
   color: var(--bond-color-text);
-  background: rgba(var(--bond-ink-rgb), 0.05);
-  border-radius: var(--bond-radius-md);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: border-color var(--bond-duration-fast);
 }
 
-.bond-footer__link.is-selected { color: var(--bond-color-text); }
-
-.bond-footer__link--disabled {
-  padding: var(--bond-space-2) var(--bond-space-4);
-  color: rgba(var(--bond-ink-rgb), 0.3);
-  cursor: default;
+.bond-footer__link:is(:link, :visited),
+.bond-footer__meta-link:is(:link, :visited) {
+  color: var(--bond-color-text);
+  text-decoration: none;
 }
 
-/* Terms / privacy + copyright: small, uppercase, letter-spaced - like the splash footer. */
+.bond-footer__link:is(a):hover,
+.bond-footer__meta-link:hover { border-bottom-color: var(--bond-koraal); }
+
+.bond-footer__link:focus-visible,
+.bond-footer__pijl:focus-visible,
+.bond-footer__meta-link:focus-visible {
+  outline: 2px solid var(--bond-color-focus);
+  outline-offset: 2px;
+}
+
+.bond-footer__link--disabled { color: var(--bond-color-text-disabled); }
+
+/* Bottom row: small 500, copyright in inkt-zacht, links in inkt. */
+.bond-footer__bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--bond-space-4) var(--bond-space-6);
+  font-size: var(--bond-type-small);
+  font-weight: var(--bond-font-weight-medium);
+  line-height: 1.25rem;
+  color: var(--bond-color-text-muted);
+}
+
+/* Scroll-in: the bottom row rises together with the grid (as the design).
+   It is not observed itself: at the end of the page it can never reach the
+   observer's -8% line, so it would stay hidden. Hidden only while scripts/
+   reveal.js runs (.bond-reveal-aan) and the grid has not been shown yet. */
+.bond-reveal-aan .bond-footer__bottom {
+  transition:
+    opacity 1s cubic-bezier(0.16, 0.84, 0.3, 1),
+    transform 1s cubic-bezier(0.16, 0.84, 0.3, 1);
+}
+
+.bond-reveal-aan :where(.bond-footer__grid:not(.is-zichtbaar)) + .bond-footer__bottom {
+  opacity: 0;
+  transform: translateY(3rem) scale(0.98);
+}
+
+.bond-footer__copyright { margin: 0; }
+
 .bond-footer__meta {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--bond-space-2);
-  font-size: var(--bond-font-size-xs);
-  letter-spacing: var(--bond-letter-spacing-widest);
-  text-transform: uppercase;
-  color: var(--bond-color-text-subtle);
+  gap: var(--bond-space-4) var(--bond-space-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.bond-footer__meta-link:is(:link, :visited) {
-  color: var(--bond-color-text-subtle);
-  text-decoration: underline;
-  text-underline-offset: 2px;
-  transition: color var(--bond-duration-fast);
+/* >= 24px touch target without changing the text line. */
+.bond-footer__meta-link:is(a) {
+  display: inline-flex;
+  min-height: 1.5rem;
+  align-items: center;
 }
 
-.bond-footer__meta-link:hover { color: var(--bond-color-text); }
-.bond-footer__sep { color: var(--bond-sand-400); }
-
-.bond-footer__copyright {
-  font-size: var(--bond-font-size-xs);
-  letter-spacing: var(--bond-letter-spacing-widest);
-  text-transform: uppercase;
-  color: var(--bond-color-text-subtle);
-}
-
-.bond-footer__logo { display: none; }
-
-@media (--bond-lg) {
-  .bond-footer__logo { display: block; }
-}
-
-.bond-footer__logo img {
-  width: auto;
-  height: 8rem;
-  opacity: 0.25;
+@media (--bond-reduced-motion) {
+  .bond-footer__link,
+  .bond-footer__meta-link,
+  .bond-footer__icoon { transition: none; }
 }

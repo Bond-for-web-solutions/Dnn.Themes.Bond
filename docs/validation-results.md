@@ -44,7 +44,7 @@ A separate reviewer (read-only, not anchored on the implementation) reported 11 
 | 3 | non-BOND exceptions skipped `last-failure.json` and aborted `build --all` | wrapped as BOND999, stale marker always written, per-theme isolation in the CLI; malformed `url()` encoding → BOND122 | `failures.test.mjs` |
 | 4 | `:not(.x) p`, `:is(.x, h1)`, `html:has(.x) div` passed both isolation layers | only top-level classes count as scoping (audit + Stylelint) | `units`, `lint-rules` |
 | 5 | `--prune` deleted a just-deployed file after a case-only rename | case-insensitive stale list | `deploy.test.mjs` |
-| 6 | `--deploy` without a value was unusable | boolean `--deploy` (the site comes from `.env`) | - |
+| 6 | `--deploy` without a value was unusable | boolean `--deploy` (the site comes from `.env.json`) | - |
 | 7 | toolchain changes reported no affected themes | `packages/build/` and `.gitattributes` are global inputs | `units.test.mjs` |
 | 8 | auth card hid captcha/verification controls and left the native form focusable | fails open on unmirrored controls or a missing login button; native form gets `hidden`; Register link mirrored | `behavior.spec.mjs` |
 | 9 | deploy did not re-check output hashes | refuses if `publish/` differs from `build-manifest.json` (BOND716) | `deploy.test.mjs` |

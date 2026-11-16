@@ -13,11 +13,11 @@ const HELP = `bond <command> [options]
   menu                       Pick a command and a theme from a list (arrow keys + Enter)
   build <theme...> | --all   Build theme(s). --mode production (default) | development
                              --package   also create an install ZIP in development mode
-                             --deploy    copy each successful build to the site in .env
+                             --deploy    copy each successful build to the site in .env.json.json
   watch <theme>              Rebuild (development) on theme/shared changes. --deploy [--prune --adopt]
   validate <theme...> | --all  Re-verify published output, reports and ZIPs (no rebuild)
   clean <theme...> | --all   Delete publish/<theme> (only generated artifacts)
-  deploy <theme>             Copy a validated build to the LOCAL DNN site in .env
+  deploy <theme>             Copy a validated build to the LOCAL DNN site in .env.json.json
                              --dry-run --adopt --prune
   snapshot <theme>           Record this release's file list (enables DNN Cleanup on upgrade)
   affected [--base <ref>]    List themes impacted by changes since <ref> (default origin/main)
