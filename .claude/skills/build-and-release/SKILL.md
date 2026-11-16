@@ -22,7 +22,7 @@ On failure, read the first `error BONDnnn` line: it names the source file and li
 
 ## Local deploy (development sites only)
 
-Requires `.env` (git-ignored) with `<THEME>_SITE_ROOT` (e.g. `BOND_SITE_ROOT`) or the fallback `SITE_ROOT` pointing at a local DNN site. Always dry-run first:
+Requires `.env.json` (git-ignored, copy `.env.example.json`) with `themes.<theme>.siteRoot` (or the fallback `siteRoot`) pointing at a local DNN site. Always dry-run first:
 `node packages/build/bin/bond.mjs deploy <id> --dry-run`. Never copy files into `C:\DNN\*` by hand,
 never use `--adopt` without the user confirming the folder is this theme, and never deploy to
 shared/staging/production servers.

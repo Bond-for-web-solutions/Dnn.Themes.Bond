@@ -1,11 +1,12 @@
 <!-- layout: default -->
 <!-- Approximates DNN's rendering of skin/default.ascx: HeaderMenu.cshtml output,
      an HTML module in ContentPane (None container), FooterMenu.cshtml output. -->
+<a class="bond-skip" href="#bond-main">Naar de inhoud</a>
+<span class="bond-header__strook" aria-hidden="true"><span class="bond-header__balk bond-header__balk--2"></span><span class="bond-header__balk bond-header__balk--1"></span><span class="bond-header__balk bond-header__balk--3"></span><span class="bond-header__balk bond-header__balk--5"></span><span class="bond-header__balk bond-header__balk--4"></span><span class="bond-header__balk bond-header__balk--6"></span></span>
 <header class="bond-header">
-  <div class="bond-topbar"><div class="bond-container"><div class="bond-topbar__inner"><a href="#login" class="bond-topbar__link">Login</a></div></div></div>
   <div class="bond-header__main"><div class="bond-container"><div class="bond-header__inner">
-    <div class="bond-header__logo"><a href="#home"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='48'%3E%3Crect width='160' height='48' rx='8' fill='%235abcd2'/%3E%3C/svg%3E" alt="Bond" width="160" height="48"></a></div>
-    <nav class="bond-nav" aria-label="Main Navigation">
+    <a class="bond-header__logo" href="#home"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='29'%3E%3Crect width='88' height='29' rx='4' fill='%23383e42'/%3E%3C/svg%3E" alt="Bond, naar de startpagina" width="88" height="29"><span class="bond-header__since">Sinds 1998</span></a>
+    <nav class="bond-nav" aria-label="Hoofdmenu">
       <ul class="bond-menu bond-menu--root">
         <li class="bond-menu__item"><a href="#home" class="bond-nav-link is-selected">Home</a></li>
         <li class="bond-menu__item"><a href="#services" class="bond-nav-link">Services<svg class="bond-menu-icon" aria-hidden="true" focusable="false" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg></a>
@@ -19,23 +20,30 @@
         <li class="bond-menu__item"><span class="bond-nav-link bond-nav-link--disabled">Disabled</span></li>
       </ul>
     </nav>
-    <button type="button" class="bond-hamburger" data-bond-menu-toggle aria-controls="bond-mobile-menu" aria-expanded="false" aria-label="Toggle navigation"><span></span><span></span><span></span></button>
+    <div class="bond-header__actions">
+      <a class="bond-knop bond-header__cta" href="#contact">Plan een gesprek</a>
+      <button type="button" class="bond-hamburger" data-bond-menu-toggle aria-controls="bond-mobile-menu" aria-expanded="false" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
   </div></div></div>
   <div id="bond-mobile-menu" class="bond-mobile-menu">
-    <nav class="bond-mobile-menu__nav" aria-label="Mobile Navigation"><ul class="bond-menu bond-menu--root">
+    <nav class="bond-mobile-menu__nav" aria-label="Hoofdmenu"><ul class="bond-menu bond-menu--root">
       <li class="bond-menu__item"><a href="#home" class="bond-nav-link is-selected">Home</a></li>
       <li class="bond-menu__item"><a href="#about" class="bond-nav-link">About</a></li>
     </ul></nav>
-    <div class="bond-mobile-menu__footer"><div class="bond-mobile-menu__footer-inner"><a href="#login" class="bond-mobile-menu__login">Login</a></div></div>
+    <div class="bond-mobile-menu__footer"><div class="bond-mobile-menu__footer-inner"><a class="bond-knop bond-knop--koraal" href="#contact">Plan een gesprek</a></div></div>
   </div>
 </header>
-<main class="bond-main">
+<main id="bond-main" class="bond-main" tabindex="-1">
   <div id="dnn_BannerPane" class="DNNEmptyPane"></div>
   <div id="dnn_ContentPane" class="bond-content">
     <div class="DnnModule DnnModule-DNN_HTML DnnModule-381"><a name="381"></a>
       <div id="dnn_ctr381_ContentPane"><div id="dnn_ctr381_ModuleContent" class="DNNModuleContent ModDNNHTMLC">
         <div id="dnn_ctr381_HtmlModule_lblContent" class="Normal">
           <h1>Welcome to Bond</h1>
+          <p class="bond-label">Werkwijze</p>
+          <h2><span class="bond-facet">K</span>ennis groeit als mensen <span class="bond-mark">elkaar vinden</span>.</h2>
+          <p class="bond-lead">We luisteren eerst, en denken dan hardop met je mee.</p>
+          <p><a class="bond-more" href="#more">Lees meer</a></p>
           <p>Paragraph text from an HTML module with <a href="#inline">an inline link</a>. DNN's default.css styles headings, paragraphs and links in module content.</p>
           <ul><li>First list item</li><li>Second list item</li></ul>
           <p><a class="bond-button" href="#cta">Get in touch</a> <button type="button" class="bond-button bond-button--secondary">Secondary</button></p>
@@ -46,17 +54,26 @@
   <div id="dnn_FluidPane" class="DNNEmptyPane"></div>
 </main>
 <footer class="bond-footer">
-  <div class="bond-footer__accent"></div>
-  <div class="bond-container bond-footer__body"><div class="bond-footer__grid">
-    <div class="bond-footer__left">
-      <nav aria-label="Footer Navigation"><ul class="bond-footer__nav-list">
-        <li class="bond-footer__nav-item"><a href="#home" class="bond-footer__link is-selected">Home</a></li>
-        <li class="bond-footer__nav-item"><a href="#services" class="bond-footer__link">Services</a></li>
-        <li class="bond-footer__nav-item"><span class="bond-footer__link bond-footer__link--disabled">Disabled</span></li>
-      </ul></nav>
-      <div class="bond-footer__meta"><a class="bond-footer__meta-link" href="#terms">Terms</a><span class="bond-footer__sep" aria-hidden="true">|</span><a class="bond-footer__meta-link" href="#privacy">Privacy</a></div>
-      <div class="bond-footer__copyright">Copyright 2026 by Bond</div>
+  <div class="bond-container bond-footer__body">
+    <div class="bond-footer__grid">
+      <div class="bond-footer__column">
+        <a class="bond-footer__logo" href="#home"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='29'%3E%3Crect width='88' height='29' rx='4' fill='%23383e42'/%3E%3C/svg%3E" alt="Bond" width="88" height="29"></a>
+        <p class="bond-footer__payoff">Bond. Bouwen, bewaken en verbinden.</p>
+      </div>
+      <div class="bond-footer__column">
+        <p class="bond-footer__heading">Bond for web solutions · sinds 1998</p>
+        <address class="bond-footer__address"><p class="bond-footer__text">Vlaardingweg 62, Rotterdam</p><p class="bond-footer__text"><a class="bond-footer__pijl" href="tel:0107371750"><span>010 73 71 750</span><svg class="bond-footer__icoon" viewBox="0 0 16 12" width="16" height="12" aria-hidden="true" focusable="false"><path d="M1 6h13M9.5 1.5 14 6l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"/></svg></a></p><p class="bond-footer__text"><a class="bond-footer__pijl" href="mailto:support@example.com"><span>support@example.com</span><svg class="bond-footer__icoon" viewBox="0 0 16 12" width="16" height="12" aria-hidden="true" focusable="false"><path d="M1 6h13M9.5 1.5 14 6l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"/></svg></a></p></address>
+      </div>
+      <nav class="bond-footer__column" aria-label="Footermenu">
+        <p class="bond-footer__heading">Onderwerpen</p>
+        <ul class="bond-footer__nav-list">
+          <li class="bond-footer__nav-item"><a href="#home" class="bond-footer__link is-selected">Home</a></li><li class="bond-footer__nav-item"><a href="#services" class="bond-footer__link">Services</a></li><li class="bond-footer__nav-item"><span class="bond-footer__link bond-footer__link--disabled">Disabled</span></li>
+        </ul>
+      </nav>
     </div>
-    <div class="bond-footer__logo"><a href="#home"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='48'%3E%3Crect width='160' height='48' rx='8' fill='%235abcd2'/%3E%3C/svg%3E" alt="Bond" width="160" height="48"></a></div>
-  </div></div>
+    <div class="bond-footer__bottom">
+      <p class="bond-footer__copyright">© 2026 Bond for web solutions</p>
+      <ul class="bond-footer__meta"><li><a class="bond-footer__meta-link" href="#privacy">Privacy</a></li><li><a class="bond-footer__meta-link" href="#login">Inloggen</a></li></ul>
+    </div>
+  </div>
 </footer>

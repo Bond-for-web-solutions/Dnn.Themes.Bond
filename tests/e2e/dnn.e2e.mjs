@@ -4,6 +4,7 @@
 import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
 import path from 'node:path';
+import { hasCredentials, login } from './auth.mjs';
 
 const base = process.env.BOND_E2E_BASE_URL;
 const pages = JSON.parse(process.env.BOND_E2E_PAGES || '{"default":"/"}');
@@ -47,12 +48,8 @@ test('login page shows the themed auth card and keeps DNN controls', async ({ pa
 });
 
 test('admin: log in, edit mode shows panes and module actions', async ({ page }) => {
-  test.skip(!process.env.BOND_E2E_USER || !process.env.BOND_E2E_PASSWORD, 'Set BOND_E2E_USER/BOND_E2E_PASSWORD for admin checks');
-  await page.goto('/Login');
-  await page.locator('.bond-auth input[autocomplete="username"]').fill(process.env.BOND_E2E_USER);
-  await page.locator('.bond-auth input[type="password"]').fill(process.env.BOND_E2E_PASSWORD);
-  await page.locator('.bond-auth .bond-button').click();
-  await page.waitForLoadState('networkidle');
+  test.skip(!hasCredentials, 'Fill themes.<theme>.e2e.login.user/password in .env.json for admin checks');
+  await login(page, Object.values(pages)[0]);
   await page.goto(Object.values(pages)[0]);
   await expect(page.locator('#dnn_ContentPane')).toBeAttached();
   // Persona Bar (DNN 9/10 admin UI) is present for administrators.

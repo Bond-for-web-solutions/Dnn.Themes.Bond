@@ -1,55 +1,98 @@
-/* Bond brand tokens. Values are exactly those of Bond 1.0 (skin.css,
-   login.css, splash.css) - moved here so components can be themed without
-   editing shared source. */
+/* Bond brand tokens - Bond huisstijl 2027 (light only). Source of truth: the
+   "Bond Huisstijl" design system (project/tokens.css). Shared components are
+   themed through the semantic --bond-color-* / --bond-<component>-* tokens.
+   Contrast (WCAG): inkt on papier 10.1, on koraal 5.4; inkt-zacht on zand 5.7;
+   koraal-diep on papier 5.6. Koraal itself is never a text colour (2:1). */
 :root {
-  /* ---- Bond palette (warm cream + cyan accent) ---- */
-  --bond-cream-50: #faf5ee;
-  --bond-cream-100: #f4ede4;
-  --bond-cream-200: #efe6d9;
-  --bond-cream-300: #e6ddd0;
-  --bond-sand-400: #c3b8a5;
-  --bond-sand-500: #b3a994;
-  --bond-ink-500: #8a8175;
-  --bond-ink-600: #6b6256;
-  --bond-ink-900: #2b2b2b;
-  --bond-grey-600: #5a5a5a;
-  --bond-cyan-500: #5abcd2;
-  --bond-cyan-700: #0e7490;
-  --bond-mist-300: #c3d1d8;
-  --bond-ink-rgb: 43, 43, 43;
-  --bond-cyan-rgb: 90, 188, 210;
+  /* ---- Bond palette 2027 ---- */
+  --bond-papier: #fbf6f1;      /* page background (warm white) */
+  --bond-wit: #ffffff;         /* cards, forms */
+  --bond-zand: #f6ede4;        /* alternating sections, footer */
+  --bond-koraal: #fc9f82;      /* THE hard colour: primary button, highlight */
+  --bond-koraal-diep: #a8432a; /* coral as text: labels, arrows, focus ring */
+  --bond-abrikoos: #f2c9b4;    /* soft fields, card borders (lijn) */
+  --bond-rosegoud: #d8a98d;
+  --bond-oker: #e6a93a;
+  --bond-petrol: #0e7c7b;
+  --bond-turquoise: #5abcd2;   /* accent only, never a full-width band */
+  --bond-inkt: #383e42;        /* antraciet: all text, logo, lines */
+  --bond-inkt-zacht: #6b5a52;  /* secondary text, captions */
+  --bond-rand: #8c7b73;        /* input borders */
+  --bond-inkt-rgb: 56, 62, 66;
+  --bond-koraal-rgb: 252, 159, 130;
 
   /* ---- Shared semantic tokens -> Bond ---- */
-  --bond-font-sans: "MuseoSans", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  --bond-font-sans: "museo-sans", "MuseoSans", "Museo Sans", "MuseoSans Fallback", "Avenir Next", "Segoe UI", system-ui, sans-serif;
   --bond-font-heading: var(--bond-font-sans);
-  --bond-color-bg: var(--bond-cream-100);
-  --bond-color-surface: var(--bond-cream-50);
-  --bond-color-surface-raised: #ffffff;
-  --bond-color-surface-sunken: var(--bond-cream-200);
-  --bond-color-text: var(--bond-ink-900);
-  --bond-color-text-muted: var(--bond-ink-600);
-  --bond-color-text-subtle: var(--bond-ink-500);
-  --bond-color-text-disabled: var(--bond-sand-500);
-  --bond-color-border: var(--bond-cream-300);
-  --bond-color-accent: var(--bond-cyan-500);
-  --bond-color-accent-strong: var(--bond-cyan-700);
-  --bond-color-on-accent: #ffffff;
-  --bond-color-focus: var(--bond-cyan-700);
-  --bond-color-focus-ring: rgba(var(--bond-cyan-rgb), 0.2);
+  --bond-font-weight-light: 300;
+  --bond-font-weight-semibold: 700; /* MuseoSans has no 600; headings and emphasis are bold */
+  --bond-letter-spacing-label: 0.24em;
+  --bond-color-bg: var(--bond-papier);
+  --bond-color-surface: var(--bond-papier);
+  --bond-color-surface-raised: var(--bond-wit);
+  --bond-color-surface-sunken: var(--bond-zand);
+  --bond-color-text: var(--bond-inkt);
+  --bond-color-text-muted: var(--bond-inkt-zacht);
+  --bond-color-text-subtle: var(--bond-inkt-zacht);
+  --bond-color-text-disabled: var(--bond-rand);
+  --bond-color-border: var(--bond-abrikoos);
+  --bond-color-accent: var(--bond-koraal);
+  --bond-color-accent-strong: var(--bond-koraal-diep);
+  --bond-color-on-accent: var(--bond-inkt);
+  --bond-color-focus: var(--bond-koraal-diep);
+  --bond-color-focus-ring: rgba(var(--bond-koraal-rgb), 0.35);
+  --bond-border-width: 1.5px;
+  --bond-radius-md: 0.5rem;
 
-  /* ---- Component tuning (Bond 1.0 login card values) ---- */
+  /* ---- Huisstijl 2027: type scale (web), rhythm, graphic elements ----
+     Sizes scale fluidly between 320px and 1440px viewports and land on the
+     brandbook values (h1 56/62, h2 44/52, h3 24/30, lead 20/30, body 16/26). */
+  --bond-type-h1: clamp(2.25rem, 1.6rem + 3.2vw, 3.5rem);
+  --bond-type-h1-line: 1.11;
+  --bond-type-h2: clamp(1.875rem, 1.45rem + 2.1vw, 2.75rem);
+  --bond-type-h2-line: 1.18;
+  --bond-type-h3: clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);
+  --bond-type-h3-line: 1.25;
+  --bond-type-lead: clamp(1.125rem, 1.07rem + 0.3vw, 1.25rem);
+  --bond-type-lead-line: 1.5;
+  --bond-type-body: 1rem;
+  --bond-type-body-line: 1.625;
+  --bond-type-small: 0.875rem;
+  --bond-type-label: 0.75rem;
+  --bond-heading-tracking: -0.015em;
+  --bond-measure: 42rem;                 /* ~68 characters per line */
+  --bond-content-max: 78rem;             /* 1248px max content width */
+  --bond-gutter: clamp(1rem, 0.6rem + 2vw, 2rem);
+  --bond-section-gap: clamp(3.5rem, 2.4rem + 5vw, 6rem); /* 96px between sections */
+  --bond-radius-card: 0.5rem;
+  --bond-facet: linear-gradient(150deg, var(--bond-koraal) 0 46%, var(--bond-oker) 46% 60%, var(--bond-petrol) 60% 100%);
+  --bond-facet-rustig: linear-gradient(150deg, var(--bond-koraal) 0 46%, var(--bond-abrikoos) 46% 60%, var(--bond-rosegoud) 60% 100%);
+  --bond-facet-op-kleur: linear-gradient(150deg, var(--bond-inkt) 0 46%, var(--bond-papier) 46% 60%, var(--bond-petrol) 60% 100%);
+  --bond-strook-hoogte: 1.5rem;
+
+  /* ---- Components: pill buttons, flat white cards, white forms ---- */
   --bond-button-padding-y: 0.8125rem;
-  --bond-button-padding-x: 1rem;
+  --bond-button-padding-x: 1.5rem;
   --bond-button-font-size: 0.9375rem;
+  --bond-button-font-weight: 500;
   --bond-button-letter-spacing: 0.02em;
   --bond-button-line-height: normal;
-  --bond-button-radius: 0.625rem;
+  --bond-button-radius: 999px;
+  --bond-button-bg-hover: var(--bond-abrikoos); /* inkt text stays readable (7.1:1) */
   --bond-field-label-size: 0.8125rem;
+  --bond-field-label-weight: 500;
   --bond-field-label-letter-spacing: 0.02em;
+  --bond-field-label-color: var(--bond-inkt);
   --bond-field-padding-y: 0.75rem;
   --bond-field-padding-x: 0.875rem;
   --bond-field-font-size: 0.9375rem;
-  --bond-field-radius: 0.625rem;
-  --bond-card-radius: 1rem;
-  --bond-card-shadow: 0 12px 32px -12px rgba(var(--bond-ink-rgb), 0.18);
+  --bond-field-radius: 0.5rem;
+  --bond-field-bg: var(--bond-wit);
+  --bond-field-border-color: var(--bond-rand);
+  --bond-card-bg: var(--bond-wit);
+  --bond-card-border-color: var(--bond-abrikoos);
+  --bond-card-radius: 0.5rem;
+  --bond-card-shadow: none;
+  --bond-auth-link-color: var(--bond-koraal-diep);
+  --bond-auth-link-color-hover: var(--bond-inkt);
 }

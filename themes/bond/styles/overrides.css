@@ -1,0 +1,10 @@
+/* The only place Bond targets shared component classes
+   (docs/css-architecture.md#tiers). Variants set their tokens on the class
+   itself, so :root tokens cannot reach them.
+
+   Huisstijl secondary button: 1.5px koraal border, inkt text, no fill. */
+.bond-button--secondary {
+  --bond-button-bg: transparent;
+  --bond-button-bg-hover: var(--bond-zand);
+  --bond-button-border-color: var(--bond-koraal);
+}

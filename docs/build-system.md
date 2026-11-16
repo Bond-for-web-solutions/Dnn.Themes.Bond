@@ -30,7 +30,7 @@ same commands. There is no IDE-only build logic.
 | Watch | `pnpm dev <theme>` (`--deploy`) | — (terminal only) |
 | Clean | `pnpm clean <theme>` / `pnpm clean --all` | — (terminal only) |
 | Re-verify output | `pnpm validate` | — (terminal only) |
-| Local deploy | `pnpm deploy:local <theme>` (`--dry-run`, `--adopt`, `--prune`; site from `.env`) | DNN: Publish Theme Locally… |
+| Local deploy | `pnpm deploy:local <theme>` (`--dry-run`, `--adopt`, `--prune`; site from `.env.json`) | DNN: Publish Theme Locally… |
 | Architecture checks | `pnpm check` | DNN: Check Architecture |
 | Impact analysis | `pnpm bond affected --base origin/main` | - |
 | New theme | `pnpm bond create-theme <id> --prefix <p>` | - |

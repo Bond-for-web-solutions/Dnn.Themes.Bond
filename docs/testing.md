@@ -69,17 +69,33 @@ locally before and after a shared component change to see which themes it alters
 
 ## Real DNN end-to-end
 
-```bash
-BOND_E2E_BASE_URL=http://mysite.dnndev.me \
-BOND_E2E_PAGES='{"default":"/","splash":"/coming-soon"}' \
-pnpm test:e2e
+Settings live with the theme in `.env.json` (git-ignored; copy `.env.example.json`), next to
+the site it deploys to:
+
+```json
+{
+  "themes": {
+    "bond": {
+      "siteRoot": "C:/DNN/bond-dev",
+      "e2e": {
+        "baseUrl": "http://mysite.dnndev.me",
+        "pages": { "default": "/", "splash": "/coming-soon" },
+        "login": { "path": "/inloggen", "user": "", "password": "" }
+      }
+    }
+  }
+}
 ```
+
+Then run `pnpm test:e2e`. The theme is the only one with an `e2e` section, or the one you name
+with `BOND_E2E_THEME=dzp pnpm test:e2e`. Its id and `siteRoot` reach the tests as `BOND_E2E_THEME`
+and `BOND_E2E_SITE_ROOT`. [tests/e2e/settings.mjs](../tests/e2e/settings.mjs) lists every key and
+maps it to a `BOND_E2E_*` variable. A variable set in the shell wins over the file, for a one-off run.
 
 Checks per page: not DNN's error page, `skin.css?cdv=` loaded after DNN's
 `default.css`, other layouts' CSS **not** loaded, `theme.js` present, no 4xx
 for theme assets. Login: the card replaces the native form. With
-`BOND_E2E_USER`/`BOND_E2E_PASSWORD` (environment only), it also logs in and
-checks that the Persona Bar appears.
+`login.user`/`login.password` set, it also logs in and checks that the Persona Bar appears.
 
 ## Accessibility
 

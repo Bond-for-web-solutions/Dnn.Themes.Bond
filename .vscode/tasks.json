@@ -75,7 +75,7 @@
     },
     {
       "label": "DNN: Publish Theme Locally…",
-      "detail": "Copy the validated build to the LOCAL DNN site in .env.",
+      "detail": "Copy the validated build to the LOCAL DNN site in .env.json.json.",
       "type": "process",
       "command": "node",
       "args": [

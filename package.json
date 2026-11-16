@@ -29,6 +29,7 @@
     "verify": "node packages/build/bin/bond.mjs check && stylelint \"packages/*/src/**/*.css\" \"themes/*/styles/**/*.css\" && eslint . && node packages/build/bin/bond.mjs build --all --mode production && node packages/build/bin/bond.mjs validate --all && node --test --test-concurrency=1 \"tests/integration/*.test.mjs\""
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
     "@bond/build": "workspace:*",
     "@eslint/js": "10.0.1",
     "@playwright/test": "1.64.1",

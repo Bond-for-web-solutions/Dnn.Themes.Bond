@@ -21,8 +21,8 @@ pnpm bond affected --base origin/main       # which themes a change touches
 ## Hard rules
 
 - **Never write to a DNN site directly.** Local deploy only via
-  `bond deploy <id>` with the site set in `.env`
-  (`<THEME>_SITE_ROOT` per theme, e.g. `BOND_SITE_ROOT`; git-ignored). The machine has several real client sites
+  `bond deploy <id>` with the site set in `.env.json`
+  (`themes.<theme>.siteRoot`; git-ignored, copy `.env.example.json`). The machine has several real client sites
   under `C:\DNN\*`; do not touch them otherwise. Never deploy to production.
 - `publish/` is generated. Never edit it. Fix the source and rebuild.
 - ASCX layouts/partials/containers: **no `<% %>` code blocks** (DNN then

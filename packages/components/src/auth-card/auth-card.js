@@ -146,6 +146,9 @@ function buildLogin(t) {
   if (origRemember) {
     const remLabel = make('label', 'bond-auth__remember');
     const rem = make('input', 'bond-auth__checkbox');
+    // normalCheckBox: DNN's dnnCheckbox plugin skips it, so the native checkbox
+    // stays (otherwise DNN swaps in a 1x1 PNG sprite: Lighthouse image-size-responsive).
+    rem.classList.add('normalCheckBox');
     rem.type = 'checkbox';
     rem.checked = origRemember.checked;
     rem.addEventListener('change', () => { origRemember.checked = rem.checked; });
@@ -218,5 +221,19 @@ function buildReset(t) {
  */
 export function initAuthCard(strings = {}) {
   const t = { ...DEFAULT_TEXT, ...strings };
-  onDnnReady(() => { buildLogin(t); buildReset(t); });
+  const build = () => { buildLogin(t); buildReset(t); };
+  // The theme bundle runs at the end of the form, when the login markup is
+  // already parsed: build now, before the first paint, instead of at
+  // DOMContentLoaded (the swap from DNN's form to the card after first paint
+  // was a layout shift, Lighthouse CLS ~0.17). onDnnReady still rebuilds after
+  // ASP.NET AJAX partial postbacks, which replace the DOM.
+  let builtEarly = false;
+  if (document.readyState === 'loading' && document.querySelector('.dnnLoginService, .dnnSendPassword')) {
+    build();
+    builtEarly = true;
+  }
+  onDnnReady(() => {
+    if (builtEarly) { builtEarly = false; return; }
+    build();
+  });
 }

@@ -1,0 +1,192 @@
+/* ==========================================================================
+   Layout bundle "pagina" (-> Skins/DNN.Themes.Bond/pagina.css, priority 20,
+   only on pagina.ascx).
+
+   1. Page structure: panes and the Standaard container.
+   2. Content typography for 2sxc output inside <main> (.bond-pagina).
+   No Bootstrap: Koi reports the framework "bond" (skin/koi.json); the 2sxc
+   Bond app and the Blog6 bond/ edition render with the theme's bond-* classes
+   only. Spacing comes from flex/grid gap; margins are only reset to 0.
+   ========================================================================== */
+@import "@bond/tokens/media.css";
+
+/* ---- 1. Page structure ------------------------------------------------- */
+
+.bond-pagina__kop,
+.bond-pagina__breed { width: 100%; }
+
+/* Extra room above the first and below the last Standaard block, as one
+   padding shorthand on the pane (each .bond-blok has 40px top and bottom). */
+.bond-pagina__inhoud:has(.bond-blok) { padding: var(--bond-space-2) 0 calc(var(--bond-section-gap) - var(--bond-space-10)); }
+
+.bond-pagina:focus { outline: 0; }
+
+/* Kruimelpad: small label line above the page head. */
+.bond-kruimel {
+  padding: var(--bond-space-3) 0;
+  font-size: var(--bond-type-small);
+  line-height: 1.25rem;
+  color: var(--bond-inkt-zacht);
+}
+
+.bond-kruimel:not(:has(a)) { display: none; }
+
+.bond-kruimel a:is(:link, :visited) {
+  color: var(--bond-inkt);
+  text-decoration: underline;
+  text-decoration-color: var(--bond-koraal);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.25em;
+}
+
+.bond-kruimel a:hover { color: var(--bond-koraal-diep); }
+
+/* ---- 2. Content typography ----------------------------------------------- */
+.bond-pagina {
+  font-family: var(--bond-font-sans);
+  font-size: var(--bond-type-body);
+  font-weight: var(--bond-font-weight-light);
+  line-height: var(--bond-type-body-line);
+  color: var(--bond-inkt);
+  /* Long words (e-mail addresses, URLs) wrap instead of widening a phone screen. */
+  overflow-wrap: break-word;
+}
+
+.bond-pagina :is(h1, h2, h3, h4, h5, h6) {
+  font-family: var(--bond-font-heading);
+  font-weight: var(--bond-font-weight-bold);
+  letter-spacing: var(--bond-heading-tracking);
+  color: inherit;
+}
+
+.bond-pagina h1 {
+  font-size: var(--bond-type-h1);
+  line-height: var(--bond-type-h1-line);
+}
+
+.bond-pagina h2 {
+  font-size: var(--bond-type-h2);
+  line-height: var(--bond-type-h2-line);
+}
+
+.bond-pagina h3 {
+  font-size: var(--bond-type-h3);
+  line-height: var(--bond-type-h3-line);
+}
+
+.bond-pagina h4 { font-size: 1.25rem; }
+.bond-pagina :is(h5, h6) { font-size: 1rem; }
+
+/* Eerste letter facet on every page title (h1): koraal / oker / petrol; on a
+   koraal block antraciet / papier / petrol. Not when the heading already
+   marks its own letter with .bond-facet. */
+.bond-pagina h1:not(:has(.bond-facet))::first-letter {
+  color: transparent;
+  background: var(--bond-facet);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.bond-op-koraal h1:not(:has(.bond-facet))::first-letter { background-image: var(--bond-facet-op-kleur); }
+
+@media (--bond-forced-colors) {
+  .bond-pagina h1::first-letter {
+    color: CanvasText;
+    background: none;
+    -webkit-text-fill-color: CanvasText;
+  }
+}
+
+/* Long Dutch compounds ("levensduurverkortende") break with a hyphen on
+   phones only; wider screens have room for the whole word. */
+@media (--bond-below-sm) {
+  .bond-pagina :is(h1, h2, h3) { hyphens: auto; }
+}
+
+.bond-pagina :is(b, strong) { font-weight: var(--bond-font-weight-bold); }
+
+/* Links: antraciet, no underline when a link wraps a card or block; links
+   inside running text get the 2px koraal underline. */
+.bond-pagina a:not([class]) {
+  color: var(--bond-inkt);
+  text-decoration: none;
+}
+
+/* (0,2,2): beats the rule above and DNN's a:visited (0,1,1). */
+.bond-pagina :is(p, li, td, dd) > a:not([class]) {
+  text-decoration: underline;
+  text-decoration-color: var(--bond-koraal);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.25em;
+}
+
+.bond-pagina a:not([class]):hover { color: var(--bond-koraal-diep); }
+
+/* Visible focus everywhere in content (WCAG 2.4.7 / 2.4.11). */
+.bond-pagina :focus-visible {
+  outline: 2px solid var(--bond-color-focus);
+  outline-offset: 2px;
+}
+
+/* Plain quotes in rich text get the citaat frame in abrikoos. */
+.bond-pagina blockquote:not([class]) {
+  margin: 0;
+  padding: var(--bond-space-6) var(--bond-space-8);
+  font-size: 1.25rem;
+  font-weight: var(--bond-font-weight-bold);
+  background: var(--bond-abrikoos);
+  border-radius: var(--bond-radius-card);
+}
+
+/* 2sxc blocks with a background colour set by the editor (inline style,
+   koraal/abrikoos, text antraciet): the koraal-diep label would fail contrast
+   there (3.9:1 on abrikoos), so it takes the block's text colour. */
+.bond-pagina :where([style*="background-color"]) .bond-label { color: inherit; }
+
+/* stylelint-disable bond/selector-namespace, selector-class-pattern -- classes from older 2sxc templates (Font Awesome markup, effect-zoom), scoped by .bond-pagina / .bond-kennis / .bond-post */
+
+/* Font Awesome chevrons in older 2sxc templates ("meer >") become the
+   huisstijl arrow in koraal-diep. Not in navigation. */
+.bond-pagina :is(.fa-chevron-right, .fa-angle-right)::before {
+  content: "\2192";
+  font-family: var(--bond-font-sans);
+  font-weight: var(--bond-font-weight-light);
+  color: var(--bond-koraal-diep);
+}
+
+/* Font Awesome is not loaded on Bond pages, so other icon <i>s are empty:
+   hide them. Normal style stops an otherwise unused italic font download. */
+.bond-pagina :where(.fa, .fas, .far, .fab) { font-style: normal; }
+.bond-pagina :where(.fa, .fas, .far, .fab):empty:not(.fa-chevron-right, .fa-angle-right) { display: none; }
+
+/* Blokje over de hoek on blog photos (.bond-kennis__beeld on the list,
+   .bond-post-beeld on an article), except photos already edited in the 2027
+   style (bond-2027-*.jpg). */
+.bond-kennis__beeld :where(.effect-zoom):not(:has(img[src*="bond-2027"]))::after,
+.bond-post-beeld :where(.effect-zoom):not(:has(img[src*="bond-2027"]))::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  width: clamp(2.25rem, 11%, 5.25rem);
+  aspect-ratio: 1;
+  background: var(--bond-turquoise);
+  pointer-events: none;
+}
+
+.bond-kennis__beeld :where(.effect-zoom):not(:has(img[src*="bond-2027"]))::before,
+.bond-post-beeld :where(.effect-zoom):not(:has(img[src*="bond-2027"]))::before {
+  content: "";
+  position: absolute;
+  right: clamp(2.25rem, 11%, 5.25rem);
+  bottom: 0;
+  z-index: 2;
+  width: clamp(0.75rem, 3.7%, 1.75rem);
+  aspect-ratio: 1;
+  background: var(--bond-oker);
+  pointer-events: none;
+}
+
+/* stylelint-enable bond/selector-namespace, selector-class-pattern */

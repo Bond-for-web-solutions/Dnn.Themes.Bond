@@ -22,16 +22,19 @@
     "releaseNotes": "package/ReleaseNotes.txt"
   },
   "styles": {
-    "skin.css": "styles/skin.css"
+    "skin.css": "styles/skin.css",
+    "pagina.css": "styles/layouts/pagina.css"
   },
   "scripts": {
-    "resources/js/theme.js": "scripts/theme.js"
+    "resources/js/theme.js": "scripts/theme.js",
+    "resources/js/pagehide.js": "scripts/pagehide.js"
   },
   "globalSelectors": [
     "*",
     "::after",
     "::before",
     ":root",
+    ":root:has(…)",
     "body",
     "body > form",
     "img"
@@ -41,13 +44,19 @@
   },
   "budgets": {
     "skin.css": {
-      "brotli": 4500
+      "brotli": 7200
     },
     "splash.css": {
       "brotli": 1500
     },
     "resources/js/theme.js": {
       "brotli": 2500
+    },
+    "pagina.css": {
+      "brotli": 2500
+    },
+    "resources/js/pagehide.js": {
+      "brotli": 400
     }
   }
 }

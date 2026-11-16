@@ -1,7 +1,6 @@
 // clean / validate (re-verify published output) / deploy (guarded local copy) / snapshot.
 import fs from 'node:fs';
 import path from 'node:path';
-import { parseEnv } from 'node:util';
 import {
   repoRoot, publishRoot, Diagnostics, paint, BondError, listFiles, sha256, readJson, writeJson, rmrf, isInside, THEME_ID, rel, toPosix,
 } from './util.mjs';
@@ -95,53 +94,68 @@ export function validatePublished(ws, id) {
 // ---------------------------------------------------------------------------
 const MARKER = '.bond-deploy.json';
 
-const SETTINGS = ['SITE_ROOT', 'PRUNE'];
-// Near-misses of a setting name (SITEROOT, site-root, THEME, PRUNES…) are treated as typos.
-const squash = (k) => k.toUpperCase().replace(/[^A-Z]/g, '').replace(/S$/, '');
-const SQUASHED = new Map(SETTINGS.map((k) => [squash(k), k]));
-/** Theme folder name -> .env key prefix: "bond" -> BOND, "my-shop" -> MY_SHOP. */
-export const envKey = (id) => id.toUpperCase().replace(/[^A-Z0-9]/g, '_');
+const CONFIG_FILE = '.env.json';
+const DEPLOY_KEYS = ['siteRoot', 'prune'];
+const THEME_KEYS = [...DEPLOY_KEYS, 'e2e']; // "e2e" is read by tests/e2e/settings.mjs
+// Near-misses of a key (siteroot, site_root, prunes…) are reported as typos.
+const squash = (k) => k.toLowerCase().replace(/[^a-z0-9]/g, '').replace(/s$/, '');
+const hint = (k, keys) => { const m = keys.find((x) => squash(x) === squash(k)); return m ? ` (did you mean "${m}"?)` : ''; };
+const isObj = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);
+const own = (o) => Object.keys(o).filter((k) => !k.startsWith('$')); // "$comment" etc. are notes
+
+/** Path of the git-ignored local settings file (BOND_LOCAL_CONFIG overrides it, for tests). */
+export const localConfigFile = () => (process.env.BOND_LOCAL_CONFIG ? path.resolve(process.env.BOND_LOCAL_CONFIG) : path.join(repoRoot, CONFIG_FILE));
 
 /**
- * Local DNN development sites to deploy to, from .env (git-ignored). Only this
- * file is read, never the shell environment, so a deploy target can't come
- * from a stray variable.
- *   <THEME>_SITE_ROOT=C:\DNN\bond-dev   the site for one theme (BOND_SITE_ROOT, DZP_SITE_ROOT, …)
- *   <THEME>_PRUNE=true                  prune setting for one theme
- *   SITE_ROOT=C:\DNN\my-dev-site        fallback for themes without their own line
- *   PRUNE=true                          fallback prune setting
- * @param {string[]} themeIds folders in themes/ (to recognise per-theme keys and typos)
+ * Local DNN development sites to deploy to, from .env.json (git-ignored),
+ * one entry per theme folder. Only this file is read, never the shell
+ * environment, so a deploy target can't come from a stray variable.
+ *   { "themes": {
+ *       "bond": { "siteRoot": "C:/DNN/bond-dev", "prune": true, "e2e": { … } } },
+ *     "siteRoot": "C:/DNN/my-dev-site",   fallback for themes without their own siteRoot
+ *     "prune": false }                    fallback prune setting
+ * @param {string[]} themeIds folders in themes/ (to recognise theme entries and typos)
  */
 export function loadLocalConfig(themeIds = []) {
-  const file = process.env.BOND_LOCAL_CONFIG ? path.resolve(process.env.BOND_LOCAL_CONFIG) : path.join(repoRoot, '.env');
+  const file = localConfigFile();
   if (!fs.existsSync(file)) {
-    throw new BondError('No local DNN site configured. Copy .env.example to .env (git-ignored) and set <THEME>_SITE_ROOT (e.g. BOND_SITE_ROOT) to your local DNN site. The site is never guessed.', 'BOND700', { file: path.join(repoRoot, '.env.example') });
+    throw new BondError(`No local DNN site configured. Copy .env.example.json to ${CONFIG_FILE} (git-ignored) and set themes.<theme>.siteRoot to your local DNN site. The site is never guessed.`, 'BOND700', { file: path.join(repoRoot, '.env.example.json') });
   }
   const loc = { file };
-  let vars;
-  try { vars = parseEnv(fs.readFileSync(file, 'utf8')); } catch (e) { throw new BondError(`Cannot read ${path.basename(file)}: ${e.message}`, 'BOND706', loc); }
-
-  // .env may hold other tools' variables; only things that look like OUR settings are checked.
-  const known = new Set([...SETTINGS, ...themeIds.flatMap((id) => [`${envKey(id)}_SITE_ROOT`, `${envKey(id)}_PRUNE`])]);
-  const problems = [];
-  for (const k of Object.keys(vars)) {
-    if (known.has(k)) continue;
-    const sq = squash(k);
-    if (SQUASHED.has(sq)) { problems.push(`${k} (did you mean ${SQUASHED.get(sq)}?)`); continue; }
-    const m = /^(.+?)(SITEROOT|PRUNE)$/.exec(sq);
-    if (!m) continue;
-    const setting = m[2] === 'SITEROOT' ? 'SITE_ROOT' : 'PRUNE';
-    const id = themeIds.find((t) => envKey(t).replace(/_/g, '') === m[1]);
-    problems.push(id ? `${k} (did you mean ${envKey(id)}_${setting}?)` : `${k} (there is no theme "${m[1].toLowerCase()}" in themes/: ${themeIds.join(', ') || 'none'})`);
+  const name = path.basename(file);
+  let json;
+  try { json = JSON.parse(fs.readFileSync(file, 'utf8').replace(/^\uFEFF/, '')); } catch (e) {
+    throw new BondError(`Cannot read ${name}: ${e.message}. Write Windows paths with forward slashes (C:/DNN/site); a single backslash is invalid JSON.`, 'BOND706', loc);
   }
-  if (problems.length) throw new BondError(`Unrecognised setting(s) in ${path.basename(file)}: ${problems.join(', ')}.`, 'BOND706', loc);
+  if (!isObj(json)) throw new BondError(`${name} must contain a JSON object.`, 'BOND706', loc);
+  const problems = [];
+  const checkEntry = (o, where, keys) => {
+    if (!isObj(o)) { problems.push(`${where || 'the file'} must be an object`); return {}; }
+    const at = (k) => (where ? `${where}.${k}` : k);
+    for (const k of own(o)) if (!keys.includes(k)) problems.push(`${at(k)}${hint(k, keys)}`);
+    if (o.siteRoot !== undefined && typeof o.siteRoot !== 'string') problems.push(`${at('siteRoot')} must be a string`);
+    if (o.prune !== undefined && typeof o.prune !== 'boolean') problems.push(`${at('prune')} must be true or false`);
+    if (o.e2e !== undefined && !isObj(o.e2e)) problems.push(`${at('e2e')} must be an object`);
+    return o;
+  };
+  checkEntry(json, '', [...DEPLOY_KEYS, 'themes']);
+  const themes = json.themes ?? {};
+  if (!isObj(themes)) problems.push('themes must be an object');
+  const entries = {};
+  if (isObj(themes)) {
+    for (const id of own(themes)) {
+      if (!themeIds.includes(id)) { problems.push(`themes.${id} (there is no theme "${id}" in themes/: ${themeIds.join(', ') || 'none'})`); continue; }
+      entries[id] = checkEntry(themes[id], `themes.${id}`, THEME_KEYS);
+    }
+  }
+  if (problems.length) throw new BondError(`Unrecognised or invalid setting(s) in ${name}: ${problems.join(', ')}.`, 'BOND706', loc);
 
-  const val = (k) => (vars[k] || '').trim();
+  const str = (v) => (typeof v === 'string' ? v.trim() : '');
   return {
     file,
     /** { key, value } of the site root that applies to a theme ('' when none). */
-    siteRootFor: (id) => (val(`${envKey(id)}_SITE_ROOT`) ? { key: `${envKey(id)}_SITE_ROOT`, value: val(`${envKey(id)}_SITE_ROOT`) } : { key: 'SITE_ROOT', value: val('SITE_ROOT') }),
-    pruneFor: (id) => /^(1|true|yes)$/i.test(val(`${envKey(id)}_PRUNE`) || val('PRUNE')),
+    siteRootFor: (id) => (str(entries[id]?.siteRoot) ? { key: `themes.${id}.siteRoot`, value: str(entries[id].siteRoot) } : { key: 'siteRoot', value: str(json.siteRoot) }),
+    pruneFor: (id) => (typeof entries[id]?.prune === 'boolean' ? entries[id].prune : json.prune === true),
   };
 }
 
@@ -202,7 +216,7 @@ export function deploy(ws, id, opts = {}) {
   const config = loadLocalConfig([...ws.themes.keys()]);
   const loc = { file: config.file };
   const { key, value: raw } = config.siteRootFor(id);
-  if (!raw) throw new BondError(`No site for theme "${id}": set ${envKey(id)}_SITE_ROOT (or SITE_ROOT for every theme) in ${path.basename(config.file)}.`, 'BOND705', loc);
+  if (!raw) throw new BondError(`No site for theme "${id}": set themes.${id}.siteRoot (or siteRoot for every theme) in ${path.basename(config.file)}.`, 'BOND705', loc);
   if (/^(\\\\|\/\/)/.test(raw)) throw new BondError('Network (UNC) paths are refused: local deploy is for a development site on this machine.', 'BOND702', loc);
   if (!path.isAbsolute(raw)) throw new BondError(`${key} must be an absolute path: ${raw}`, 'BOND701', loc);
   const siteRoot = path.resolve(raw);
@@ -257,7 +271,7 @@ export function deploy(ws, id, opts = {}) {
     console.log(`  ${step.files.length} file(s) -> ${step.dest}${step.stale.length ? `; prune ${step.stale.length} file(s) not in the build` : ''}`);
     for (const f of step.stale) console.log(`    - ${f}`);
     if (step.left.length) {
-      console.log(`  ${step.left.length} file(s) in ${step.dest} are not in the build; left in place (use --prune or ${envKey(id)}_PRUNE=true to remove them):`);
+      console.log(`  ${step.left.length} file(s) in ${step.dest} are not in the build; left in place (use --prune or themes.${id}.prune: true to remove them):`);
       for (const f of step.left) console.log(`    ? ${f}`);
     }
     if (opts.dryRun) continue;

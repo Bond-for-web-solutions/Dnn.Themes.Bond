@@ -37,7 +37,7 @@ test('publish contract: staged theme, versioned package, checksums, reports', ()
 
 test('install ZIP: manifest, root files and nested archives match DNN expectations', () => {
   const entries = new Map(readZip(fs.readFileSync(zipPath())).map((e) => [e.name, e]));
-  assert.deepEqual([...entries.keys()].sort(), ['License.txt', 'None.ascx', 'ReleaseNotes.txt', 'Resources.zip', 'default.ascx', 'manifest.dnn', 'splash.ascx']);
+  assert.deepEqual([...entries.keys()].sort(), ['ContainerResources.zip', 'License.txt', 'None.ascx', 'ReleaseNotes.txt', 'Resources.zip', 'Standaard.ascx', 'default.ascx', 'manifest.dnn', 'pagina.ascx', 'splash.ascx']);
   const xml = entries.get('manifest.dnn').data.toString('utf8');
   const { problems, referenced } = checkManifestXml(xml);
   assert.deepEqual(problems, []);
@@ -52,7 +52,7 @@ test('install ZIP: manifest, root files and nested archives match DNN expectatio
   for (const f of ['menus/header/HeaderMenu.cshtml', 'menus/header/menudef.xml', 'menus/footer/FooterMenu.cshtml', 'menus/footer/menudef.xml',
     'partials/_includes.ascx', 'partials/_registers.ascx', 'skin.doctype.xml', 'skin.css', 'splash.css', 'resources/js/theme.js',
     'resources/vendor/splash/assets/img/bond-for-web-solutions-logo.png', 'resources/vendor/splash/assets/font/MuseoSans_500.otf',
-    'resources/font/MuseoSans/MuseoSans_500.otf']) {
+    'resources/font/MuseoSans/MuseoSans_500.woff2']) {
     assert.ok(res.includes(f), `Resources.zip lacks ${f}`);
   }
   assert.ok(!res.includes('default.ascx') && !res.includes('splash.ascx'), 'declared layouts live at the ZIP root only');
@@ -64,7 +64,7 @@ test('install ZIP: manifest, root files and nested archives match DNN expectatio
 
 test('shared packages are compiled in automatically; no runtime dependency on other skins', () => {
   const css = fs.readFileSync(path.join(skin(), 'skin.css'), 'utf8');
-  for (const needle of ['.bond-button', '.bond-auth__card', '.bond-container', '--bond-space-4', '--bond-cyan-500', '@font-face']) assert.ok(css.includes(needle), `skin.css lacks ${needle}`);
+  for (const needle of ['.bond-button', '.bond-auth__card', '.bond-container', '--bond-space-4', '--bond-koraal', '@font-face']) assert.ok(css.includes(needle), `skin.css lacks ${needle}`);
   assert.ok(!css.includes('@import'), 'imports are bundled');
   assert.ok(!css.includes('@custom-media') && !/@media[^{]*\(--/.test(css), 'custom media resolved at build time');
   const js = fs.readFileSync(path.join(skin(), 'resources', 'js', 'theme.js'), 'utf8');
@@ -106,6 +106,17 @@ test('upgrade from 1.0.0: Cleanup removes exactly the files 1.1.0 no longer ship
     'resources/css/fonts.css', 'resources/css/login.css', 'resources/css/skin.css', 'resources/css/splash.css',
     'resources/font/MuseoSans/MuseoSans-100.otf', 'resources/font/MuseoSans/MuseoSans-100Italic.otf', 'resources/font/MuseoSans/MuseoSans-300.otf',
     'resources/font/MuseoSans/MuseoSans-300Italic.otf', 'resources/font/MuseoSans/MuseoSans-700Italic.otf', 'resources/font/MuseoSans/MuseoSans-900Italic.otf',
+    // Huisstijl 2027: MuseoSans ships as WOFF2; the OTFs of 1.0.0 go.
+    'resources/font/MuseoSans/MuseoSans_100.otf',
+    'resources/font/MuseoSans/MuseoSans_100Italic.otf',
+    'resources/font/MuseoSans/MuseoSans_300.otf',
+    'resources/font/MuseoSans/MuseoSans_300Italic.otf',
+    'resources/font/MuseoSans/MuseoSans_500.otf',
+    'resources/font/MuseoSans/MuseoSans_500_Italic.otf',
+    'resources/font/MuseoSans/MuseoSans_700.otf',
+    'resources/font/MuseoSans/MuseoSans_700Italic.otf',
+    'resources/font/MuseoSans/MuseoSans_900.otf',
+    'resources/font/MuseoSans/MuseoSans_900Italic.otf',
     // The splash logo moved to resources/vendor/splash/ with the shared @bond/splash layout.
     'resources/img/bond-for-web-solutions-logo.png',
     'resources/js/login.js',
@@ -133,7 +144,8 @@ test('package identity is unchanged from the legacy Bond 1.0 manifest', { skip: 
   assert.equal(b.skinName, a.skinName);
   assert.equal(b.containerName, a.containerName);
   assert.equal(b.core, a.core);
-  assert.deepEqual(b.containers, a.containers);
+  // Containers may be added (Standaard, huisstijl 2027); every legacy container must stay.
+  for (const c of a.containers) assert.ok(b.containers.includes(c), `legacy container ${c} still shipped`);
   assert.ok(b.resourceZips.includes('Resources.zip'));
   // ContainerResources.zip is omitted on purpose: its only file (None.ascx) is already a declared containerFile.
 });
