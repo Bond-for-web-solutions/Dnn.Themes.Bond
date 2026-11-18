@@ -18,7 +18,7 @@
   "dependencies": {
     "esbuild": "0.28.2",
     "lightningcss": "1.33.0",
-    "postcss-selector-parser": "7.1.7"
+    "postcss-selector-parser": "7.1.8"
   },
   "peerDependencies": {
     "stylelint": "^17.16.0"
